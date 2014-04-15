@@ -222,6 +222,7 @@ end
 
 function solid() return false end
 function grid() return false end
+function water() return false end
 function projectileType() return false end
 
 function move_obj (o)
