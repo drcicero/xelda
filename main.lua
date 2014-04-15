@@ -2,7 +2,8 @@ require "math"
 floor = math.floor
 local g = love.graphics
 
-local tiled, tw, tileset, projectiles, groundmap, watermap, player, quads
+local tiled, tw, tileset, projectiles, solidmap, watermap, player, quads
+local DEBUG = true
 
 function clamp (min, x, max)
   if x < min then return min
@@ -35,7 +36,7 @@ end
 function love.load ()
   tiled = require "puzzle"
   tw = tiled.tilewidth
-  groundmap = false
+  solidmap = false
   watermap = false
   player = {health=6, hearts=3, keys=0, rubies=0, arrows=0}
 
@@ -90,7 +91,7 @@ function love.load ()
       end
 
     elseif layer.type == "tilelayer" and layer.opacity then
-      if     layer.name == "Ground" then groundmap = layer.data
+      if     layer.name == "Ground" then solidmap = layer.data
       elseif layer.name == "Water"  then watermap = layer.data end
 
       local cache = g.newCanvas(tiled.width * tiled.tilewidth, tiled.height * tiled.tileheight)
@@ -220,9 +221,17 @@ function draw_obj (i, o)
   end
 end
 
-function solid() return false end
+function map(map, x, y)
+  local result = map[round(x/tw) + round(y/tw)*tiled.width]
+  if DEBUG then
+    if result then g.setColor(255,255,255,51)
+    else           g.setColor(0,0,0,51)       end
+    g.rectangle("fill", round(x/tw)*tw, round(y/tw)*tw, tw, tw)
+  end
+end
+function solid(x, y) return solidmap and map(solidmap, x, y) end
+function water(x, y) return watermap and map(watermap, x, y-15) end
 function grid() return false end
-function water() return false end
 function projectileType() return false end
 
 function move_obj (o)
