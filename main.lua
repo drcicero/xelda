@@ -86,14 +86,15 @@ function love.load ()
       for i,o in ipairs(layer.objects) do
         if o.properties.player then player_obj = o end
         setType(o, sprites[o.gid] or "DUMMY")
-        o.x = o.x+tw/2
-        o.y = o.y-tw/2
+        o.x = o.x+tw+tw/2
+        o.y = o.y
         o.vx = 0
         o.vy = 0
         o.timer = 0
       end
 
     elseif layer.type == "tilelayer" and layer.opacity then
+      local lw = layer.width
       if     layer.name == "Ground" then solidmap = layer.data
       elseif layer.name == "Water"  then watermap = layer.data end
 
@@ -101,7 +102,6 @@ function love.load ()
       cache:renderTo(function ()
         for i,tile in ipairs(layer.data) do
           if tile ~= 0 then
-            local lw = layer.width
             g.draw(tileset, quads[tile], (i%lw)*tw, floor(i/lw)*tw)
           end
         end
@@ -113,21 +113,19 @@ function love.load ()
   projectiles = {}
   table.insert(tiled.layers, {type="objectgroup", objects=projectiles})
 
-  cam_min_x = g:getWidth() / 2
-  cam_min_y = g:getHeight() / 2
-  cam_max_x = tiled.width * tiled.tilewidth - g:getWidth() / 2
-  cam_max_y = tiled.height * tiled.tileheight - g:getHeight() / 2
+  camera = { zoom = 1.5 }
 
-  camera = {
-    zoom=1,
-    x=clamp(cam_min_x, player_obj.x, cam_max_x),
-    y=clamp(cam_min_y, player_obj.y, cam_max_y)
-  }
+  cam_min_x = g:getWidth()/camera.zoom / 2
+  cam_min_y = g:getHeight()/camera.zoom / 2
+  cam_max_x = tiled.width * tiled.tilewidth - cam_min_x
+  cam_max_y = tiled.height * tiled.tileheight - cam_min_y
 
-  g.setFont(g.newFont(11))
+  camera.x = clamp(cam_min_x, player_obj.x, cam_max_x)
+  camera.y = clamp(cam_min_y, player_obj.y, cam_max_y)
+
+  g.setFont(g.newFont(12))
 end
 
-local last_frame
 local now = love.timer.getTime()
 local last_frame = now
 local fps = 0
@@ -143,6 +141,7 @@ function love.draw()
   g.push()
   g.scale(camera.zoom, camera.zoom)
   g.translate(cam_min_x-camera.x, cam_min_y-camera.y)
+  control(player_obj)
   draw_layers()
   g.pop()
   draw_hud()
@@ -158,7 +157,6 @@ function love.update ()
   camera.x = camera.x + (clamp(cam_min_x, player_obj.x, cam_max_x) - camera.x) / 6
   camera.y = camera.y + (clamp(cam_min_y, player_obj.y, cam_max_y) - camera.y) / 12
 
-  control(player_obj)
   update_layers()
 end
 
@@ -172,7 +170,7 @@ local hittimer = 0
 local bowtimer = 0
 function control (o)
   debugtimer = debugtimer-1
-  if debugtimer < 0 and pressed.enter then
+  if debugtimer < 0 and pressed["return"] then
     DEBUG = not DEBUG
     debugtimer = 10
   end
@@ -197,16 +195,16 @@ function control (o)
 
     setType(o, hittimer > 10 and "RINK_ATTACK" or "RINK")
     hittimer = hittimer-1
-    if hittimer < 0 and pressed.space then
-      setType(o, "RINK_ATTACK")
-      local as = {audios.hah,audios.hah2,audios.hah3}
-      play(as[floor(math.random()*2)])
+    if hittimer < 0 and pressed[" "] then
+--      setType(o, "RINK_ATTACK")
+--      local as = {audios.hah,audios.hah2,audios.hah3}
+--      play(as[floor(math.random()*2)])
       hittimer = 20
     end
 
-    if o.type ~= "RINK" then
+    if o.type == "RINK" then
       local as = {"RINK_WALK", "RINK", "RINK_HOLD"}
-      setType(o, as[floor(math.sin(now/100)/2*3)+1])
+      setType(o, as[floor(math.sin(now/100)*1.5+2.5)])
     end
 
     arrow = false;
@@ -224,7 +222,7 @@ function control (o)
     )
 
     hittimer = hittimer-1
-    if hittimer < 0 and pressed.space then
+    if hittimer < 0 and pressed[" "] then
       setType(o, "RINK_ATTACK")
 --      play([audios.hah,audios.hah2,audios.hah3][~~(Math.random()*2)])
       hittimer = 20
@@ -274,10 +272,13 @@ function draw_layers()
       local parallax_x = (i/#tiled.layers - 0.5) * parallax_x + 1
       local parallax_y = (i/#tiled.layers - 0.5) * parallax_y + 1
 
-      local x = camera.x-g.getWidth()/2/camera.zoom
-      local y = camera.y-g.getHeight()/2/camera.zoom
-      local w = g:getWidth()/camera.zoom
-      local h = g:getHeight()/camera.zoom
+      local x = camera.x * (1-parallax_x)
+      local y = camera.y * (1-parallax_y)
+
+      if layer.name == "Water" then
+        x = x - ((now+math.sin(now))%5000)/5000 * 4 * tw
+        y = math.sin(now/500)*tw/4 + y
+      end
 
       g.setColor(255, 255, 255, 255*layer.opacity)
       g.draw(layer.cache, x,y, 0, parallax_x,parallax_y);
@@ -307,10 +308,12 @@ function draw_obj (i, o)
 
       local sx if o.vx < 0 then sx=-1 else sx=1 end
       g.setColor(255,255,255,255)
-      g.draw(tileset, quads[sprites_indexOf[o.type]], o.x-tw/2, o.y-tw, 0, sx)
-      g.rectangle("line", o.x-tw/2, o.y-tw, tw, tw)
-      g.rectangle("fill", o.x-2, o.y-2, 4, 4)
+      g.draw(tileset, quads[sprites_indexOf[o.type]], o.x-tw/2-(sx-1)*tw/2, o.y-tw, 0, sx, 1)
 
+      if DEBUG then
+        g.rectangle("line", o.x-tw/2, o.y-tw, tw, tw)
+        g.rectangle("fill", o.x-2, o.y-2, 4, 4)
+      end
     end
   end
 end
@@ -337,15 +340,16 @@ function move_obj (o)
   end
 
   local w = tw/2
-  if o.vx <= 0 then
-    if o.vx < 0 then w = -w end
-    if solid(o.x+o.vx+w, o.y) or grid(o.x, o.y) then
+  local facing = 1
+  if o.vx < 0 then facing = -1 end
+  if o.vx ~= 0 then
+    if solid(o.x+o.vx+facing*w, o.y) or grid(o.x, o.y) then
       o.vx = 0
     end
   end
 
   o.ground = o.vy >= 0 and (
-    solid(o.x, o.y+o.vy+w+1) or
+    solid(o.x, o.y+o.vy+1) or
     grid(o.x, o.y+o.vy+1) or
     (not o.type=="BLOCK" and grid(o.x, o.y) and block(o.x, o.y+o.vy+1))
   )
