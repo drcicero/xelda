@@ -9,19 +9,19 @@ local switchs = {}
 function setSwitch (sw, bool)
   local reverse = sw[0] == "!"
   if reverse then
-    sw = sw.substring(1);
-    bool = !bool;
+    sw = sw.sub(1)
+    bool = not bool
   end
   if switchs[sw] ~= bool then
     print(sw, switchs[sw], bool)
-    play(audios.schwupp)
+--    play(audios.schwupp)
     switchs[sw] = bool
   end
 end
 function getSwitch (sw)
   local reverse = sw[0] == "!"
-  if reverse then sw = sw.substring(1) end
-  return !!(switchs[sw]) == !reverse
+  if reverse then sw = sw.sub(1) end
+  return switchs[sw] == not reverse
 end
 
 function clamp (min, x, max)
@@ -69,10 +69,10 @@ function collision (x1, y1, x2, y2, r1, r2)
 
   if DEBUG then
     if sq_r/sq_d > 0.1 then
-      g.setColor(255,255,255, 255*Math.min(sq_r/sq_d, 1))
+      g.setColor(255,255,255, 255*math.min(sq_r/sq_d, 1))
       g.line(x1, y1, x2, y2)
-      g.circle(x1, y1, r1)
-      g.circle(x2, y2, r2)
+      g.circle("fill", x1, y1, r1)
+      g.circle("fill", x2, y2, r2)
     end
   end
 
@@ -107,7 +107,7 @@ function love.load ()
     "SLIME", "ESLIME", "PIG", "SKELETON", "BAT1", "BAT2", "BAT_SIT", "GHOST",
     "HASH", "LAMP", "GLOVE", "BOW", "CONTAINER", "KEY", "?", "?",
     "BIGKEY", "BLOCK", "BOMB1", "BOMB2", "YELLOW", "CYAN", "MAGENTA", "?",
-    "HEART_EMPTY", "HEART_HALF", "HEART", "RUBY", "RUBY5", "RUBY10", "RUBY50", "RUBY100",
+    "HEART_EMPTY", "HEART_HALF", "HEART", "RUBY1", "RUBY5", "RUBY10", "RUBY50", "RUBY100",
     "ARROWS", "?", "?", "?", "DUMMY", "BOMB", "ARROW", "NUT",
     "?", "?", "?", "?", "?", "?", "?", "LOCK",
     "?", "?", "?", "?", "?", "?", "?", "HOLE",
@@ -156,7 +156,7 @@ function love.load ()
   end
 
   projectiles = {}
-  table.insert(tiled.layers, {type="objectgroup", objects=projectiles})
+  table.insert(tiled.layers, {type="objectgroup", objects=projectiles, name="projectiles"})
 
   camera = { zoom = 1.5 }
 
@@ -273,7 +273,7 @@ function control (o)
     hittimer = hittimer-1
     if hittimer < 0 and pressed[" "] then
       setType(o, "RINK_ATTACK")
---      play([audios.hah,audios.hah2,audios.hah3][~~(Math.random()*2)])
+--      play([audios.hah,audios.hah2,audios.hah3][~~(math.random()*2)])
       hittimer = 20
 
     elseif pressed.down then            setType(o, "RINK_SHIELD")
@@ -338,13 +338,125 @@ function draw_layers()
   end
 end
 
+function arrow_hurt (x)
+  for i,s in ipairs({"TRIGGER", "TRIGGER2", "EYE", "EYE2", "BAT1", "BAT2", "BAT_SIT", "SLIME", "PIG", "SKELETON", "GHOST"}) do
+    if x == s then return true end
+  end return false
+end
+
+function sword_hurt (x)
+  for i,s in ipairs({"GRASS", "LOCK", "CHEST", "LAMPPOST_ON", "TRIGGER", "TRIGGER2", "EYE", "EYE2", "BAT1", "BAT2", "BAT_SIT", "SLIME", "PIG", "SKELETON", "GHOST"}) do
+    if x == s then return true end
+  end return false
+end
+
+function player_hurt (x)
+  for i,s in ipairs({"BAT1", "BAT2", "NUT", "BAT_SIT", "PIG", "SLIME", "ESLIME", "SKELETON"}) do
+    if x == s then return true end
+  end return false
+end
+
+
+function add_obj (type, x, y, vx, vy)
+  local o
+  for i,p in ipairs(projectiles) do
+    if p.disabled then
+      o = p
+      break
+    end
+  end
+  if not o then
+    o = {}
+    table.insert(projectiles, o)
+  end
+
+  setType(o, type)
+  o.timer = 0
+  o.x = x
+  o.y = y
+  o.vx = vx or 0
+  o.vy = vy or 0
+  o.properties = {}
+  o.disabled = false
+end
+
+function hurt_enemy (o)
+  if o.type == "CHEST" then
+    o.disabled = true
+--    music("Triumph")
+--    _music.seek(0)
+    local tmp = control
+    control = function () end
+    setType(player_obj, "RINK_HOLD")
+
+    add_obj(o.properties.item, o.x, o.y-tw, 0, -4)
+
+    local tmp2 = love.update
+    local start = now
+
+    local time = 1000 --[[audios.Triumph.duration*1000 CONTAINER BIGKEY BOW LAMP]]
+
+    love.update = function ()
+      calc_fps()
+
+      if now - start > time then
+        control = tmp
+        love.update = tmp2
+      end
+    end
+
+  else
+--  play(audios.hit)
+    add_obj(
+      player.health < player.hearts*2 and Math.random() > 0.5 and "HEART"
+      or player.bow and Math.random() > 0.5 and "ARROWS" or "RUBY1",
+      o.x, o.y-tw, 0, -4
+    )
+    o.disabled = true
+
+  end
+end
+
 local updates = {}
 function update_obj (i, o)
   if not o.disabled then
     objs = objs+1
     o.timer = o.timer-1
+
     local update = updates[o.type]
     if update then update(o) end
+
+    if arrow_hurt(o.type) then
+      for i,p in ipairs(projectiles) do
+        if p.timer <= 0 and p.type == "ARROW" and collision(o.x,o.y, p.x,p.y, tw/2,tw/2) then
+          hurt_enemy(o)
+        end
+      end
+    end
+
+    if player_obj.type == "RINK_ATTACK" and sword_hurt(o.type)
+    and collision(player_obj.x - player.facing*10, player_obj.y, o.x, o.y, tw/4, tw/2) then
+      hurt_enemy(o)
+    end
+
+    if player_obj.timer < 0 and player_obj.type ~= "RINK_SHIELD"
+    and player_hurt(o)
+    and pl_col(o.x, o.y, tw/2) then
+      hurt_player()
+    end
+
+    if o.type:sub(1, 4) == "RUBY" and pl_col(o.x, o.y, tw/4) then
+--    play(audios.ding)
+      player.rubies = player.rubies + tonumber(o.type:sub(5))
+      o.disabled = true
+
+    elseif not player.grab and pressed.c
+    and (o.type == "CYAN" or o.type == "YELLOW" or o.type == "MAGENTA")
+    and pl_col(o.x, o.y, tw/4) then
+      player.grab = o;
+    end
+
+
   end
 end
 
@@ -389,10 +501,10 @@ function move_obj (o)
   end
 
   local w = tw/2
-  local facing = 1
-  if o.vx < 0 then facing = -1 end
+  if o.vx < 0 then player.facing = -1 else player.facing = 1 end
+
   if o.vx ~= 0 then
-    if solid(o.x+o.vx+facing*w, o.y) or grid(o.x, o.y) then
+    if solid(o.x+o.vx+player.facing*w, o.y) or grid(o.x, o.y) then
       o.vx = 0
     end
   end
