@@ -79,15 +79,13 @@ function love.load ()
   for i,layer in ipairs(tiled.layers) do
     if layer.type == "objectgroup" then
       for i,o in ipairs(layer.objects) do
-        o.x = o.x + tw/2
-        o.y = o.y - tw/2
-        o.timer = 0
+        if o.properties.player then player_obj = o end
+        setType(o, sprites[o.gid] or "DUMMY")
+        o.x = o.x+tw/2
+        o.y = o.y-tw/2
         o.vx = 0
         o.vy = 0
-        setType(o, sprites[o.gid] or "DUMMY")
-        if o.properties.player then
-          player_obj = o
-        end
+        o.timer = 0
       end
 
     elseif layer.type == "tilelayer" and layer.opacity then
@@ -231,12 +229,13 @@ function draw_obj (i, o)
 end
 
 function map(map, x, y)
-  local result = map[floor(x/tw) + floor(y/tw)*tiled.width]
+  local result = map[floor(x/tw) + floor(y/tw)*tiled.width] ~= 0
   if DEBUG then
     if result then g.setColor(255,255,255,51)
     else           g.setColor(0,0,0,51)       end
     g.rectangle("fill", floor(x/tw)*tw, floor(y/tw)*tw, tw, tw)
   end
+  return result
 end
 function solid(x, y) return solidmap and map(solidmap, x, y) end
 function water(x, y) return watermap and map(watermap, x, y-15) end
@@ -267,6 +266,7 @@ function move_obj (o)
   if not o.water then
     if o.ground then
       o.vx = 0.8*o.vx
+
     else
       o.vx = o.vx * 0.8
       o.vy = o.vy+0.5
