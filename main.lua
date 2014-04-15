@@ -38,6 +38,32 @@ function setType (o, type)
   return o
 end
 
+function collision (x1, y1, x2, y2, r1, r2)
+  collisions = collisions+1
+
+  local dx = x1-x2
+  local dy = y1-y2
+  local sq_d = dx*dx + dy*dy
+
+  local r = r1 + r2
+  local sq_r = r * r
+
+  if DEBUG then
+    if sq_r/sq_d > 0.1 then
+      g.setColor(255,255,255, 255*Math.min(sq_r/sq_d, 1))
+      g.line(x1, y1, x2, y2)
+      g.circle(x1, y1, r1)
+      g.circle(x2, y2, r2)
+    end
+  end
+
+  return sq_d < sq_r
+end
+function pl_col (x, y, r)
+  return collision (player_obj.x, player_obj.y, x, y, tw/2, r)
+end
+
+
 function love.load ()
   tiled = require "puzzle"
   tw = tiled.tilewidth
@@ -124,6 +150,10 @@ function love.load ()
   camera.y = clamp(cam_min_y, player_obj.y, cam_max_y)
 
   g.setFont(g.newFont(12))
+
+  music = love.audio.newSource "Xelda.mp3"
+  music:setLooping(true)
+  music:play()
 end
 
 local now = love.timer.getTime()
