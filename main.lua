@@ -232,8 +232,8 @@ function move_obj (o)
     o.vy = 0.9*o.vy
   end
 
+  local w = tw/2
   if o.vx <= 0 then
-    local w = tw/2
     if o.vx < 0 then w = -w end
     if solid(o.x+o.vx+w, o.y) or grid(o.x, o.y) then
       o.vx = 0
