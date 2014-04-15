@@ -5,6 +5,25 @@ local g = love.graphics
 local tiled, tw, tileset, projectiles, solidmap, watermap, player, quads
 local DEBUG = true
 
+local switchs = {}
+function setSwitch (sw, bool)
+  local reverse = sw[0] == "!"
+  if reverse then
+    sw = sw.substring(1);
+    bool = !bool;
+  end
+  if switchs[sw] ~= bool then
+    print(sw, switchs[sw], bool)
+    play(audios.schwupp)
+    switchs[sw] = bool
+  end
+end
+function getSwitch (sw)
+  local reverse = sw[0] == "!"
+  if reverse then sw = sw.substring(1) end
+  return !!(switchs[sw]) == !reverse
+end
+
 function clamp (min, x, max)
   if x < min then return min
   elseif x > max then return max
