@@ -124,24 +124,28 @@ function love.load ()
   g.setFont(g.newFont(11))
 end
 
-local dt = dt
-function love.update (dt_)
-  dt = dt_
-end
-
 local last_frame
 local now = love.timer.getTime()
 local last_frame = now
 local fps = 0
-
 function calc_fps()
-  now = love.timer.getTime()
+  now = love.timer.getTime()*1000
   local dt = now - last_frame
-  fps = (0 * fps + 1000 / dt) / 1
+  fps = (59 * fps + 1000 / dt) / 60
   last_frame = now
 end
 
 function love.draw()
+  g.clear()
+  g.push()
+  g.scale(camera.zoom, camera.zoom)
+  g.translate(cam_min_x-camera.x, cam_min_y-camera.y)
+  draw_layers()
+  g.pop()
+  draw_hud()
+end
+
+function love.update ()
   calc_fps()
 
   collisions = 0
@@ -151,22 +155,14 @@ function love.draw()
   camera.x = camera.x + (clamp(cam_min_x, player_obj.x, cam_max_x) - camera.x) / 6
   camera.y = camera.x + (clamp(cam_min_y, player_obj.y, cam_max_y) - camera.y) / 12
 
-  g.clear()
-  g.push()
-    g.scale(camera.zoom, camera.zoom)
-    g.translate(cam_min_x-camera.x, cam_min_y-camera.y)
-
-    --control(player_obj)
-    draw_layers()
-  g.pop()
-
-  draw_hud()
+--  control(player_obj)
+  update_layers()
 end
 
 s = ""
 function draw_hud ()
   g.setColor(255, 255, 255, 255)
-  g.print("fps: " .. floor(dt), 10, 70)
+  g.print("fps: " .. floor(fps), 10, 70)
   g.print("collisions: " .. floor(collisions), 10, 85)
   g.print("objs: " .. floor(objs), 10, 100)
 
@@ -176,6 +172,15 @@ function draw_hud ()
 --  end
 
   s = ""
+end
+
+function update_layers()
+  for i,layer in ipairs(tiled.layers) do
+    if layer.cache then
+    else
+      table.foreach(layer.objects, update_obj)
+    end
+  end
 end
 
 function draw_layers()
@@ -202,19 +207,23 @@ function draw_layers()
 end
 
 local updates = {}
-function draw_obj (i, o)
+function update_obj (i, o)
   if not o.disabled then
     objs = objs+1
     o.timer = o.timer-1
     move_obj(o)
-
     local update = updates[o.type]
     if update then update(o) end
+  end
+end
 
+function draw_obj (i, o)
+  if not o.disabled then
     if camera.x - cam_min_x < o.x and o.x < camera.x + cam_min_x
     and camera.y - cam_min_y < o.y and o.y < camera.y + cam_min_y then
 
       local sx if o.vx < 0 then sx=-1 else sx=1 end
+      g.setColor(255,255,255,255)
       g.draw(tileset, quads[sprites_indexOf[o.type]], o.x-tw/2, o.y, 0, sx)
 
     end
