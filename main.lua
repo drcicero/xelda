@@ -16,16 +16,21 @@ local empty = {}
 function setType (o, type)
   local old_type = types[o.type]
   if old_type ~= nil then
-    old_type[i] = empty
-    local i = sprites_indexOf[old_type]
+    for i = 1, #old_type do
+      if old_type[i] == o then
+        old_type[i] = empty
+        break
+      end
+    end
   end
 
   o.type = type
   local need_new = true
-  for i = 0, #types do
+  for i = 1, #types do
     if types[i] == empty then
       need_new = false
       types[i] = o
+      break
     end
   end
   if need_new then table.insert(types[type], o) end
@@ -153,8 +158,87 @@ function love.update ()
   camera.x = camera.x + (clamp(cam_min_x, player_obj.x, cam_max_x) - camera.x) / 6
   camera.y = camera.x + (clamp(cam_min_y, player_obj.y, cam_max_y) - camera.y) / 12
 
---  control(player_obj)
+  control(player_obj)
   update_layers()
+end
+
+pressed = {}
+function love.keypressed (e)  pressed[e] = true  end
+function love.keyreleased (e) pressed[e] = false end
+
+local debugtimer = 0
+local arrow = false
+local hittimer = 0
+local bowtimer = 0
+function control (o)
+  debugtimer = debugtimer-1
+  if debugtimer < 0 and pressed.enter then
+    DEBUG = not DEBUG
+    debugtimer = 10
+  end
+
+  if o.water then
+--    if _music ~= audios.Beach then
+--      play(audios.schwupp)
+--      music("Beach")
+--    end
+
+    if pressed.up then       o.vy = o.vy - 0.2
+    elseif pressed.down then o.vy = o.vy + 0.2 end
+
+    if pressed.left then      o.vx = o.vx - 0.2
+    elseif pressed.right then o.vx = o.vx + 0.2 end
+
+    if pressed.up and
+    (solid(o.x-15, o.y) or solid(o.x+15, o.y)) and
+    not water(o.x, o.y-5) then
+      o.vy = -6;
+    end
+
+    setType(o, hittimer > 10 and "RINK_ATTACK" or "RINK")
+    hittimer = hittimer-1
+    if hittimer < 0 and pressed.space then
+      setType(o, "RINK_ATTACK")
+      local as = {audios.hah,audios.hah2,audios.hah3}
+      play(as[floor(math.random()*2)])
+      hittimer = 20
+    end
+
+    if o.type ~= "RINK" then
+      local as = {"RINK_WALK", "RINK", "RINK_HOLD"}
+      setType(o, as[floor(math.sin(now/100)/2*3)+1])
+    end
+
+    arrow = false;
+
+  else
+--    if _music ~= audios.Xelda then
+--      play(audios.schwupp)
+--      music("Xelda")
+--    end
+
+    setType(o,
+      hittimer > 10 and "RINK_ATTACK" or
+      (not arrow and bowtimer <= 15) and "RINK" or
+      "RINK_BOW"
+    )
+
+    hittimer = hittimer-1
+    if hittimer < 0 and pressed.space then
+      setType(o, "RINK_ATTACK")
+--      play([audios.hah,audios.hah2,audios.hah3][~~(Math.random()*2)])
+      hittimer = 20
+
+    elseif pressed.down then            setType(o, "RINK_SHIELD")
+    elseif o.ground and pressed.up then o.vy = -7                 end
+
+    if pressed.left then      o.vx = o.vx - (o.type ~= "RINK" and 0.1 or 0.5)
+    elseif pressed.right then o.vx = o.vx + (o.type ~= "RINK" and 0.1 or 0.5) end
+
+    if o.type == "RINK" and (pressed.left or pressed.right) then
+      setType(o, math.sin(now/100)<0 and "RINK" or "RINK_WALK")
+    end
+  end
 end
 
 s = ""
@@ -209,7 +293,6 @@ function update_obj (i, o)
   if not o.disabled then
     objs = objs+1
     o.timer = o.timer-1
-    move_obj(o)
     local update = updates[o.type]
     if update then update(o) end
   end
@@ -217,12 +300,16 @@ end
 
 function draw_obj (i, o)
   if not o.disabled then
+    move_obj(o)
+
     if camera.x - cam_min_x < o.x and o.x < camera.x + cam_min_x
     and camera.y - cam_min_y < o.y and o.y < camera.y + cam_min_y then
 
       local sx if o.vx < 0 then sx=-1 else sx=1 end
       g.setColor(255,255,255,255)
-      g.draw(tileset, quads[sprites_indexOf[o.type]], o.x-tw/2, o.y, 0, sx)
+      g.draw(tileset, quads[sprites_indexOf[o.type]], o.x-tw/2, o.y-tw, 0, sx)
+      g.rectangle("line", o.x-tw/2, o.y-tw, tw, tw)
+      g.rectangle("fill", o.x-2, o.y-2, 4, 4)
 
     end
   end
