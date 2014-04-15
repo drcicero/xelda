@@ -242,7 +242,7 @@ function move_obj (o)
   o.ground = o.vy >= 0 and (
     solid(o.x, o.y+o.vy+w+1) or
     grid(o.x, o.y+o.vy+1) or
-    (not o.type="BLOCK" and grid(o.x, o.y) and block(o.x, o.y+o.vy+1))
+    (not o.type=="BLOCK" and grid(o.x, o.y) and block(o.x, o.y+o.vy+1))
   )
 
   if not o.water then
