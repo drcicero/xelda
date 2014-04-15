@@ -222,11 +222,11 @@ function draw_obj (i, o)
 end
 
 function map(map, x, y)
-  local result = map[round(x/tw) + round(y/tw)*tiled.width]
+  local result = map[floor(x/tw) + floor(y/tw)*tiled.width]
   if DEBUG then
     if result then g.setColor(255,255,255,51)
     else           g.setColor(0,0,0,51)       end
-    g.rectangle("fill", round(x/tw)*tw, round(y/tw)*tw, tw, tw)
+    g.rectangle("fill", floor(x/tw)*tw, floor(y/tw)*tw, tw, tw)
   end
 end
 function solid(x, y) return solidmap and map(solidmap, x, y) end
