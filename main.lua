@@ -156,7 +156,7 @@ function love.update ()
   bubbles = {}
 
   camera.x = camera.x + (clamp(cam_min_x, player_obj.x, cam_max_x) - camera.x) / 6
-  camera.y = camera.x + (clamp(cam_min_y, player_obj.y, cam_max_y) - camera.y) / 12
+  camera.y = camera.y + (clamp(cam_min_y, player_obj.y, cam_max_y) - camera.y) / 12
 
   control(player_obj)
   update_layers()
