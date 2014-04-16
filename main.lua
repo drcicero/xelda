@@ -1,169 +1,54 @@
+local g = love.graphics
+local stage, tw, projectiles, solidmap, watermap, player
+
+DEBUG = false
+
 require "math"
 floor = math.floor
-local g = love.graphics
 
-local tiled, tw, tileset, projectiles, solidmap, watermap, player, quads
-local DEBUG = true
-
-local switchs = {}
-function setSwitch (sw, bool)
-  local reverse = sw[0] == "!"
-  if reverse then
-    sw = sw.sub(1)
-    bool = not bool
-  end
-  if switchs[sw] ~= bool then
-    print(sw, switchs[sw], bool)
---    play(audios.schwupp)
-    switchs[sw] = bool
-  end
-end
-function getSwitch (sw)
-  local reverse = sw[0] == "!"
-  if reverse then sw = sw.sub(1) end
-  return switchs[sw] == not reverse
-end
-
-function clamp (min, x, max)
-  if x < min then return min
-  elseif x > max then return max
-  else return x end
-end
-
-local types = {}
-local empty = {}
-function setType (o, type)
-  local old_type = types[o.type]
-  if old_type ~= nil then
-    for i = 1, #old_type do
-      if old_type[i] == o then
-        old_type[i] = empty
-        break
-      end
-    end
-  end
-
-  o.type = type
-  local need_new = true
-  for i = 1, #types do
-    if types[i] == empty then
-      need_new = false
-      types[i] = o
-      break
-    end
-  end
-  if need_new then table.insert(types[type], o) end
-
-  return o
-end
-
-function collision (x1, y1, x2, y2, r1, r2)
-  collisions = collisions+1
-
-  local dx = x1-x2
-  local dy = y1-y2
-  local sq_d = dx*dx + dy*dy
-
-  local r = r1 + r2
-  local sq_r = r * r
-
-  if DEBUG then
-    if sq_r/sq_d > 0.1 then
-      g.setColor(255,255,255, 255*math.min(sq_r/sq_d, 1))
-      g.line(x1, y1, x2, y2)
-      g.circle("fill", x1, y1, r1)
-      g.circle("fill", x2, y2, r2)
-    end
-  end
-
-  return sq_d < sq_r
-end
-function pl_col (x, y, r)
-  return collision (player_obj.x, player_obj.y, x, y, tw/2, r)
-end
-
+require "clamp"
+require "switchs"
+require "setType"
+require "collision"
+tiled = require "tiled"
 
 function love.load ()
-  tiled = require "puzzle"
-  tw = tiled.tilewidth
+  CANVAS = g.isSupported("canvas", "npot")
+
+  player = {health=6, hearts=3, keys=0, rubies=0, arrows=0}
   solidmap = false
   watermap = false
-  player = {health=6, hearts=3, keys=0, rubies=0, arrows=0}
 
-  tileset = love.graphics.newImage "tileset.png"
+  stage = require "maps/puzzle"
+  tw = stage.tilewidth
+  tiled.load(tw)
 
-  quads = {}
-  local setw = tileset:getWidth()
-  local seth = tileset:getHeight()
-  local sw = setw / tw
-  for i = 0, setw/tw * seth/tw do
-    local quad = g.newQuad((i%sw)*tw, floor(i/sw)*tw, tw, tw, setw, seth)
-    table.insert(quads, quad)
-  end
-
-  sprites = {
-    "XELDA", "XELDA_WALK", "XELDA_SHIELD", "XELDA_HOLD", "XELDA_ATTACK", "XELDA_ATTACK2", "XELDA_BOW", "?",
-    "RINK", "RINK_WALK", "RINK_SHIELD", "RINK_HOLD", "RINK_ATTACK2", "RINK_ATTACK", "RINK_BOW", "?",
-    "SLIME", "ESLIME", "PIG", "SKELETON", "BAT1", "BAT2", "BAT_SIT", "GHOST",
-    "HASH", "LAMP", "GLOVE", "BOW", "CONTAINER", "KEY", "?", "?",
-    "BIGKEY", "BLOCK", "BOMB1", "BOMB2", "YELLOW", "CYAN", "MAGENTA", "?",
-    "HEART_EMPTY", "HEART_HALF", "HEART", "RUBY1", "RUBY5", "RUBY10", "RUBY50", "RUBY100",
-    "ARROWS", "?", "?", "?", "DUMMY", "BOMB", "ARROW", "NUT",
-    "?", "?", "?", "?", "?", "?", "?", "LOCK",
-    "?", "?", "?", "?", "?", "?", "?", "HOLE",
-    "?", "?", "SWITCH", "SWITCH2", "?", "?", "?", "CHEST",
-    "?", "?", "?", "TABLET", "SHIELD", "?", "GRASS", "GRID",
-    "?", "?", "TRIGGER", "TRIGGER2", "?", "?", "?", "?",
-    "?", "?", "EYE", "EYE2", "?", "?", "?", "?",
-    "?", "?", "?", "?", "?", "?", "?", "?",
-    "?", "?", "?", "LAMPPOST", "LAMPPOST_ON", "?", "?", "?",
-  }
-  sprites_indexOf = {}
-
-  types = {}
-  for i,s in ipairs(sprites) do
-    types[s] = {}
-    sprites_indexOf[s] = i
-  end
-
-  for i,layer in ipairs(tiled.layers) do
+  for i,layer in ipairs(stage.layers) do
     if layer.type == "objectgroup" then
       for i,o in ipairs(layer.objects) do
         if o.properties.player then player_obj = o end
         setType(o, sprites[o.gid] or "DUMMY")
-        o.x = o.x+tw+tw/2
-        o.y = o.y
+        o.x = o.x+tw*3/2
         o.vx = 0
         o.vy = 0
         o.timer = 0
       end
 
     elseif layer.type == "tilelayer" and layer.opacity then
-      local lw = layer.width
       if     layer.name == "Ground" then solidmap = layer.data
       elseif layer.name == "Water"  then watermap = layer.data end
-
-      local cache = g.newCanvas(tiled.width * tiled.tilewidth, tiled.height * tiled.tileheight)
-      cache:renderTo(function ()
-        for i,tile in ipairs(layer.data) do
-          if tile ~= 0 then
-            g.draw(tileset, quads[tile], (i%lw)*tw, floor(i/lw)*tw)
-          end
-        end
-      end)
-      layer.cache = cache
     end
   end
 
   projectiles = {}
-  table.insert(tiled.layers, {type="objectgroup", objects=projectiles, name="projectiles"})
+  table.insert(stage.layers, {type="objectgroup", objects=projectiles, name="projectiles"})
 
   camera = { zoom = 1.5 }
 
   cam_min_x = g:getWidth()/camera.zoom / 2
   cam_min_y = g:getHeight()/camera.zoom / 2
-  cam_max_x = tiled.width * tiled.tilewidth - cam_min_x
-  cam_max_y = tiled.height * tiled.tileheight - cam_min_y
+  cam_max_x = stage.width * stage.tilewidth - cam_min_x
+  cam_max_y = stage.height * stage.tileheight - cam_min_y
 
   camera.x = clamp(cam_min_x, player_obj.x, cam_max_x)
   camera.y = clamp(cam_min_y, player_obj.y, cam_max_y)
@@ -173,6 +58,21 @@ function love.load ()
   music = love.audio.newSource "Xelda.mp3"
   music:setLooping(true)
   music:play()
+
+  if CANVAS then
+    for i,layer in ipairs(stage.layers) do
+      if layer.type == "tilelayer" then
+        local cache = g.newCanvas(stage.width * stage.tilewidth, stage.height * stage.tileheight)
+
+        g.setCanvas(cache)
+        g.setColor(255, 255, 255, 255*layer.opacity)
+        tiled.draw_layer(layer, 0, 0, 0, 1, 1)
+
+        layer.cache = cache
+      end
+    end
+  end
+  g.setCanvas()
 end
 
 local now = love.timer.getTime()
@@ -188,11 +88,15 @@ end
 function love.draw()
   g.clear()
   g.push()
-  g.scale(camera.zoom, camera.zoom)
-  g.translate(cam_min_x-camera.x, cam_min_y-camera.y)
-  control(player_obj)
-  draw_layers()
+    g.scale(camera.zoom, camera.zoom)
+    g.translate(cam_min_x-camera.x, cam_min_y-camera.y)
+
+    control(player_obj)
+    draw_layers()
+    update_layers()
+
   g.pop()
+
   draw_hud()
 end
 
@@ -205,8 +109,6 @@ function love.update ()
 
   camera.x = camera.x + (clamp(cam_min_x, player_obj.x, cam_max_x) - camera.x) / 6
   camera.y = camera.y + (clamp(cam_min_y, player_obj.y, cam_max_y) - camera.y) / 12
-
-  update_layers()
 end
 
 pressed = {}
@@ -304,23 +206,19 @@ function draw_hud ()
 end
 
 function update_layers()
-  for i,layer in ipairs(tiled.layers) do
-    if layer.cache then
-    else
+  for i,layer in ipairs(stage.layers) do
+    if layer.type == "objectgroup" then
       table.foreach(layer.objects, update_obj)
     end
   end
 end
 
 function draw_layers()
-  for i,layer in ipairs(tiled.layers) do
-    if layer.cache then
+  for i,layer in ipairs(stage.layers) do
+    if layer.type == "tilelayer" then
       local lprop = layer.properties
-      local parallax_x = tonumber(lprop and lprop.parallax_x or 0)
-      local parallax_y = tonumber(lprop and lprop.parallax_y or 0)
-      local parallax_x = (i/#tiled.layers - 0.5) * parallax_x + 1
-      local parallax_y = (i/#tiled.layers - 0.5) * parallax_y + 1
-
+      local parallax_x = (i/#stage.layers - 0.5) * tonumber(lprop and lprop.parallax_x or 0) + 1
+      local parallax_y = (i/#stage.layers - 0.5) * tonumber(lprop and lprop.parallax_y or 0) + 1
       local x = camera.x * (1-parallax_x)
       local y = camera.y * (1-parallax_y)
 
@@ -329,10 +227,18 @@ function draw_layers()
         y = math.sin(now/500) * tw/4 + y
       end
 
-      g.setColor(255, 255, 255, 255*layer.opacity)
-      g.draw(layer.cache, x,y, 0, parallax_x,parallax_y);
+      if CANVAS then
+        g.setColor(255, 255, 255, 255)
+        g.setBlendMode("premultiplied")
+        g.draw(layer.cache, x, y, 0, parallax_x, parallax_y)
+        g.setBlendMode("alpha")
 
-    else
+      else
+        g.setColor(255, 255, 255, 255*layer.opacity)
+        tiled.draw_layer(layer, x, y, 0, parallax_x, parallax_y)
+      end
+
+    elseif layer.type == "objectgroup" then
       table.foreach(layer.objects, draw_obj)
     end
   end
@@ -428,31 +334,31 @@ function update_obj (i, o)
 
     if arrow_hurt(o.type) then
       for i,p in ipairs(projectiles) do
-        if p.timer <= 0 and p.type == "ARROW" and collision(o.x,o.y, p.x,p.y, tw/2,tw/2) then
+        if p.timer <= 0 and p.type == "ARROW" and collision(o.x,o.y-tw/2, p.x,p.y-tw/2, tw/2,tw/2) then
           hurt_enemy(o)
         end
       end
     end
 
     if player_obj.type == "RINK_ATTACK" and sword_hurt(o.type)
-    and collision(player_obj.x - player.facing*10, player_obj.y, o.x, o.y, tw/4, tw/2) then
+    and collision(player_obj.x + player_obj.facing*10, player_obj.y-tw/2, o.x, o.y-tw/2, tw/4, tw/2) then
       hurt_enemy(o)
     end
 
     if player_obj.timer < 0 and player_obj.type ~= "RINK_SHIELD"
     and player_hurt(o)
-    and pl_col(o.x, o.y, tw/2) then
+    and pl_col(o.x, o.y-tw/2, tw/2) then
       hurt_player()
     end
 
-    if o.type:sub(1, 4) == "RUBY" and pl_col(o.x, o.y, tw/4) then
+    if o.type:sub(1, 4) == "RUBY" and pl_col(o.x, o.y-tw/2, tw/4) then
 --    play(audios.ding)
       player.rubies = player.rubies + tonumber(o.type:sub(5))
       o.disabled = true
 
     elseif not player.grab and pressed.c
     and (o.type == "CYAN" or o.type == "YELLOW" or o.type == "MAGENTA")
-    and pl_col(o.x, o.y, tw/4) then
+    and pl_col(o.x, o.y-tw/2, tw/4) then
       player.grab = o;
     end
 
@@ -469,7 +375,7 @@ function draw_obj (i, o)
 
       local sx if o.vx < 0 then sx=-1 else sx=1 end
       g.setColor(255,255,255,255)
-      g.draw(tileset, quads[sprites_indexOf[o.type]], o.x-tw/2-(sx-1)*tw/2, o.y-tw, 0, sx, 1)
+      g.draw(tiled.tileset, tiled.quads[sprites_indexOf[o.type]], o.x-tw/2-(sx-1)*tw/2, o.y-tw, 0, sx, 1)
 
       if DEBUG then
         g.rectangle("line", o.x-tw/2, o.y-tw, tw, tw)
@@ -480,7 +386,7 @@ function draw_obj (i, o)
 end
 
 function map(map, x, y)
-  local result = map[floor(x/tw) + floor(y/tw)*tiled.width] ~= 0
+  local result = map[floor(x/tw) + floor(y/tw)*stage.width] ~= 0
   if DEBUG then
     if result then g.setColor(255,255,255,51)
     else           g.setColor(0,0,0,51)       end
@@ -501,10 +407,10 @@ function move_obj (o)
   end
 
   local w = tw/2
-  if o.vx < 0 then player.facing = -1 else player.facing = 1 end
+  if o.vx < 0 then o.facing = -1 else o.facing = 1 end
 
   if o.vx ~= 0 then
-    if solid(o.x+o.vx+player.facing*w, o.y) or grid(o.x, o.y) then
+    if solid(o.x+o.vx+o.facing*w, o.y) or grid(o.x, o.y) then
       o.vx = 0
     end
   end
