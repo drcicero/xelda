@@ -325,8 +325,8 @@ function draw_layers()
       local y = camera.y * (1-parallax_y)
 
       if layer.name == "Water" then
-        x = x - ((now+math.sin(now))%5000)/5000 * 4 * tw
-        y = math.sin(now/500)*tw/4 + y
+        x = x - (now%1000)/1000 * tw*1.25
+        y = math.sin(now/500) * tw/4 + y
       end
 
       g.setColor(255, 255, 255, 255*layer.opacity)
