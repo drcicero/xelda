@@ -4,7 +4,7 @@ local g = love.graphics
 
 function tiled.load (tw_)
   tw = tw_
-  tiled.tileset = love.graphics.newImage "tileset.png"
+  tiled.tileset = love.graphics.newImage "assets/tileset.png"
 
   tiled.quads = {}
   local quads = tiled.quads

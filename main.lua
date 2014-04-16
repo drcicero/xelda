@@ -7,13 +7,17 @@ require "math"
 floor = math.floor
 
 require "clamp"
+require "audio"
 require "switchs"
 require "setType"
 require "collision"
+audio = require "audio"
 tiled = require "tiled"
 
 function love.load ()
   CANVAS = g.isSupported("canvas", "npot")
+
+  audio.load()
 
   player = {health=6, hearts=3, keys=0, rubies=0, arrows=0}
   solidmap = false
@@ -55,9 +59,7 @@ function love.load ()
 
   g.setFont(g.newFont(12))
 
-  music = love.audio.newSource "Xelda.mp3"
-  music:setLooping(true)
-  music:play()
+  audio.music "Xelda"
 
   if CANVAS then
     for i,layer in ipairs(stage.layers) do
@@ -115,11 +117,17 @@ pressed = {}
 function love.keypressed (e)  pressed[e] = true  end
 function love.keyreleased (e) pressed[e] = false end
 
-local debugtimer = 0
 local arrow = false
+local fullscreentimer = 0
+local debugtimer = 0
 local hittimer = 0
 local bowtimer = 0
 function control (o)
+  fullscreentimer = fullscreentimer-1
+  if pressed.lalt and pressed["return"] then
+    love.window.setFullscreen(not love.window.getFullscreen())
+    fullscreentimer = 10
+  end
   debugtimer = debugtimer-1
   if debugtimer < 0 and pressed["return"] then
     DEBUG = not DEBUG
@@ -127,10 +135,10 @@ function control (o)
   end
 
   if o.water then
---    if _music ~= audios.Beach then
---      play(audios.schwupp)
---      music("Beach")
---    end
+    if audio._music ~= "Beach" then
+      audio.play "schwupp"
+      audio.music "Beach"
+    end
 
     if pressed.up then       o.vy = o.vy - 0.2
     elseif pressed.down then o.vy = o.vy + 0.2 end
@@ -161,10 +169,10 @@ function control (o)
     arrow = false;
 
   else
---    if _music ~= audios.Xelda then
---      play(audios.schwupp)
---      music("Xelda")
---    end
+    if audio._music ~= "Xelda" then
+      audio.play "schwupp"
+      audio.music "Xelda"
+    end
 
     setType(o,
       hittimer > 10 and "RINK_ATTACK" or
@@ -289,8 +297,10 @@ end
 function hurt_enemy (o)
   if o.type == "CHEST" then
     o.disabled = true
---    music("Triumph")
---    _music.seek(0)
+
+    audio.music()
+    audio.play "Triumph"
+
     local tmp = control
     control = function () end
     setType(player_obj, "RINK_HOLD")
@@ -300,7 +310,7 @@ function hurt_enemy (o)
     local tmp2 = love.update
     local start = now
 
-    local time = 1000 --[[audios.Triumph.duration*1000 CONTAINER BIGKEY BOW LAMP]]
+    local time = 7000 --[[audios.Triumph.duration*1000 CONTAINER BIGKEY BOW LAMP]]
 
     love.update = function ()
       calc_fps()
@@ -312,7 +322,7 @@ function hurt_enemy (o)
     end
 
   else
---  play(audios.hit)
+    audio.play "hit"
     add_obj(
       player.health < player.hearts*2 and Math.random() > 0.5 and "HEART"
       or player.bow and Math.random() > 0.5 and "ARROWS" or "RUBY1",
@@ -328,6 +338,8 @@ function update_obj (i, o)
   if not o.disabled then
     objs = objs+1
     o.timer = o.timer-1
+
+    move_obj(o)
 
     local update = updates[o.type]
     if update then update(o) end
@@ -352,7 +364,7 @@ function update_obj (i, o)
     end
 
     if o.type:sub(1, 4) == "RUBY" and pl_col(o.x, o.y-tw/2, tw/4) then
---    play(audios.ding)
+      audio.play "ding"
       player.rubies = player.rubies + tonumber(o.type:sub(5))
       o.disabled = true
 
@@ -368,8 +380,6 @@ end
 
 function draw_obj (i, o)
   if not o.disabled then
-    move_obj(o)
-
     if camera.x - cam_min_x < o.x and o.x < camera.x + cam_min_x
     and camera.y - cam_min_y < o.y and o.y < camera.y + cam_min_y then
 
