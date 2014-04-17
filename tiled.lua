@@ -1,5 +1,5 @@
 local tiled = {}
-local stage, tw
+local tw
 local g = love.graphics
 
 function tiled.load (tw_)
@@ -72,6 +72,56 @@ function tiled.draw_layer (layer, x, y, r, sx, sy)
   if SPRITEBATCH then
     sp:unbind()
     g.draw(sp, x, y, r, sx, sy)
+  end
+end
+
+function tiled.draw_layers()
+  for i,layer in ipairs(stage.layers) do
+    if layer.type == "tilelayer" then
+      local lprop = layer.properties
+      local parallax_x = (i/#stage.layers - 0.5) * tonumber(lprop and lprop.parallax_x or 0) + 1
+      local parallax_y = (i/#stage.layers - 0.5) * tonumber(lprop and lprop.parallax_y or 0) + 1
+      local x = camera.x * (1-parallax_x)
+      local y = camera.y * (1-parallax_y)
+
+      if layer.name == "Water" then
+        x = x - (now%1000)/1000 * tw*1.25
+        y = math.sin(now/500) * tw/4 + y
+      end
+
+      if CANVAS then
+        g.setColor(255, 255, 255, 255)
+        g.setBlendMode("premultiplied")
+        g.draw(layer.cache, x, y, 0, parallax_x, parallax_y)
+        g.setBlendMode("alpha")
+
+      else
+        g.setColor(255, 255, 255, 255*layer.opacity)
+        tiled.draw_layer(layer, x, y, 0, parallax_x, parallax_y)
+      end
+
+    elseif layer.type == "objectgroup" then
+      table.foreach(layer.objects, tiled.draw_obj)
+    end
+  end
+end
+
+function tiled.draw_obj (i, o)
+  if not o.disabled then
+    if camera.x - cam_min_x < o.x and o.x < camera.x + cam_min_x
+    and camera.y - cam_min_y < o.y and o.y < camera.y + cam_min_y then
+
+      if DEBUG then
+        g.setColor(255, 255, 255, 50)
+        g.rectangle("line", o.x-tw/2, o.y-tw, tw, tw)
+        g.rectangle("fill", o.x-2, o.y-2, 4, 4)
+
+      else
+        local sx if o.vx < 0 then sx=-1 else sx=1 end
+        g.setColor(255,255,255,255)
+        g.draw(tiled.tileset, tiled.quads[sprites_indexOf[o.type]], o.x-tw/2-(sx-1)*tw/2, o.y-tw, 0, sx, 1)
+      end
+    end
   end
 end
 

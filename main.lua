@@ -1,5 +1,5 @@
 local g = love.graphics
-local stage, tw, projectiles, solidmap, watermap, player
+local tw, projectiles, player
 
 DEBUG = false
 
@@ -77,7 +77,7 @@ function love.load ()
   g.setCanvas()
 end
 
-local now = love.timer.getTime()
+now = love.timer.getTime()
 local last_frame = now
 local fps = 0
 function calc_fps()
@@ -93,8 +93,8 @@ function love.draw()
     g.scale(camera.zoom, camera.zoom)
     g.translate(cam_min_x-camera.x, cam_min_y-camera.y)
 
+    tiled.draw_layers()
     control(player_obj)
-    draw_layers()
     update_layers()
 
   g.pop()
@@ -221,37 +221,6 @@ function update_layers()
   end
 end
 
-function draw_layers()
-  for i,layer in ipairs(stage.layers) do
-    if layer.type == "tilelayer" then
-      local lprop = layer.properties
-      local parallax_x = (i/#stage.layers - 0.5) * tonumber(lprop and lprop.parallax_x or 0) + 1
-      local parallax_y = (i/#stage.layers - 0.5) * tonumber(lprop and lprop.parallax_y or 0) + 1
-      local x = camera.x * (1-parallax_x)
-      local y = camera.y * (1-parallax_y)
-
-      if layer.name == "Water" then
-        x = x - (now%1000)/1000 * tw*1.25
-        y = math.sin(now/500) * tw/4 + y
-      end
-
-      if CANVAS then
-        g.setColor(255, 255, 255, 255)
-        g.setBlendMode("premultiplied")
-        g.draw(layer.cache, x, y, 0, parallax_x, parallax_y)
-        g.setBlendMode("alpha")
-
-      else
-        g.setColor(255, 255, 255, 255*layer.opacity)
-        tiled.draw_layer(layer, x, y, 0, parallax_x, parallax_y)
-      end
-
-    elseif layer.type == "objectgroup" then
-      table.foreach(layer.objects, draw_obj)
-    end
-  end
-end
-
 function arrow_hurt (x)
   for i,s in ipairs({"TRIGGER", "TRIGGER2", "EYE", "EYE2", "BAT1", "BAT2", "BAT_SIT", "SLIME", "PIG", "SKELETON", "GHOST"}) do
     if x == s then return true end
@@ -339,7 +308,9 @@ function update_obj (i, o)
     objs = objs+1
     o.timer = o.timer-1
 
-    move_obj(o)
+    if o.type ~= "GRID" then
+      move_obj(o)
+    end
 
     local update = updates[o.type]
     if update then update(o) end
@@ -378,35 +349,6 @@ function update_obj (i, o)
   end
 end
 
-function draw_obj (i, o)
-  if not o.disabled then
-    if camera.x - cam_min_x < o.x and o.x < camera.x + cam_min_x
-    and camera.y - cam_min_y < o.y and o.y < camera.y + cam_min_y then
-
-      local sx if o.vx < 0 then sx=-1 else sx=1 end
-      g.setColor(255,255,255,255)
-      g.draw(tiled.tileset, tiled.quads[sprites_indexOf[o.type]], o.x-tw/2-(sx-1)*tw/2, o.y-tw, 0, sx, 1)
-
-      if DEBUG then
-        g.rectangle("line", o.x-tw/2, o.y-tw, tw, tw)
-        g.rectangle("fill", o.x-2, o.y-2, 4, 4)
-      end
-    end
-  end
-end
-
-function map(map, x, y)
-  local result = map[floor(x/tw) + floor(y/tw)*stage.width] ~= 0
-  if DEBUG then
-    if result then g.setColor(255,255,255,51)
-    else           g.setColor(0,0,0,51)       end
-    g.rectangle("fill", floor(x/tw)*tw, floor(y/tw)*tw, tw, tw)
-  end
-  return result
-end
-function solid(x, y) return solidmap and map(solidmap, x, y) end
-function water(x, y) return watermap and map(watermap, x, y-15) end
-function grid() return false end
 function projectileType() return false end
 
 function move_obj (o)
@@ -420,7 +362,7 @@ function move_obj (o)
   if o.vx < 0 then o.facing = -1 else o.facing = 1 end
 
   if o.vx ~= 0 then
-    if solid(o.x+o.vx+o.facing*w, o.y) or grid(o.x, o.y) then
+    if solid(o.x+o.vx+o.facing*w, o.y) or grid(o.x+o.vx, o.y) then
       o.vx = 0
     end
   end

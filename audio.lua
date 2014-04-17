@@ -14,7 +14,6 @@ function audio.load ()
 end
 
 function audio.play (name)
-  print("play", name)
   files[name]:clone():play()
 end
 
