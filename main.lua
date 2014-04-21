@@ -1,392 +1,176 @@
-local g = love.graphics
-local tw, projectiles, player
 
-DEBUG = false
+-- TODO FIXME draw state.pool !!!
+
+local g = love.graphics
+g.setDefaultFilter("linear", "nearest")
+
+tw = 20
+change_level_timer = 0
 
 require "math"
 floor = math.floor
 
+require "saveload"
 require "clamp"
 require "audio"
 require "switchs"
 require "setType"
 require "collision"
+require "update"
 audio = require "audio"
 tiled = require "tiled"
+require "maps"
 
 function love.load ()
-  CANVAS = g.isSupported("canvas", "npot")
+  -- options
+  DEBUG = false
 
+  -- FIXME with canvas tilemaps are no longer visible
+  --CANVAS = g.isSupported("canvas", "npot")
+
+  -- init
+  font = g.newFont(16)
+  g.setFont(font)
+
+  -- load libs
   audio.load()
-
-  player = {health=6, hearts=3, keys=0, rubies=0, arrows=0}
-  solidmap = false
-  watermap = false
-
-  stage = require "maps/puzzle"
-  tw = stage.tilewidth
   tiled.load(tw)
 
-  for i,layer in ipairs(stage.layers) do
-    if layer.type == "objectgroup" then
-      for i,o in ipairs(layer.objects) do
-        if o.properties.player then player_obj = o end
-        setType(o, sprites[o.gid] or "DUMMY")
-        o.x = o.x+tw*3/2
-        o.vx = 0
-        o.vy = 0
-        o.timer = 0
-      end
+  -- load menu
+  change_level "mainmenu"
 
-    elseif layer.type == "tilelayer" and layer.opacity then
-      if     layer.name == "Ground" then solidmap = layer.data
-      elseif layer.name == "Water"  then watermap = layer.data end
-    end
-  end
+  -- the player
+  player = {health=6, hearts=3, keys=0, rubies=0}
 
-  projectiles = {}
-  table.insert(stage.layers, {type="objectgroup", objects=projectiles, name="projectiles"})
+  -- is there a save file?
+  if love.filesystem.exists("save.lua") then setVar("first_play", true) end
 
-  camera = { zoom = 1.5 }
-
-  cam_min_x = g:getWidth()/camera.zoom / 2
-  cam_min_y = g:getHeight()/camera.zoom / 2
-  cam_max_x = stage.width * stage.tilewidth - cam_min_x
-  cam_max_y = stage.height * stage.tileheight - cam_min_y
-
-  camera.x = clamp(cam_min_x, player_obj.x, cam_max_x)
-  camera.y = clamp(cam_min_y, player_obj.y, cam_max_y)
-
-  g.setFont(g.newFont(12))
-
-  audio.music "Xelda"
-
-  if CANVAS then
-    for i,layer in ipairs(stage.layers) do
-      if layer.type == "tilelayer" then
-        local cache = g.newCanvas(stage.width * stage.tilewidth, stage.height * stage.tileheight)
-
-        g.setCanvas(cache)
-        g.setColor(255, 255, 255, 255*layer.opacity)
-        tiled.draw_layer(layer, 0, 0, 0, 1, 1)
-
-        layer.cache = cache
-      end
-    end
-  end
-  g.setCanvas()
+--  -- init special vars
+--  calc_fps()
+--  update_layers()
 end
 
-now = love.timer.getTime()
-local last_frame = now
-local fps = 0
-function calc_fps()
-  now = love.timer.getTime()*1000
-  local dt = now - last_frame
-  fps = (59 * fps + 1000 / dt) / 60
-  last_frame = now
-end
-
-function love.draw()
+function love.draw(dt)
   g.clear()
   g.push()
     g.scale(camera.zoom, camera.zoom)
     g.translate(cam_min_x-camera.x, cam_min_y-camera.y)
 
-    tiled.draw_layers()
-    control(player_obj)
-    update_layers()
-
+    tiled.draw_layers(map, state.pool)
+    if DEBUG then love.update(dt, true) end
   g.pop()
 
   draw_hud()
 end
 
-function love.update ()
-  calc_fps()
+function love.update (dt, from_draw)
+  if from_draw or not DEBUG then
+    calc_fps()
+
+    change_level_timer = change_level_timer-1
+
+    control()
+    update_layers()
+
+    if quit then quit() quit=nil end
+  end
+end
+
+now = love.timer.getTime()
+local last_frame = now
+local fps = 0
+function calc_fps ()
+  now = love.timer.getTime()*1000
+  local dt = now - last_frame
+  fps = (59 * fps + 1000 / dt) / 60
+  last_frame = now
 
   collisions = 0
   objs = 0
   bubbles = {}
-
-  camera.x = camera.x + (clamp(cam_min_x, player_obj.x, cam_max_x) - camera.x) / 6
-  camera.y = camera.y + (clamp(cam_min_y, player_obj.y, cam_max_y) - camera.y) / 12
 end
 
 pressed = {}
 function love.keypressed (e)  pressed[e] = true  end
 function love.keyreleased (e) pressed[e] = false end
 
-local arrow = false
-local fullscreentimer = 0
-local debugtimer = 0
-local hittimer = 0
-local bowtimer = 0
-function control (o)
-  fullscreentimer = fullscreentimer-1
-  if pressed.lalt and pressed["return"] then
-    love.window.setFullscreen(not love.window.getFullscreen())
-    fullscreentimer = 10
-  end
-  debugtimer = debugtimer-1
-  if debugtimer < 0 and pressed["return"] then
-    DEBUG = not DEBUG
-    debugtimer = 10
-  end
-
-  if o.water then
-    if audio._music ~= "Beach" then
-      audio.play "schwupp"
-      audio.music "Beach"
-    end
-
-    if pressed.up then       o.vy = o.vy - 0.2
-    elseif pressed.down then o.vy = o.vy + 0.2 end
-
-    if pressed.left then      o.vx = o.vx - 0.2
-    elseif pressed.right then o.vx = o.vx + 0.2 end
-
-    if pressed.up and
-    (solid(o.x-15, o.y) or solid(o.x+15, o.y)) and
-    not water(o.x, o.y-5) then
-      o.vy = -6;
-    end
-
-    setType(o, hittimer > 10 and "RINK_ATTACK" or "RINK")
-    hittimer = hittimer-1
-    if hittimer < 0 and pressed[" "] then
---      setType(o, "RINK_ATTACK")
---      local as = {audios.hah,audios.hah2,audios.hah3}
---      play(as[floor(math.random()*2)])
-      hittimer = 20
-    end
-
-    if o.type == "RINK" then
-      local as = {"RINK_WALK", "RINK", "RINK_HOLD"}
-      setType(o, as[floor(math.sin(now/100)*1.5+2.5)])
-    end
-
-    arrow = false;
-
-  else
-    if audio._music ~= "Xelda" then
-      audio.play "schwupp"
-      audio.music "Xelda"
-    end
-
-    setType(o,
-      hittimer > 10 and "RINK_ATTACK" or
-      (not arrow and bowtimer <= 15) and "RINK" or
-      "RINK_BOW"
-    )
-
-    hittimer = hittimer-1
-    if hittimer < 0 and pressed[" "] then
-      setType(o, "RINK_ATTACK")
---      play([audios.hah,audios.hah2,audios.hah3][~~(math.random()*2)])
-      hittimer = 20
-
-    elseif pressed.down then            setType(o, "RINK_SHIELD")
-    elseif o.ground and pressed.up then o.vy = -7                 end
-
-    if pressed.left then      o.vx = o.vx - (o.type ~= "RINK" and 0.1 or 0.5)
-    elseif pressed.right then o.vx = o.vx + (o.type ~= "RINK" and 0.1 or 0.5) end
-
-    if o.type == "RINK" and (pressed.left or pressed.right) then
-      setType(o, math.sin(now/100)<0 and "RINK" or "RINK_WALK")
-    end
-  end
-end
-
 s = ""
 function draw_hud ()
+  local x = math.max(0, w/2-400)
+  local y = 0 -- math.max(0, h/2-200)
+
+  g.setColor(0, 0, 0, 10)
+  g.rectangle("fill", 0, 0, x, h)
+  g.rectangle("fill", w-x, 0, x, h)
+  g.rectangle("fill", x, 0, w-2*x, y)
+  g.rectangle("fill", x, h-y, w-2*x, y)
+
+  g.push()
+  g.translate(x, y)
+
   g.setColor(255, 255, 255, 255)
-  g.print("fps: " .. floor(fps), 10, 70)
-  g.print("collisions: " .. floor(collisions), 10, 85)
-  g.print("objs: " .. floor(objs), 10, 100)
+  g.print("fps: " .. floor(fps), 26, 115)
+--  g.print("collisions: " .. floor(collisions), 10, 85)
+--  g.print("objs: " .. floor(objs), 10, 100)
+--  g.print(s, 10, 130);
+--  s = ""
 
---  local lines = string.split(s, "\n")
---  for i in ipairs(lines) do
---    g.print(lines[i], 10, 115+15*i);
---  end
+  for i = 1, player.hearts*2, 2 do
+    local tile_idx =
+      i+1 <= player.health and sprites_indexOf.HEART or
+      i == player.health   and sprites_indexOf.HEART_HALF or
+                               sprites_indexOf.HEART_EMPTY
 
-  s = ""
+    g.draw(tiled.tileset, tiled.quads[tile_idx], 15*i-2, 10, 0, 2, 2)
+  end
+
+  if player.rubies~=0 then
+    g.draw(tiled.tileset, tiled.quads[sprites_indexOf.RUBY1], 14, 50-2, 0, 2, 2)
+    g.print(player.rubies, 14+30, 50+20)
+  end
+
+  if player.keys~=0 then
+    g.draw(tiled.tileset, tiled.quads[sprites_indexOf.KEY], 61, 50+2, 0, 2, 2)
+    g.print(player.keys, 61+30, 50+20)
+  end
+
+  if player.bow then
+    g.draw(tiled.tileset, tiled.quads[sprites_indexOf.ARROW], 109+tw, 50+2+tw, math.pi/2, 2, 2, tw/2, tw/2)
+    g.print(player.arrows or 0, 109+30, 50+20)
+  end
+
+  g.pop()
+  textbubbles()
 end
 
-function update_layers()
-  for i,layer in ipairs(stage.layers) do
-    if layer.type == "objectgroup" then
-      table.foreach(layer.objects, update_obj)
-    end
+function textbubbles ()
+  for i,o in ipairs(bubbles) do
+    local width, height = font:getWrap(o.text, w/3)
+    height = font:getHeight()*height
+    local x = (o.x + cam_min_x-camera.x)*camera.zoom - width/2
+    local y = (o.y + cam_min_y-camera.y - tw*2) *camera.zoom - height
+
+    g.setColor(0, 0, 0, 0.66*255)
+    g.rectangle("fill", x-10, y-10, width+20, height+20)
+
+    g.setColor(255, 255, 255, 255)
+    love.graphics.printf(o.text, x, y, width, "center")
   end
 end
 
-function arrow_hurt (x)
-  for i,s in ipairs({"TRIGGER", "TRIGGER2", "EYE", "EYE2", "BAT1", "BAT2", "BAT_SIT", "SLIME", "PIG", "SKELETON", "GHOST"}) do
-    if x == s then return true end
-  end return false
-end
-
-function sword_hurt (x)
-  for i,s in ipairs({"GRASS", "LOCK", "CHEST", "LAMPPOST_ON", "TRIGGER", "TRIGGER2", "EYE", "EYE2", "BAT1", "BAT2", "BAT_SIT", "SLIME", "PIG", "SKELETON", "GHOST"}) do
-    if x == s then return true end
-  end return false
-end
-
-function player_hurt (x)
-  for i,s in ipairs({"BAT1", "BAT2", "NUT", "BAT_SIT", "PIG", "SLIME", "ESLIME", "SKELETON"}) do
-    if x == s then return true end
-  end return false
-end
-
-
-function add_obj (type, x, y, vx, vy)
-  local o
-  for i,p in ipairs(projectiles) do
-    if p.disabled then
-      o = p
-      break
-    end
-  end
-  if not o then
-    o = {}
-    table.insert(projectiles, o)
-  end
-
-  setType(o, type)
-  o.timer = 0
-  o.x = x
-  o.y = y
-  o.vx = vx or 0
-  o.vy = vy or 0
-  o.properties = {}
-  o.disabled = false
-end
-
-function hurt_enemy (o)
-  if o.type == "CHEST" then
-    o.disabled = true
-
-    audio.music()
-    audio.play "Triumph"
-
-    local tmp = control
-    control = function () end
-    setType(player_obj, "RINK_HOLD")
-
-    add_obj(o.properties.item, o.x, o.y-tw, 0, -4)
-
-    local tmp2 = love.update
-    local start = now
-
-    local time = 7000 --[[audios.Triumph.duration*1000 CONTAINER BIGKEY BOW LAMP]]
-
-    love.update = function ()
-      calc_fps()
-
-      if now - start > time then
-        control = tmp
-        love.update = tmp2
-      end
-    end
-
+tmp = love.update
+function love.focus (e)
+  if e then
+    love.update = tmp
   else
-    audio.play "hit"
-    add_obj(
-      player.health < player.hearts*2 and Math.random() > 0.5 and "HEART"
-      or player.bow and Math.random() > 0.5 and "ARROWS" or "RUBY1",
-      o.x, o.y-tw, 0, -4
-    )
-    o.disabled = true
-
+    love.update = calc_fps
   end
 end
 
-local updates = {}
-function update_obj (i, o)
-  if not o.disabled then
-    objs = objs+1
-    o.timer = o.timer-1
-
-    if o.type ~= "GRID" then
-      move_obj(o)
-    end
-
-    local update = updates[o.type]
-    if update then update(o) end
-
-    if arrow_hurt(o.type) then
-      for i,p in ipairs(projectiles) do
-        if p.timer <= 0 and p.type == "ARROW" and collision(o.x,o.y-tw/2, p.x,p.y-tw/2, tw/2,tw/2) then
-          hurt_enemy(o)
-        end
-      end
-    end
-
-    if player_obj.type == "RINK_ATTACK" and sword_hurt(o.type)
-    and collision(player_obj.x + player_obj.facing*10, player_obj.y-tw/2, o.x, o.y-tw/2, tw/4, tw/2) then
-      hurt_enemy(o)
-    end
-
-    if player_obj.timer < 0 and player_obj.type ~= "RINK_SHIELD"
-    and player_hurt(o)
-    and pl_col(o.x, o.y-tw/2, tw/2) then
-      hurt_player()
-    end
-
-    if o.type:sub(1, 4) == "RUBY" and pl_col(o.x, o.y-tw/2, tw/4) then
-      audio.play "ding"
-      player.rubies = player.rubies + tonumber(o.type:sub(5))
-      o.disabled = true
-
-    elseif not player.grab and pressed.c
-    and (o.type == "CYAN" or o.type == "YELLOW" or o.type == "MAGENTA")
-    and pl_col(o.x, o.y-tw/2, tw/4) then
-      player.grab = o;
-    end
-
-
+function love.quit ()
+  if map.name ~= "mainmenu" then
+    print("quitting")
+    save_game()
   end
 end
 
-function projectileType() return false end
-
-function move_obj (o)
-  o.water = water(o.x, o.y+tw/2+2)
-  if o.water then
-    o.vx = 0.9*o.vx
-    o.vy = 0.9*o.vy
-  end
-
-  local w = tw/2
-  if o.vx < 0 then o.facing = -1 else o.facing = 1 end
-
-  if o.vx ~= 0 then
-    if solid(o.x+o.vx+o.facing*w, o.y) or grid(o.x+o.vx, o.y) then
-      o.vx = 0
-    end
-  end
-
-  o.ground = o.vy >= 0 and (
-    solid(o.x, o.y+o.vy+1) or
-    grid(o.x, o.y+o.vy+1) or
-    (not o.type=="BLOCK" and grid(o.x, o.y) and block(o.x, o.y+o.vy+1))
-  )
-
-  if not o.water then
-    if o.ground then
-      o.vx = 0.8*o.vx
-
-    else
-      o.vx = o.vx * 0.8
-      o.vy = o.vy+0.5
-    end
-  end
-
-  if o.ground or (o.vy < 0 and (solid(o.x, o.y+o.vy-w) or grid(o.x, o.y+o.vy-w))) then
-    o.vy = 0
-  end
-
-  o.x = o.x+o.vx
-  o.y = o.y+o.vy
-end

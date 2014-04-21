@@ -6,7 +6,6 @@ audio.files = files
 function audio.load ()
   for i, name in ipairs(love.filesystem.getDirectoryItems("assets")) do
     if name:sub(-4) == ".mp3" then
-      print("assets/" .. name)
       local file = love.audio.newSource("assets/" .. name, "static")
       files[name:sub(1, #name-4)] = file
     end
