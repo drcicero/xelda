@@ -1,10 +1,10 @@
 function setType (o, type)
-  if o.type ~= nil then
-    types[type][o] = nil
+  if o.type then
+    types[o.type][o] = nil
   end
 
-  o.type = type
   types[type][o] = 1
+  o.type = type
 
   return o
 end

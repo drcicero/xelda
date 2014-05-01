@@ -1,5 +1,3 @@
-local make_key, serialize
-
 function make_key (it, indent)
   indent = indent or ""
   return (
@@ -63,7 +61,6 @@ function serialize(it, replace, indent, ancestors, path)
       if type(val) ~= "table" then
         x = serialize(val, replace, "", {unpack(ancestors)}, path.." "..i)
       else
-        table_in_array = true
         x = serialize(val, replace, indent .. default_indent, {unpack(ancestors)}, path.." "..i)
       end
       if x == nil then
@@ -101,7 +98,7 @@ function serialize(it, replace, indent, ancestors, path)
 
     local both = array_part ~= "" and dict_part ~= ""
     return "{" ..
-      ((both or table_in_array) and newline .. default_indent .. indent or "") ..
+      ((both or array_part:find("\n")==-1) and newline .. default_indent .. indent or "") ..
       array_part ..
       (both and "," or "") ..
       dict_part ..

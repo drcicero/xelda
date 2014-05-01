@@ -430,7 +430,9 @@ return {
           width = 28,
           height = 48,
           visible = true,
-          properties = {}
+          properties = {
+            ["TO"] = "mainmenu"
+          }
         },
         {
           name = "",

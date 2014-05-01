@@ -219,21 +219,6 @@ return {
           name = "",
           type = "",
           shape = "rectangle",
-          x = 580,
-          y = 160,
-          width = 0,
-          height = 0,
-          gid = 99,
-          visible = true,
-          properties = {
-            ["change"] = "eye",
-            ["switch"] = "!enemies"
-          }
-        },
-        {
-          name = "",
-          type = "",
-          shape = "rectangle",
           x = 840,
           y = 120,
           width = 0,
@@ -386,6 +371,21 @@ return {
           visible = true,
           properties = {
             ["switch"] = "!eye"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 580,
+          y = 180,
+          width = 0,
+          height = 0,
+          gid = 91,
+          visible = true,
+          properties = {
+            ["change"] = "eye",
+            ["switch"] = "!enemies"
           }
         }
       }

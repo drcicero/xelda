@@ -25,7 +25,7 @@ function tiled.load (tw_)
     "HASH", "LAMP", "GLOVE", "BOW", "CONTAINER", "KEY", "FISH", "FISH2",
     "BIGKEY", "BLOCK", "BOMB1", "BOMB2", "YELLOW", "CYAN", "MAGENTA", "?",
     "HEART_EMPTY", "HEART_HALF", "HEART", "RUBY1", "RUBY5", "RUBY10", "RUBY50", "RUBY100",
-    "ARROWS", "SWORD", "?", "?", "DUMMY", "BOMB", "ARROW", "NUT",
+    "ARROWS", "SWORD", "ELECTRO", "?", "DUMMY", "BOMB", "ARROW", "NUT",
     "?", "?", "?", "?", "?", "?", "?", "LOCK",
     "?", "?", "?", "?", "?", "?", "?", "HOLE",
     "?", "?", "SWITCH", "SWITCH2", "?", "?", "?", "CHEST",
@@ -123,30 +123,40 @@ function tiled.draw_layers (map, pool)
   end
 
   if not_yet_pool_drawn then
-    not_yet_pool_drawn = true
     table.foreach(pool, tiled.draw_obj)
   end
 end
 
 function tiled.draw_obj (i, o)
-  if not o.to_be_removed and not o.disabled and o.type ~= "META" then
+  if o.type ~= "REMOVED" and not o.disabled and o.type ~= "META" then
     if camera.x - cam_min_x - tw/2 < o.x and o.x < camera.x + cam_min_x + tw/2
     and camera.y - cam_min_y < o.y and o.y < camera.y + cam_min_y + tw then
-      if DEBUG then
-        g.setColor(255, 255, 255, 50)
-        if o.width then
-          g.rectangle("line", o.x-o.width/2, o.y-o.height, o.width, o.height)
-        else
-          g.rectangle("fill", o.x-tw/2, o.y-tw, tw, tw)
-        end
-        g.rectangle("fill", o.x-2, o.y-2, 4, 4)
-
-      end
-
-      local sx = o.vx<0 and not o.r and -1 or 1
+      local sx = o.r==math.huge and o.facing or 1
+      local r = o.r==math.huge and 0 or o.r
       g.setColor(255, 255, 255, o.alpha or 255)
       g.draw(tiled.tileset, tiled.quads[sprites_indexOf[o.type]],
-        o.x,o.y-tw/2, o.r or 0, sx,1, tw/2,tw/2)
+        o.x,o.y, r, sx,1, o.ix,o.iy)
+
+      if o.type == "EYE" then
+        g.setColor(0,0,0,255)
+        local x, y = avatar.x-o.x, avatar.y-o.y
+        local len = math.sqrt(x * x + y * y)/4
+        g.rectangle("fill", floor(o.x+x/len-2), floor(o.y-tw/2+y/len-2), 4, 4)
+      end
+
+      if DEBUG then
+        g.push()
+        g.translate(o.x, o.y)
+
+        g.setColor(255, 255, 255, 50)
+        g.rectangle("fill", -2, -2, 4, 4)
+
+        g.rotate(r)
+        g.rectangle("fill", -o.ix, -o.iy, tw, tw)
+        g.rectangle("line", -o.ox, -o.oy, o.width, o.height)
+
+        g.pop()
+      end
     end
   end
 end

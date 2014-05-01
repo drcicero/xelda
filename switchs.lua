@@ -33,7 +33,7 @@ function getVar (name)
 
   if     t == "nil" then     return not_
   elseif t == "boolean" then return val == not not_
-  elseif t == "number" then  return (val == 0) == not not_ end
+  elseif t == "number" then  return (val <= 0) == not not_ end
 
   print("getVar: error " .. tostring(val) .. " is neither nil, bool or number")
 end

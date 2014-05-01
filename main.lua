@@ -1,176 +1,257 @@
+--- Main 
+-- This is the module
+love.graphics.setDefaultFilter("linear", "nearest")
 
--- TODO FIXME draw state.pool !!!
-
-local g = love.graphics
-g.setDefaultFilter("linear", "nearest")
-
-tw = 20
-change_level_timer = 0
-
-require "math"
-floor = math.floor
+w = love.graphics.getWidth()
+h = love.graphics.getHeight()
 
 require "saveload"
-require "clamp"
-require "audio"
-require "switchs"
-require "setType"
-require "collision"
-require "update"
-audio = require "audio"
-tiled = require "tiled"
-require "maps"
+require "menu"
+require "game"
 
 function love.load ()
   -- options
   DEBUG = false
-
-  -- FIXME with canvas tilemaps are no longer visible
-  --CANVAS = g.isSupported("canvas", "npot")
-
-  -- init
-  font = g.newFont(16)
-  g.setFont(font)
+--  -- FIXME canvas are invisible?
+--   CANVAS = love.graphics.isSupported("canvas", "npot")
 
   -- load libs
   audio.load()
-  tiled.load(tw)
 
-  -- load menu
-  change_level "mainmenu"
+  --- menu frames
+  -- This is so
+  local frames = {}
 
-  -- the player
-  player = {health=6, hearts=3, keys=0, rubies=0}
+  --- a slot
+  -- how to draw a slot
+  function frames.slot (slot) return function ()
+    set_slot(slot.title)
 
-  -- is there a save file?
-  if love.filesystem.exists("save.lua") then setVar("first_play", true) end
+    local list = {
+      menu.label("Slot > " .. slot.title):set("style", menu.styles.header),
 
---  -- init special vars
---  calc_fps()
---  update_layers()
+      menu.label(""),
+      menu.button(slot.time and "Continue game" or "Begin game", function ()
+        change_app_state(game)
+        set_slot(slot.title)
+        if slot.time then load_slot() else change_level "mainmenu" end
+
+        clean_trash_slots()
+      end):set("style", menu.styles.primary),
+
+      menu.button("Return", menu.goto(frames.slots)),
+
+      menu.label(" "),
+      menu.label("Change Slotname:"),
+      menu.input("slotname", slot.title)
+        :set("change", function (self)
+          self.parent[1].title = "Slot > " .. self.title
+          if slot.time then
+            set_slot(slot.title)
+            move_slot(self.title)
+          end
+          slot.title = self.title
+        end),
+    }
+
+    if slot.time then
+      table.insert(list, #list-2, menu.label(""))
+      table.insert(list, #list-2, menu.button("Discard this slot", function ()
+        set_slot(slot.title)
+        trash_slot()
+        menu.goto(frames.slots)()
+      end))
+      table.insert(list, #list-1, menu.label(
+        "Last played:\n" .. os.date("%X %a, %d %b %y", slot.time)
+      ):set("style", menu.styles.light))
+    end
+
+    return menu.column(list)
+  end end
+
+  --- a slot in the trash
+  function frames.trash_slot (slot) return function ()
+    return menu.column {
+      menu.label("Trash Slot > " .. slot.title),
+      menu.label(""),
+      menu.button("Return", menu.goto(frames.trash_slots)):set("style", menu.styles.primary),
+      menu.button("Undiscard this slot", function ()
+        set_slot(slot.title)
+        untrash_slot()
+        if #search_slots(true) == 0 then
+          menu.goto(frames.slots)()
+        else
+          menu.goto(frames.trash_slots)()
+        end
+      end),
+
+      menu.label(""),
+      menu.label(
+        "Last played:\n" .. (slot.time and os.date("%X %a, %d %b %y", slot.time) or " - ") 
+      ):set("style", menu.styles.light),
+    }
+  end end
+
+  --- the trash folder
+  function frames.trash_slots ()
+    local list = {
+      menu.label("Slots in the trashbin"):set("style", menu.styles.header),
+      menu.label("These slots will be auto-deleted on starting to play."),
+      menu.label(""),
+    }
+
+    local trash_slots = search_slots(true)
+    for i,slot in ipairs(trash_slots) do
+      table.insert(list, menu.button(slot.title,
+        menu.goto(frames.trash_slot(slot))))
+    end
+
+    table.insert(list, menu.label(""))
+    table.insert(list, menu.button("Return", menu.goto(frames.slots)))
+
+    return menu.column(list)
+  end
+
+  -- the slots overview
+  function frames.slots () return menu.column {
+      menu.label("Select a slot"):set("style", menu.styles.header),
+      menu.label(""),
+      menu.button("Return", menu.goto(frames.mainmenu))
+    }:set("enter", function (self)
+
+      local first = true
+      local slots = search_slots(false)
+      table.sort(slots, function (a,b) return a.time < b.time end)
+
+      for i,slot in ipairs(slots) do
+        table.insert(self, #self-1, menu.button(
+          slot.title .. "\n" .. os.date("%X %a, %d %b %y", slot.time),
+          menu.goto(frames.slot(slot))
+        ):set("style", menu.styles.push))
+      end
+
+      table.insert(self, #self-1, menu.button("New slot", function ()
+        menu.goto(frames.slot({title="Slot " .. (1+#slots)}))()
+      end):set("style", menu.styles.push))
+
+      self[2]:set("style", menu.styles.primary)
+
+      local trash_slots = search_slots(true)
+      if #trash_slots > 0 then
+        table.insert(self, #self-1, menu.label(""))
+        table.insert(self, #self-1,
+          menu.button("Trash (" .. tostring(#trash_slots) .. " items)",
+            menu.goto(frames.trash_slots)
+          ):set("style", menu.styles.push)
+        )
+      end
+    end)
+  end
+
+  local options = { fs="OFF", mvol=10, svol=10 }
+
+  --- credits screen
+  function frames.credits () return menu.column ({
+    menu.label("Credits"):set("style", menu.styles.header),
+    menu.label("Idea, some Music, Sounds, Graphics and Implementation"),
+    menu.label("- David Richter"),
+    menu.label("Tools"),
+    menu.label("- Rosegarden, beepbox.co, Gimp, Tiled, Löve"),
+    menu.label(""),
+    menu.label("Musik"),
+    menu.label("- Johannes Kühr"),
+    menu.label("Tools"),
+    menu.label("- Ludwig, Cubase"),
+    menu.label(""),
+    menu.button("Return", menu.goto(frames.mainmenu)),
+    w = 400
+  })
+  end
+
+  --- options menu
+  function frames.options () return menu.column({
+    menu.label("Options"):set("styles", menu.styles.header),
+    menu.label(""),
+
+    menu.label("Fullscreen"),
+    menu.range("fs", {"OFF", "ON"})
+      :set("change", function (self)
+        local value = self.range[self.sel]
+
+        love.window.setFullscreen(value=="ON", "desktop")
+
+        w = value~="ON" and 800 or love.graphics.getWidth()
+        h = value~="ON" and 400 or love.graphics.getHeight()
+
+        self.parent.x = w/2 - self.parent.w/2
+
+        menu.layout(self.parent)
+      end),
+
+    menu.label("Music Volume"),
+    menu.range("mvol", {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+      :set("change", function (self)
+        local value = self.range[self.sel]
+        audio.setMVol(value/10)
+      end),
+
+    menu.label("Sound Volume"),
+    menu.range("svol", {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+      :set("change", function (self)
+        local value = self.range[self.sel]
+        audio.setSVol(value/10)
+        audio.play "hah"
+      end),
+
+    menu.label(""),
+    menu.button("Return", menu.goto(frames.mainmenu)),
+  })
+    :set("enter", function (self)
+      local form = self:getForm()
+      form.fs.sel = options.fs == "ON" and 2 or 1
+      form.mvol.sel = options.mvol+1
+      form.svol.sel = options.svol+1
+    end)
+    :set("exit", function (self)
+      local form = self:getForm()
+      options.fs = form.fs.range[form.fs.sel]
+      options.mvol = form.mvol.range[form.mvol.sel]
+      options.svol = form.svol.range[form.svol.sel]
+    end)
+  end
+
+  --- main menu
+  function frames.mainmenu () return menu.column {
+    menu.label("Menu"):set("style", menu.styles.header),
+    menu.label(""),
+    menu.button("Play", menu.goto(frames.slots)):set("style", menu.styles.push):set("style", menu.styles.primary),
+    menu.label(""),
+    menu.button("Options", menu.goto(frames.options)):set("style", menu.styles.push),
+    menu.button("Credits", menu.goto(frames.credits)):set("style", menu.styles.push),
+    menu.label(""),
+    menu.button("Quit", love.event.quit),
+  } end
+
+  audio.music "Xelda"
+  change_app_state(frames.mainmenu())
 end
 
-function love.draw(dt)
-  g.clear()
-  g.push()
-    g.scale(camera.zoom, camera.zoom)
-    g.translate(cam_min_x-camera.x, cam_min_y-camera.y)
+app_state = {}
+--- how to change the app_state
+function change_app_state (new_state)
+  if app_state and app_state.quit then app_state:quit() end
+  app_state = new_state:load()
 
-    tiled.draw_layers(map, state.pool)
-    if DEBUG then love.update(dt, true) end
-  g.pop()
-
-  draw_hud()
-end
-
-function love.update (dt, from_draw)
-  if from_draw or not DEBUG then
-    calc_fps()
-
-    change_level_timer = change_level_timer-1
-
-    control()
-    update_layers()
-
-    if quit then quit() quit=nil end
+  for i,name in ipairs({
+    "update", "keypressed", "keyreleased",
+    "mousepressed", "mousereleased", "draw", "quit"
+  }) do
+    if app_state[name] then
+      love[name] = function (...) app_state[name](app_state, ...) end
+    else
+      love[name] = nil
+    end
   end
 end
 
-now = love.timer.getTime()
-local last_frame = now
-local fps = 0
-function calc_fps ()
-  now = love.timer.getTime()*1000
-  local dt = now - last_frame
-  fps = (59 * fps + 1000 / dt) / 60
-  last_frame = now
-
-  collisions = 0
-  objs = 0
-  bubbles = {}
-end
-
-pressed = {}
-function love.keypressed (e)  pressed[e] = true  end
-function love.keyreleased (e) pressed[e] = false end
-
-s = ""
-function draw_hud ()
-  local x = math.max(0, w/2-400)
-  local y = 0 -- math.max(0, h/2-200)
-
-  g.setColor(0, 0, 0, 10)
-  g.rectangle("fill", 0, 0, x, h)
-  g.rectangle("fill", w-x, 0, x, h)
-  g.rectangle("fill", x, 0, w-2*x, y)
-  g.rectangle("fill", x, h-y, w-2*x, y)
-
-  g.push()
-  g.translate(x, y)
-
-  g.setColor(255, 255, 255, 255)
-  g.print("fps: " .. floor(fps), 26, 115)
---  g.print("collisions: " .. floor(collisions), 10, 85)
---  g.print("objs: " .. floor(objs), 10, 100)
---  g.print(s, 10, 130);
---  s = ""
-
-  for i = 1, player.hearts*2, 2 do
-    local tile_idx =
-      i+1 <= player.health and sprites_indexOf.HEART or
-      i == player.health   and sprites_indexOf.HEART_HALF or
-                               sprites_indexOf.HEART_EMPTY
-
-    g.draw(tiled.tileset, tiled.quads[tile_idx], 15*i-2, 10, 0, 2, 2)
-  end
-
-  if player.rubies~=0 then
-    g.draw(tiled.tileset, tiled.quads[sprites_indexOf.RUBY1], 14, 50-2, 0, 2, 2)
-    g.print(player.rubies, 14+30, 50+20)
-  end
-
-  if player.keys~=0 then
-    g.draw(tiled.tileset, tiled.quads[sprites_indexOf.KEY], 61, 50+2, 0, 2, 2)
-    g.print(player.keys, 61+30, 50+20)
-  end
-
-  if player.bow then
-    g.draw(tiled.tileset, tiled.quads[sprites_indexOf.ARROW], 109+tw, 50+2+tw, math.pi/2, 2, 2, tw/2, tw/2)
-    g.print(player.arrows or 0, 109+30, 50+20)
-  end
-
-  g.pop()
-  textbubbles()
-end
-
-function textbubbles ()
-  for i,o in ipairs(bubbles) do
-    local width, height = font:getWrap(o.text, w/3)
-    height = font:getHeight()*height
-    local x = (o.x + cam_min_x-camera.x)*camera.zoom - width/2
-    local y = (o.y + cam_min_y-camera.y - tw*2) *camera.zoom - height
-
-    g.setColor(0, 0, 0, 0.66*255)
-    g.rectangle("fill", x-10, y-10, width+20, height+20)
-
-    g.setColor(255, 255, 255, 255)
-    love.graphics.printf(o.text, x, y, width, "center")
-  end
-end
-
-tmp = love.update
-function love.focus (e)
-  if e then
-    love.update = tmp
-  else
-    love.update = calc_fps
-  end
-end
-
-function love.quit ()
-  if map.name ~= "mainmenu" then
-    print("quitting")
-    save_game()
-  end
-end
 

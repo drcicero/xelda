@@ -120,22 +120,8 @@ return {
           name = "",
           type = "",
           shape = "rectangle",
-          x = 749,
-          y = 127,
-          width = 0,
-          height = 0,
-          gid = 99,
-          visible = true,
-          properties = {
-            ["change"] = "right"
-          }
-        },
-        {
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 49,
-          y = 63,
+          x = 70,
+          y = 69,
           width = 0,
           height = 0,
           gid = 99,
@@ -148,8 +134,8 @@ return {
           name = "",
           type = "",
           shape = "rectangle",
-          x = 68,
-          y = 159,
+          x = 69,
+          y = 128,
           width = 0,
           height = 0,
           gid = 80,
@@ -312,14 +298,14 @@ return {
           name = "",
           type = "",
           shape = "rectangle",
-          x = 720,
+          x = 740,
           y = 180,
           width = 0,
           height = 0,
-          gid = 84,
+          gid = 91,
           visible = true,
           properties = {
-            ["text"] = "fracture for fracture,\neye for eye,\ntooth for tooth"
+            ["change"] = "right"
           }
         }
       }

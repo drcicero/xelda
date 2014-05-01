@@ -87,7 +87,7 @@ function grid(o, vx, vy)
     local left, top = b.x-b.ox-o.ox, b.y-b.oy
     local right, bottom = left+b.width+o.width, top+b.height+o.oy
 
-    if DEBUG and not b.to_be_removed and not b.disabled then
+    if DEBUG and not b.disabled then
       g.setColor(255, 0, 255, 50)
       g.rectangle("fill", o.x-2, o.y-2, 4, 4)
       g.rectangle("fill", b.x-b.ox, b.y-b.oy, b.width, b.height)
@@ -95,7 +95,7 @@ function grid(o, vx, vy)
       g.rectangle("fill", left, top, right-left, bottom-top)
     end
 
-    if not b.to_be_removed and not b.disabled
+    if not b.disabled
     and left < o.x+vx and o.x+vx < right
     and top < o.y+vy and o.y+vy < bottom then
       return true

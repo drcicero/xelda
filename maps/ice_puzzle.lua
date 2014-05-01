@@ -621,14 +621,14 @@ return {
           name = "",
           type = "",
           shape = "rectangle",
-          x = 880,
+          x = 860,
           y = 140,
           width = 0,
           height = 0,
           gid = 84,
           visible = true,
           properties = {
-            ["text"] = "shoot with [X]"
+            ["text"] = "[x] : shoot"
           }
         },
         {
@@ -720,8 +720,8 @@ return {
           name = "",
           type = "",
           shape = "rectangle",
-          x = 770,
-          y = 79,
+          x = 720,
+          y = 71,
           width = 0,
           height = 0,
           gid = 99,
@@ -1146,7 +1146,7 @@ return {
           gid = 84,
           visible = true,
           properties = {
-            ["text"] = "grab orbs with [C]"
+            ["text"] = "[c] : grab orbs"
           }
         },
         {
@@ -1176,6 +1176,20 @@ return {
           properties = {
             ["switch"] = "!special",
             ["text"] = "Nobody will ever find it!"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 720,
+          y = 180,
+          width = 0,
+          height = 0,
+          gid = 88,
+          visible = true,
+          properties = {
+            ["switch"] = "EYE2"
           }
         }
       }
