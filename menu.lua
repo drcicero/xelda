@@ -1,10 +1,9 @@
---- Menu:
--- Display a interactive column-based dialog box. It can be used to make menu or 
--- other simple guis.
--- 
--- Dependencies: $audio, $love.graphics
+--- Menu
+-- Display a interactive column-based dialog box.
+-- It can be used to make menus or other simple guis.
 
 require "audio"
+require "tweens"
 
 menu = {app={}}
 
@@ -28,64 +27,27 @@ function getH(font, text, max_width)
   return height
 end
 
---- Set XYWH of the children of a column out.
-function menu.layout(self)
-  local y = 0
-
-  for i,o in ipairs(self) do
-    o.parent = self
-    o.y = y
-    if o.type == "range" then
-      local x = 0
-      o.sub = {}
-      o.h = pad*2
-      for i,r in ipairs(o.range) do
-        local w = getW(o.style.font, r)
-        o.sub[i] = {title=r, w=w, x=x}
-        x = x + w
-        o.h = math.max(o.h, getH(o.style.font, r, self.w) + pad*2)
-
-        if r == o.title then o.sel = i end
-      end
-
-    else
-      o.h = getH(o.style.font, o.title, self.w) + pad*2
-    end
-    y = y + o.h
-  end
-
-  self.h = y
-
-  return self
-end
-
 popping = nil
 exiting = nil
 
 function anim (self, hide_show, left_right, onfinished)
   INTERACTION = false
-  start = love.timer.getTime()
+
+  local time = 1/4
 
   local x_diff = left_right=="left" and -10 or 10
-  local x_from = self.x - (hide_show=="hide" and 0 or x_diff)
-
-  local a_from = hide_show=="hide" and 1 or 0
-  local a_diff = hide_show=="hide" and -1 or 1
-
-  local tmp = self.update
-  self.update = function ()
-    local x = math.min((love.timer.getTime()-start)*4, 1)
-    x = x*x*(3-2*x)
-
-    self.x = x_from + x * x_diff
-    self.alpha = a_from + x * a_diff
-
-    if x == 1 then
-      INTERACTION = true
-      self.update = tmp
-      onfinished()
-    end
+  if hide_show == "show" then
+    self.x = self.x - x_diff
   end
+  tweens.by(self, "x", x_diff, time)
+
+  self.alpha =            hide_show=="hide" and 1 or 0
+  tweens.by(self, "alpha", hide_show=="hide" and -1 or 1, time)
+
+  tweens.after(time, function ()
+    INTERACTION = true
+    if onfinished then onfinished() end
+  end)
 end
 
 ---- Widgets
@@ -101,9 +63,9 @@ function menu.set (self, k, v)
   return self
 end
 
---- A Column is a container widget. Generate is a function that returns an array of widgets to be displayed vertical.
+--- A Column is a container widget. self is a list of widgets to be displayed vertically.
 function menu.column (self)
---- 
+  --- returns a map of all widgets with names by name
   function self.getForm (self)
     local form = {}
     for i,o in ipairs(self) do
@@ -114,45 +76,76 @@ function menu.column (self)
     return form
   end
 
---- 
-  function self.load (self)
-    self.w = 200
+  self.w = self.w or 200
 
-    self.x = w/2 - self.w/2
-    self.y = 150
+  self.x = self.x or w/2 - self.w/2
+  self.y = self.y or 150
 
-    self.alpha = 255
+  self.alpha = self.alpha or 255
 
-    self.draw = menu.app.draw
-    self.update = menu.app.update
-    self.mousepressed = menu.app.mousepressed
-    self.keypressed = menu.app.keypressed
-    self.quit = function ()
-      if self.exit then self:exit() end
-      menu.app.quit(self)
+  self.set = menu.set
+
+  self.draw = menu.app.draw
+  self.update = menu.app.update
+  self.mousepressed = menu.app.mousepressed
+  self.keypressed = menu.app.keypressed
+  self.quit = function ()
+    if self.exit then self:exit() end
+    menu.app.quit(self)
+  end
+
+--  --- set y, h of children, so that the children are layouted in a column
+  function self.layout (self)
+    local y = 0
+
+    for i,o in ipairs(self) do
+      o.parent = self
+      o.y = y
+      if o.type == "range" then
+        local x = 0
+        o.sub = {}
+        o.h = pad*2
+        for i,r in ipairs(o.range) do
+          local w = getW(o.style.font, r)
+          o.sub[i] = {title=r, w=w, x=x}
+          x = x + w
+          o.h = math.max(o.h, getH(o.style.font, r, self.w) + pad*2)
+
+          if r == o.title then o.sel = i end
+        end
+
+      else
+        o.h = getH(o.style.font, o.title, self.w) + pad*2
+      end
+      y = y + o.h
     end
 
-    self.selector = 1
+    self.h = y
+
+    return self
+  end
+
+--  --- initialize column
+  function self.load (self)
+    self.selector = self.selector or 1
 
     if self.enter then self:enter() end
-    menu.layout(self)
+    self:layout()
     menu.app.load(self)
 
     return self
   end
 
-  self.set = menu.set
-
   return self
 end
 
---- 
+--- title is the label of the button, func is a function to be called when the button is activated. the function will get the button as first argument.
 function menu.button(title, func)
   return ({type="button", title=title, action=func,
   style={}, set=menu.set}):set("style", menu.styles.base):set("style", menu.styles.button)
 end
 
---- 
+--- this is a shortcut for 'function () change_app_state(func()) end'
 function menu.goto(blueprint) return function ()
   change_app_state(blueprint())
 end end
@@ -199,7 +192,7 @@ function menu.app.load (self, hide_show, left_right)
     self.selector = (self.selector+1-1) % #self +1
   end
 
-  anim(self, "show", "left", function () end)
+  anim(self, "show", "left")
 end
 
 menu_app_stack = {}
@@ -224,11 +217,26 @@ first_draw = true
 function menu.app.draw (self)
   if first_draw then print("first draw") first_draw = false end
 
-  local bars = 50
-  for i=0,bars do
-    local f = i/bars
-    g.setColor(255*0.3, 255*0.6, 255*0.9, 100+100*f)
-    g.rectangle("fill", 0, (1-f)*h, w, h/bars)
+  if self.bg then
+    g.setColor(self.bg)
+    g.rectangle("fill", 0, 0, w, h)
+
+  else
+    local bars = 50
+    for i=0,bars do
+      local f = i/bars
+      g.setColor(255*0.5, 255*0.55, 255*0.6, 150+100*f)
+      g.rectangle("fill", 0, (1-f)*h, w, h/bars)
+    end
+
+    g.setColor(255,255,255,255)
+    g.draw(xelda, w/2-xelda:getWidth()-150, h-xelda:getHeight()+50)
+    g.draw(watson, w/2+watson:getWidth()/2+150, h-watson:getHeight()/2-150, math.sin(love.timer.getTime())/3, 1, 1, watson:getWidth()/2, watson:getHeight()/2)
+  end
+
+  if self.fill then
+    g.setColor(self.bg)
+    g.rectangle("fill", self.x -(self.pad or 0), self.y -(self.pad or 0), self.w + 2*(self.pad or 0), self.h + 2*(self.pad or 0))
   end
 
   g.push()
@@ -254,11 +262,13 @@ function menu.app.draw (self)
     else
       g.setColor(style.col[1], style.col[2], style.col[3], style.col[4] * self.alpha)
       if style.before then g.printf(style.before, -20, o.y+pad, 10, "right") end
-      g.printf(o.title, 0, o.y+pad, self.w, "left")
+      g.printf(o.title .. (style.after or ""), 0, o.y+pad, self.w, "left")
     end
   end
 
   g.pop()
+
+  return false
 end
 
 --- 
@@ -345,8 +355,10 @@ end
 local lastX = 0
 local lastY = 0
 function menu.app.update (self)
+  if not INTERACTION then return true end
+
   if love.textinput then
-    menu.layout(self)
+    self:layout()
 
   else
     local x, y = love.mouse.getPosition()
@@ -364,10 +376,11 @@ function menu.app.update (self)
       end
     end
   end
+
+  return true
 end
 
 ---- standard styles
---- 
 menu.styles = {
   base   = { col = {255,255,255,255*0.7}, font = g.newFont(12) },
   label  = { col = {200,255,100,255} },
@@ -376,9 +389,10 @@ menu.styles = {
   range  = { col = {100,255,200,255} },
 
   header  = { col = {200,255,100,255}, font = g.newFont(18) },
-  light   = { col = {200,255,100,255*0.5} },
+  light   = { col = {200,255,100,200} },
   primary = { col = {255,255,255,255} },
-  push    = { before = ">" },
+  push    = { after = " ..." },
+  pop     = { before = "<- " },
 }
 
 

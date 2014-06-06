@@ -1,116 +1,80 @@
 serialize = require "serialize"
 
-local slotname = nil
-function set_slot (slotname_)
-  slotname = slotname_
-end
-
-function save_slot ()
+function save_slot (slot)
   -- save
-  assert(love.filesystem.write(slotname .. ".save",
+  if transient and transient.name and level[transient.name] then
+    level[transient.name].unload()
+  end
+
+  persistence.lastsaved = os.time()
+
+  assert(love.filesystem.write(slot.slotname .. ".save",
     "return " .. serialize(persistence)
   ))
 
-  assert(love.filesystem.write(slotname .. ".metasave",
-    "return " .. serialize({
-      time = os.time(),
-      mapname = map.name,
-      vars = player,
-    })
-  ))
+  print("saved")
 
-  print("saved to", love.filesystem.getSaveDirectory() .. "/" .. slotname .. ".save")
-  print("saved to", love.filesystem.getSaveDirectory() .. "/" .. slotname .. ".metasave")
+  if transient and transient.name and level[transient.name] then level[transient.name].load() end
+end
 
-  local types = {}
-  for k,state in pairs(persistence) do
-    for i,o in ipairs(state.pool) do
-      if not types[o.type] then types[o.type]=0 end
-      types[o.type] = types[o.type]+1
-    end
+function load_slot (slot)
+  -- clear & load
+  transient = nil
+
+  if type(slot) == "nil" then
+    persistence = {
+      slotname = "Slot #1",
+      mapname = "mainmenu",
+      vars = {health=6, hearts=3, keys=0, rubies=0},
+    }
+
+  elseif type(slot) == "string" then
+    persistence = assert(love.filesystem.load(file))()
+
+  else
+    persistence = slot
   end
-  local type_count = {}
-  for k,v in pairs(types) do
-    table.insert(type_count, {v, k})
-  end
-  table.sort(type_count, function (a,b) return a[1] > b[1] end)
-  print(serialize(type_count))
+
+  change_level(persistence.mapname)
 end
 
-function load_slot ()
-  -- clear
-  map = nil
-  state = nil
-
-  -- load
-  persistence = assert(love.filesystem.load(slotname .. ".save"))()
-  local save = assert(love.filesystem.load(slotname .. ".metasave"))()
-
-  print("loaded")
-
-  player = save.vars
-  player.health = 6
-  change_level(save.mapname)
+function move_slot (old, new)
+  move_file(old .. ".save", new .. ".save")
+end
+function trash_slot (slot)
+  slot.trash = true
+  save_slot(slot)
+end
+function untrash_slot (slot)
+  slot.trash = nil
+  save_slot(slot)
 end
 
-function remove_slot ()
-  love.filesystem.remove(slotname .. ".save")
-  love.filesystem.remove(slotname .. ".metasave")
-end
-
-function move_slot (newslotname)
-  local save = love.filesystem.read(slotname .. ".save")
-  local meta = love.filesystem.read(slotname .. ".metasave")
-
-  love.filesystem.remove(slotname .. ".save")
-  love.filesystem.remove(slotname .. ".metasave")
-
-  slotname = newslotname
-
-  love.filesystem.write(slotname .. ".save", save)
-  love.filesystem.write(slotname .. ".metasave", meta)
-end
-
-function trash_slot ()
-  local save = love.filesystem.read(slotname .. ".save")
-  local meta = love.filesystem.read(slotname .. ".metasave")
-
-  love.filesystem.remove(slotname .. ".save")
-  love.filesystem.remove(slotname .. ".metasave")
-
-  love.filesystem.write(slotname .. ".trashsave", save)
-  love.filesystem.write(slotname .. ".trashmetasave", meta)
-end
-
-function untrash_slot ()
-  local save = love.filesystem.read(slotname .. ".trashsave")
-  local meta = love.filesystem.read(slotname .. ".trashmetasave")
-
-  love.filesystem.remove(slotname .. ".trashsave")
-  love.filesystem.remove(slotname .. ".trashmetasave")
-
-  love.filesystem.write(slotname .. ".save", save)
-  love.filesystem.write(slotname .. ".metasave", meta)
+function move_file (old, new)
+  local content = love.filesystem.read(old)
+  love.filesystem.remove(old)
+  love.filesystem.write(new, content)
+  print("removed", old)
+  print("created", new)
 end
 
 function clean_trash_slots ()
-  for i, f in ipairs(search_slots(true)) do
-    love.filesystem.remove(f .. ".trashsave")
-    love.filesystem.remove(f .. ".trashmetasave")
+  for i,name in ipairs(search_slots(true)) do
+    love.filesystem.remove(slot.name)
   end
 end
 
 function search_slots (trash)
   slots = {}
-  local dirname = "."--love.filesystem.getSaveDirectory():gsub("//", "/"):gsub(" ", "\\ ")
-  love.filesystem.getDirectoryItems(dirname, function (file) 
-    if not trash and file:sub(-9) == ".metasave"
-    or trash and file:sub(-14) == ".trashmetasave" then
+  love.filesystem.getDirectoryItems(".", function (file) 
+    if file:sub(-5) == ".save" then
       local slot = assert(love.filesystem.load(file))()
-      slot.title = file:sub(1, trash and -15 or -10)
-      table.insert(slots, slot)
+      if trash and slot.trash or not trash and slot.trash == nil then
+        table.insert(slots, slot)
+      end
     end
   end)
+  table.sort(slots, function (a,b) return a.lastsaved > b.lastsaved end)
   return slots
 end
 

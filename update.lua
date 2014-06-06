@@ -1,12 +1,13 @@
 
 function update_layers()
-  for i,layer in ipairs(map.layers) do
-    if layer.type == "objectgroup" then
-      table.foreach(layer.objects, update_obj)
-    end
-  end
+--  for i,layer in ipairs(transient.layers) do
+--    if layer.type == "objectgroup" then
+--      table.foreach(layer.objects, update_obj)
+--    end
+--  end
 
-  table.foreach(state.pool, update_obj)
+  table.foreach(transient.pool, update_obj)
+  table.foreach(persistence[transient.name].pool, update_obj)
 end
 
 local arrow_hurt = {EYE=1, BAT1=1, BAT2=1, BAT_SIT=1, FISH=1, FISH2=1, SLIME=1, ESLIME=1, PIG=1, SKELETON=1, GHOST=1}
@@ -17,20 +18,55 @@ local player_hurt_center = {ELECTRO=1}
 function hurt_player (o)
   audio.play "hit"
 
-  player.health = player.health - 1
+  persistence.vars.health = persistence.vars.health - 1
   avatar.vx = (avatar.x < o.x) and -3 or 3
   avatar.vy = -6
   avatar.alpha = 0.5*255
 
-  if player.health == 0 then
-    quit = function () load_slot() end
+  if persistence.vars.health == 2 then
+    audio.setPitch(1.1, "default")
+  elseif persistence.vars.health == 1 then
+    audio.setPitch(1.2, "default")
+  elseif persistence.vars.health == 0 then
+    quit = function ()
+      local tmp_update, tmp_draw = love.update, love.draw
+      love.update = calc_fps
+      local start = now
+      local originalmvol = audio.mvol
+      local loaded = false
+      love.draw = function ()
+        local x = (love.timer.getTime()*1000 - start)/1000
+
+        if x >= 2 then
+          love.draw = tmp_draw
+          x = 0
+          audio.setMVol(originalmvol)
+          return
+
+        elseif x >= 1 then
+          if not loaded then
+            loaded = true
+            love.update = tmp_update
+            load_slot(persistence.slotname)
+          end
+          x = 2 - x
+        end
+
+        tmp_draw()
+
+        audio.setMVol((1-x) * originalmvol)
+        love.graphics.setColor(0,0,0, 255 * x)
+        love.graphics.rectangle("fill", 0,0,w,h)
+      end
+    end
   end
 end
 
 function hurt_enemy (o)
   if o.type == "CHEST" and not o.properties.got then
     o.properties.got = true
-    audio.music()
+    local mus = audio._music
+    audio.music(nil, "default")
     audio.play "Triumph"
 
     local start = now
@@ -55,6 +91,7 @@ function hurt_enemy (o)
           x.properties.bigkey = spec
         end
 
+        audio.music(mus, "default")
         love.update = tmp
         change_screensize()
 
@@ -64,6 +101,7 @@ function hurt_enemy (o)
 
   elseif o.type == "EYE" then
     setType(o, "EYE2")
+    o.properties.closed = true
     setVar(o.properties.change, true)
 
   else
@@ -75,8 +113,8 @@ function hurt_enemy (o)
 
     if math.random() > 0.5 then
       add_obj(
-        player.health < player.hearts*2 and math.random() > 0.5 and "HEART"
-        or player.bow and math.random() > 0.5 and "ARROWS" or "RUBY1",
+        persistence.vars.health < persistence.vars.hearts*2 and math.random() > 0.5 and "HEART"
+        or persistence.vars.bow and math.random() > 0.5 and "ARROWS" or "RUBY1",
         o.x, o.y-tw, 0, -4
       )
     end
@@ -95,6 +133,7 @@ end
 function update_fish (o)
   -- move
   o.vx = (o.properties.left and 1 or -1) * (o.type == "FISH" and 1.1 or 1.9)
+  o.vy = math.sin(now/200)/2 - 0.04
 
   -- stop on edges or walls
   if solid(o.x + o.vx + (o.vx<0 and -10 or 10), o.y+10)
@@ -107,6 +146,7 @@ function update_fish (o)
   -- special form
   if o.timer < 0 and math.abs(o.x - avatar.x) < 40 then
     setType(o, "FISH2")
+    audio.play("hah2", o.x, o.y, 0.5)
     o.timer = 200
   elseif o.timer == 100 then
     setType(o, "FISH")
@@ -170,7 +210,7 @@ local updates = {
     local function match(b)
       theblock = b
       return not b.disabled
-        and player.grab ~= b and b.x-tw/2 < o.x
+        and persistence.varspersistence.vars.grab ~= b and b.x-tw/2 < o.x
         and o.x < b.x+tw/2 and b.y-tw/2 < o.y and o.y < b.y+tw/2
     end
 
@@ -195,39 +235,36 @@ local updates = {
   end,
 
   BIG_LOCK = function (o)
-    local theblock
-
     local function match(b)
-      theblock = b
-      return not b.disabled
-        and player.grab ~= b and b.x-tw/2 < o.x
-        and o.x < b.x+tw/2 and b.y-tw/2 < o.y and o.y < b.y+tw/2
+      if not b.disabled
+      and persistence.vars.grab ~= b and b.x-tw/2 < o.x
+      and o.x < b.x+tw/2 and b.y-tw/2 < o.y and o.y < b.y+tw/2
+      and b.properties.bigkey == o.properties.bigkey then
+        del_obj(b)
+        setVar(o.properties.change, true)
+        setType(o, "BIG_LOCK_OPEN")
+        return true
+      end
     end
 
     -- the correct bigkey
-    if table.anykey(types.BIGKEY, match) and theblock.properties.bigkey == o.properties.bigkey then
-      del_obj(theblock)
-      setVar(o.properties.change, true)
-      setType(o, "BIG_LOCK_OPEN")
-
-    else
+    if not table.anykey(types.BIGKEY, match) then
       setVar(o.properties.change, false)
     end
   end,
 
   LOCK = function (o)
     if pl_col(o.x, o.y, tw/2) then
-      print("lock near")
-      if player.keys > 0 then
+      if persistence.vars.keys > 0 then
         table.insert(bubbles, {
           x = o.x, y = o.y,
           text = "[space] : use key",
         })
 
         if pressed[" "] then
-          player.keys = player.keys - 1
-          del_obj(o)
+          persistence.vars.keys = persistence.vars.keys - 1
           setVar(o.properties.change, true)
+          del_obj(o)
         end
 
       else
@@ -235,6 +272,21 @@ local updates = {
           x = o.x, y = o.y,
           text = "Find a key for this lock!",
         })
+      end
+    end
+  end,
+
+  EYE = function (o)
+    if o.timer % 100 == 0 then
+      o.type = "EYE2"
+      audio.play("schwupp", o.x, o.y)
+    end
+  end,
+
+  EYE2 = function (o)
+    if not o.properties.closed then
+      if o.timer % 10 == 0 then
+        o.type = "EYE"
       end
     end
   end,
@@ -249,6 +301,9 @@ local updates = {
         setVar(o.properties.onfirsttouch, true)
         o.properties.onfirsttouch = nil
       end
+      if o.properties.ontouch then
+        setVar(o.properties.ontouch, true)
+      end
 
       if o.properties.TO then
         table.insert(bubbles, {
@@ -257,16 +312,20 @@ local updates = {
           text = "[space] : use door",
           alpha = change_level_timer < 0 and 255 or 100
         })
+
         if pressed[" "] and change_level_timer < 0 then
           quit = function ()
-            if player.grab and player.grab.type == "BIGKEY" then
-              player.grab = {type="", player.grab.properties}
-              del_obj(player.grab)
+            sword = nil
+
+            local tmp_prop
+            if persistence.vars.grab and persistence.vars.grab.type == "BIGKEY" then
+              tmp_prop = persistence.vars.grab.properties.bigkey
+              del_obj(persistence.vars.grab)
             else
-              player.grab = false
+              persistence.vars.grab = false
             end
 
-            local from = map.name
+            local from = transient.name
 
             change_level(o.properties.TO)
 
@@ -283,12 +342,13 @@ local updates = {
             camera.x = clamp(cam_min_x, avatar.x, cam_max_x, true)
             camera.y = clamp(cam_min_y, avatar.y, cam_max_y, true)
 
-            if player.grab then
+            if persistence.vars.grab then
               local grab = add_obj("BIGKEY", avatar.x, avatar.y)
-              player.grab = grab
+              persistence.vars.grab = grab
+              persistence.vars.grab.properties.bigkey = tmp_prop
             end
 
-            save_slot()
+            save_slot(persistence)
           end
         end
       end
@@ -300,33 +360,62 @@ local updates = {
 
   HEART = function (o)
     if pl_col(o.x, o.y-tw/2, tw/4) then
-      audio.play "gluck"
-      player.health = player.health + 1
-      del_obj(o)
+      move_to_inventory(o, 15*persistence.vars.health+20+10, 10+20+10, function ()
+        audio.play "gluck"
+        persistence.vars.health = persistence.vars.health + 1
+        if persistence.vars.health == 2 then
+          audio.setPitch(1.1, "default")
+        elseif persistence.vars.health == 1 then
+          audio.setPitch(1.2, "default")
+        else
+          audio.setPitch(1, "default")
+        end
+        del_obj(o)
+      end)
+    end
+  end,
+
+  CONTAINER = function (o)
+    if pl_col(o.x, o.y-tw/2, tw/4) then
+      move_to_inventory(o, 15*persistence.vars.health+20+10, 10+20+10, function ()
+        audio.play "gluck"
+        persistence.vars.hearts = persistence.vars.hearts + 1
+        persistence.vars.health = persistence.vars.health + 1
+        if persistence.vars.health == 2 then
+          audio.setPitch(1.1, "default")
+        elseif persistence.vars.health == 1 then
+          audio.setPitch(1.2, "default")
+        else
+          audio.setPitch(1, "default")
+        end
+        del_obj(o)
+      end)
     end
   end,
 
   ARROWS = function (o)
     if pl_col(o.x, o.y-tw/2, tw/4) then
-      audio.play "gluck"
-      player.arrows = player.arrows + 3
-      del_obj(o)
+      move_to_inventory(o, 109+tw+10, 50+2+tw+10, function ()
+        audio.play "gluck"
+        persistence.vars.arrows = persistence.vars.arrows + 3
+      end)
     end
   end,
 
   KEY = function (o)
     if pl_col(o.x, o.y-tw/2, tw/4) then
-      audio.play "gluck"
-      player.keys = player.keys + 1
-      del_obj(o)
+      move_to_inventory(o, 61+10, 50+2+10, function ()
+        audio.play "gluck"
+        persistence.vars.keys = persistence.vars.keys + 1
+      end)
     end
   end,
 
   BOW = function (o)
     if pl_col(o.x, o.y-tw/2, tw/4) then
       audio.play "gluck"
-      player.bow = true
-      player.arrows = 15
+      persistence.vars.bow = true
+      persistence.vars.arrows = 15
       del_obj(o)
     end
   end,
@@ -375,7 +464,7 @@ function update_obj (i, o)
 
     if o.type ~= "META" then
       if arrow_hurt[o.type] then
-        for _,p in ipairs(state.pool) do
+        for _,p in ipairs(persistence[transient.name].pool) do
           if p.type == "ARROW"
           and p.timer <= 0 and collision(o.x,o.y-tw/2, p.x,p.y, tw/2,tw/2) then
             hurt_enemy(o)
@@ -400,31 +489,55 @@ function update_obj (i, o)
       end
 
       if o.type:sub(1, 4) == "RUBY" and pl_col(o.x, o.y-tw/2, tw/4) then
-        audio.play "ding"
-        player.rubies = player.rubies + tonumber(o.type:sub(5))
-        del_obj(o)
+        audio.play "schwupp"
+        local value = tonumber(o.type:sub(5))
+        move_to_inventory(o, 14+10, 50-2+10, function ()
+          audio.play "ding"
+          persistence.vars.rubies = persistence.vars.rubies + value
+        end)
 
-      elseif not player.grab
+      elseif not persistence.vars.grab
       and ({CYAN=1, YELLOW=1, MAGENTA=1, BIGKEY=1})[o.type]
       and pl_col(o.x, o.y-tw/2, tw/4) then
         table.insert(bubbles, {x=o.x, y=o.y, text="[c] : carry"})
         if pressed.c then
-          player.grab = o
+          persistence.vars.grab = o
         end
       end
     end
   end
 end
 
-function count (tab)
-  local i = 0
-  for _,_ in pairs(tab) do i=i+1 end
-  return i
+function move_to_inventory(o, x, y, endfunc)
+  local newo = {}
+  unclean_obj(nil, newo, nil, o.type)
+  newo.x = o.x - camera.x + cam_min_x
+  newo.y = o.y - camera.y + cam_min_y
+  newo.ix = 10
+  newo.iy = 10
+
+  del_obj(o)
+
+  newo.i = table.insert(hud_objs, newo)
+
+  tweens.to(newo, "x", (math.max(0, w/2-400) + x)/camera.zoom, 1)
+  tweens.to(newo, "y", (math.max(0, h/2-200) + y)/camera.zoom, 1)
+
+  tweens.after(1, function ()
+    table.remove(hud_objs, newo.i)
+    endfunc()
+  end)
 end
 
-function find (arr, o)
-  for i,o in ipairs(arr) do if o==o then return i end end
-end
+--function count (tab)
+--  local i = 0
+--  for _,_ in pairs(tab) do i=i+1 end
+--  return i
+--end
+
+--function find (arr, o)
+--  for i,o in ipairs(arr) do if o==o then return i end end
+--end
 
 function move_obj (o)
   o.water = water(o.x, o.y+tw/2+2)
@@ -444,11 +557,12 @@ function move_obj (o)
 
     else
       if not o.water and math.abs(o.vx) > 0.1
-      and (o.type:find("RINK")~=-1 or o.type:find("SLIME")~=-1
-      or o.type:find("FISH")~=-1) then
+      and (o.type:find("RINK")~=nil
+      or o.type:find("SLIME")~=nil
+      or o.type:find("FISH")~=nil) then
         o.properties.schwupptimer = (o.properties.schwupptimer or 0)-math.random()
         if o.properties.schwupptimer < 0 then
-          audio.play("hah3", o.x, o.y-200)
+          audio.play("hah3", o.x, o.y, 0.9)
           o.properties.schwupptimer = 10
         end
       end
@@ -457,18 +571,20 @@ function move_obj (o)
 
   o.ground = o.vy >= 0 and (
     solid(o.x, o.y+o.vy+1) or
-    grid(o, 0, o.vy+1) or
+    (not grid(o, 0, 0) and grid(o, 0, o.vy+1)) or
     (not o.type=="BLOCK" and grid(o, 0, 0) and block(o.x, o.y+o.vy+1))
   )
 
   if not o.water then
     if o.ground then
-      o.vx = o.vx * 0.8
+      o.vx = o.vx * (o.friction or 0.8)
 
     else
-      o.vx = o.vx * ("ARROW" == o.type and 0.99 or 0.8)
-      o.vy = o.vy + 0.5
+      o.vx = o.vx * (o.airfriction or 0.8)
+      o.vy = o.vy + (o.gravity or 0.5)
     end
+  elseif not o.ground then
+      o.vy = o.vy + (o.gravity or 0.5)/15
   end
 
   if o.ground or (o.vy < 0
@@ -492,7 +608,14 @@ function control ()
   camera.x = camera.x + (clamp(cam_min_x, o.x, cam_max_x, true) - camera.x) / 6
   camera.y = camera.y + (clamp(cam_min_y, o.y, cam_max_y, true) - camera.y) / 12
 
-  if pressed.escape then love.event.quit() end
+  if persistence.vars.health == 2 then
+    camera.x = camera.x + math.random()
+    camera.y = camera.y + math.random()
+
+  elseif persistence.vars.health == 1 then
+    camera.x = camera.x + math.random()*3
+    camera.y = camera.y + math.random()*3
+  end
 
   if o.timer > 0 then o.alpha = (40-o.timer)/40*255 end
 
@@ -507,22 +630,22 @@ function control ()
       fullscreentimer = 10
     end
 
-  elseif debugtimer < 0 and pressed["return"] then
+  elseif debugtimer < 0 and pressed["d"] then
     DEBUG = not DEBUG
     debugtimer = 10
   end
 
-  if not pressed.c then player.grab = false end
-  if player.grab then
-    player.grab.x = o.x + o.facing * 5
-    player.grab.y = o.y
-    player.grab.vx = avatar.vx
-    player.grab.vy = avatar.vy
+  if not pressed.c then persistence.vars.grab = false end
+  if persistence.vars.grab then
+    persistence.vars.grab.x = o.x + o.facing * 5
+    persistence.vars.grab.y = o.y
+    persistence.vars.grab.vx = avatar.vx
+    persistence.vars.grab.vy = avatar.vy
 
 --    THROW GRABBED THINGS
 --    if pressed.x then
---      arrow = player.grab
---      player.grab = false
+--      arrow = persistence.vars.grab
+--      persistence.vars.grab = false
 --    end
   end
 
@@ -546,7 +669,9 @@ function control ()
     unsword = false
     o.type = "RINK_ATTACK"
     audio.play "hah"
+
     sword = add_obj("SWORD", o.x, o.y-8)
+
     sword.timer = 5
     sword.ox = -4
     sword.oy = 2.5
@@ -561,9 +686,9 @@ function control ()
   end
 
   if o.water then
-    if audio.mvol2 ~= 1/2 then
-      audio.play "schwupp"
-      audio.setMVol2(1/2)
+    if audio.channels.default.vol ~= 1/3 then
+      audio.music("droplets", "droplets")
+      audio.setVol(1/3, "default")
     end
 
     if pressed.up then       o.vy = o.vy - 0.2
@@ -573,9 +698,9 @@ function control ()
     elseif pressed.right then o.vx = o.vx + 0.2 end
 
     if pressed.up and
-    (solid(o.x-15, o.y) or solid(o.x+15, o.y)) and
+--    (solid(o.x-15, o.y) or solid(o.x+15, o.y)) and
     not water(o.x, o.y-5) then
-      o.vy = -6;
+      o.vy = o.vy - 0.9 --6
     end
 
 
@@ -587,9 +712,10 @@ function control ()
     arrow = false
 
   else
-    if audio.mvol2 ~= 1 then
+    if audio.channels.default.vol ~= 1 then
+      audio.music(nil, "droplets")
       audio.play "schwupp"
-      audio.setMVol2(1)
+      audio.setVol(1, "default")
     end
 
     if not sword then
@@ -599,8 +725,8 @@ function control ()
       )
     end
 
-    if     pressed.down            then o.type = "RINK_SHIELD"
-    elseif o.ground and pressed.up then o.vy = -7 end
+--    if     pressed.down            then o.type = "RINK_SHIELD"
+    if o.ground and pressed.up then o.vy = -7 end
 
     arrowtimer = arrowtimer - 1
     if arrow then
@@ -615,15 +741,16 @@ function control ()
         arrowtimer = 30
       end
 
-    elseif player.bow and arrowtimer < 0 and pressed.x then
-      if player.arrows > 0 then
+    elseif persistence.vars.bow and arrowtimer < 0 and pressed.x then
+      if persistence.vars.arrows > 0 then
         audio.play "hah"
-        player.arrows = player.arrows-1
+        persistence.vars.arrows = persistence.vars.arrows-1
 
         local x = avatar.x - math.abs(math.cos(now/500))*10 * (avatar.vx<0 and 1 or -1)
         local y = avatar.y - math.abs(math.sin(now/500))*10 - 10
 
         arrow = add_obj("ARROW", x, y)
+        arrow.airfriction = 0.99
         arrow.ox = 10
         arrow.oy = 10
         arrow.ix = 10

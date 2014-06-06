@@ -3,11 +3,11 @@ local tw = 20
 
 function box_col (o1, o2, w1,h1, w2,h2)
   if DEBUG then
-    g.setColor(255, 255, 255,
-     255-255*math.min(1, math.sqrt((o1.x-o2.x)*(o1.x-o2.x)+(o1.y-o2.y)*(o1.y-o2.y))/300))
+    g.setColor(255, 0, 0, 100)
+--     255-255*math.min(1, math.sqrt((o1.x-o2.x)*(o1.x-o2.x)+(o1.y-o2.y)*(o1.y-o2.y))/300))
 
     g.rectangle("fill", o1.x-1, o1.y-h1/2-1, 2, 2)
-    g.rectangle("fill", o2.x+w2/2-1, o2.y+h2/2-1, 2, 2)
+    g.rectangle("fill", o2.x, o2.y, w2, h2)
   end
 
   if math.abs(o1.x - o2.x-w2/2) < w1/2+w2/2 and math.abs(o1.y-h1/2 - o2.y-h2/2) < h1/2+h2/2 then
@@ -19,7 +19,7 @@ end
 function rect_col (a, b)
   if DEBUG then
     g.setColor(255, 255, 255,
-     255-255*math.min(1, math.sqrt((o1.x-o2.x)*(o1.x-o2.x)+(o1.y-o2.y)*(o1.y-o2.y))/300))
+     255-255*math.min(1, math.sqrt((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y))/300))
 
     g.line(a.x, a.y, b.x, b.y)
   end
@@ -60,15 +60,15 @@ function pl_col(x, y, r)
   return circ_col(avatar.x, avatar.y-10, x, y, tw/2.5, r)
 end
 
-function maptile_at(tilemap, x, y)
+function maptile_at(tilemap, x, y, default)
   -- is map in bounds?
   local tx, ty = floor(x/tw), floor(y/tw)
-  if tx < 0 or tx > map.width - 1
-  or ty < 0 or ty > map.height - 1 then
-    return true
+  if tx < 0 or tx > transient.width - 1
+  or ty < 0 or ty > transient.height - 1 then
+    return default
   end
 
-  local result = tilemap[1 + tx + ty * map.width] ~= 0
+  local result = tilemap[1 + tx + ty * transient.width] ~= 0
 
   if DEBUG then
     local col = result and 255 or 0
@@ -79,8 +79,10 @@ function maptile_at(tilemap, x, y)
   return result
 end
 
-function solid(x, y) return solidmap and maptile_at(solidmap, x, y) end
-function water(x, y) return watermap and maptile_at(watermap, x, y-15) end
+function solid(x, y) return transient.solidmap and
+  maptile_at(transient.solidmap, x, y, true) end
+function water(x, y) return transient.watermap and
+  maptile_at(transient.watermap, x, y-15+persistence[transient.name].water_y, false) end
 
 function grid(o, vx, vy)
   for b,_ in pairs(types.GRID) do
@@ -91,13 +93,13 @@ function grid(o, vx, vy)
       g.setColor(255, 0, 255, 50)
       g.rectangle("fill", o.x-2, o.y-2, 4, 4)
       g.rectangle("fill", b.x-b.ox, b.y-b.oy, b.width, b.height)
-      g.setColor(255, 255, 0, 50)
-      g.rectangle("fill", left, top, right-left, bottom-top)
+--      g.setColor(255, 255, 0, 50)
+--      g.rectangle("fill", left, top, right-left, bottom-top)
     end
 
     if not b.disabled
     and left < o.x+vx and o.x+vx < right
-    and top < o.y+vy and o.y+vy < bottom then
+    and top-2 < o.y+vy and o.y+vy < bottom-1 then
       return true
     end
   end

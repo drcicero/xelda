@@ -70,8 +70,8 @@ function tiled.layer_init (layer)
 
   if CANVAS then
     canvas_cache[layer] = g.newCanvas(
-      map.width * map.tilewidth,
-      map.height * map.tileheight
+      transient.width * transient.tilewidth,
+      transient.height * transient.tileheight
     )
 
     local canvas = canvas_cache[layer]
@@ -84,20 +84,20 @@ function tiled.layer_init (layer)
   end
 end
 
-function tiled.draw_layers (map, pool)
+function tiled.draw_layers (transient, pool)
   local not_yet_pool_drawn = true
 
-  for i,layer in ipairs(map.layers) do
+  for i,layer in ipairs(transient.layers) do
     if layer.type == "tilelayer" then
       local lprop = layer.properties
-      local parallax_x = (i/#map.layers - 0.5) * tonumber(lprop and lprop.parallax_x or 0) + 1
-      local parallax_y = (i/#map.layers - 0.5) * tonumber(lprop and lprop.parallax_y or 0) + 1
+      local parallax_x = (i/#transient.layers - 0.5) * tonumber(lprop and lprop.parallax_x or 0) + 1
+      local parallax_y = (i/#transient.layers - 0.5) * tonumber(lprop and lprop.parallax_y or 0) + 1
       local x = floor(camera.x * (1-parallax_x))
       local y = floor(camera.y * (1-parallax_y))
 
       if layer.name == "Water" then
         x = x + math.sin(now/1000)*tw/2
-        y = y + math.sin(now/500)*tw/4
+        y = y + math.sin(now/500)*tw/4 - persistence[transient.name].water_y
       end
 
       if CANVAS then
@@ -116,13 +116,15 @@ function tiled.draw_layers (map, pool)
       table.foreach(layer.objects, tiled.draw_obj)
 
       if not_yet_pool_drawn then
-        not_yet_pool_drawn = true
+        not_yet_pool_drawn = false
+        if level[transient.name] then level[transient.name].draw() end
         table.foreach(pool, tiled.draw_obj)
       end
     end
   end
 
   if not_yet_pool_drawn then
+    if level[transient.name] then level[transient.name].draw() end
     table.foreach(pool, tiled.draw_obj)
   end
 end
@@ -140,8 +142,8 @@ function tiled.draw_obj (i, o)
       if o.type == "EYE" then
         g.setColor(0,0,0,255)
         local x, y = avatar.x-o.x, avatar.y-o.y
-        local len = math.sqrt(x * x + y * y)/4
-        g.rectangle("fill", floor(o.x+x/len-2), floor(o.y-tw/2+y/len-2), 4, 4)
+        local len = math.sqrt(x * x + y * y)/3
+        g.rectangle("fill", floor(o.x+x/len)-1, floor(o.y+y/len-tw/2)-1, 4, 4)
       end
 
       if DEBUG then

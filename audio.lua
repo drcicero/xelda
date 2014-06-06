@@ -20,61 +20,79 @@ end
 
 ---
 -- name is the name of a loaded mp3 assets. (See #audio.load)
--- if you call this function with x and y, then the volume of the sound will be affected by the distance of the pos to the avatars pos. (See $maps)
-function audio.play (name, x, y)
+-- if you call this function with x and y, then the volume of the sound will be affected by the distance of the pos to the avatar's pos multiplied with vol times #audio.svol. (See $maps)
+function audio.play (name, x, y, vol, pitch)
   local a = files[name]:clone()
-  local vol = 1
+
+  pitch = pitch or 1
+  vol = vol or 1
+
   if x then
     local dist = math.sqrt((x-avatar.x)*(x-avatar.x)+(y-avatar.y)*(y-avatar.y))
-    vol = clamp(0, 1-math.sqrt(dist)/15, 1)
+    vol = clamp(0, (1-math.sqrt(dist)/15) * vol, 1)
   end
   a:setVolume(vol * audio.svol)
+  a:setPitch(pitch)
   a:play()
 end
 
-audio._music = ""
+audio.mvol = 1
+audio.svol = 1
+
+audio.channels = {}
 ---
 -- name is the name of a loaded mp3 assets. (See #audio.load)
 -- only one music can play at a time and will be looped.
 -- you can change the volume even after starting to play with #audio.setMvol .
-function audio.music (name)
-  local old = files[audio._music]
-  local new = files[name]
-  audio._music = name
-
-  if old then
-    old:pause()
-    old:setLooping(false)
-    old:setVolume(1)
+function audio.music (name, channelid)
+  local channel = audio.channels[channelid]
+  if channel then
+    channel.sample:pause()
+    channel.name = name
+  else
+    channel = {vol=1, pitch=1, name=name}
+    audio.channels[channelid] = channel
   end
-  if new then
-    new:setLooping(true)
-    new:setVolume(audio.mvol*audio.mvol2)
-    new:play()
+
+  local template = files[name]
+  if not template then
+    if not name == nil then
+      print("warning: no audio '" .. tostring(name) .. "'")
+    end
+
+  else
+    local sample = template:clone()
+    channel.sample = sample
+    sample:setLooping(true)
+    sample:setPitch(channel.pitch)
+    sample:setVolume(channel.vol * audio.mvol)
+    sample:play()
   end
 end
 
-audio.mvol = 1
-audio.mvol2 = 1
-audio.svol = 1
+function audio.setPitch (pitch, channel)
+  local channel = audio.channels[channel]
+  if channel then
+    channel.pitch = pitch
+    channel.sample:setPitch(pitch)
+  end
+end
+
+function audio.setVol (vol, channelid)
+  local channel = audio.channels[channelid]
+  if channel then
+    channel.vol = vol
+    channel.sample:setVolume(vol * audio.mvol)
+  end
+end
 
 ---
--- vol is a number between 0 and 1.
+-- channel master volume
 function audio.setMVol (vol)
   local mus = files[audio._music]
   audio.mvol = vol
-  if mus then
-    mus:setVolume(audio.mvol*audio.mvol2)
-  end
-end
-
----
--- vol is a number between 0 and 1.
-function audio.setMVol2 (vol)
-  local mus = files[audio._music]
-  audio.mvol2 = vol
-  if mus then
-    mus:setVolume(audio.mvol*audio.mvol2)
+  for id, channel in pairs(audio.channels) do
+    channel.sample:setVolume(channel.vol * vol)
   end
 end
 
