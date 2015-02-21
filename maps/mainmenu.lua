@@ -11,15 +11,19 @@ return {
   },
   tilesets = {
     {
-      name = "All2",
+      name = "tileset",
       firstgid = 1,
       tilewidth = 20,
       tileheight = 20,
       spacing = 0,
       margin = 0,
-      image = "../../Programme/Springteufel/games/Xelda/pre/All2.png",
+      image = "../assets/tileset.png",
       imagewidth = 160,
-      imageheight = 360,
+      imageheight = 380,
+      tileoffset = {
+        x = 0,
+        y = 0
+      },
       properties = {},
       tiles = {}
     }
@@ -73,8 +77,8 @@ return {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 70, 0, 70, 0, 0, 0, 0, 0, 0, 89, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 97, 98, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        0, 89, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 97, 98, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
       }
     },
     {
@@ -88,41 +92,14 @@ return {
           name = "",
           type = "",
           shape = "rectangle",
-          x = 360,
-          y = 160,
-          width = 0,
-          height = 0,
-          gid = 84,
-          visible = true,
-          properties = {
-            ["text"] = "[alt]+[enter] : fullscreen\\n[escape] : save+quit"
-          }
-        },
-        {
-          name = "",
-          type = "",
-          shape = "rectangle",
           x = 464,
           y = 143,
           width = 29,
           height = 40,
+          rotation = 0,
           visible = true,
           properties = {
             ["TO"] = "ice_entry"
-          }
-        },
-        {
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 250,
-          y = 159,
-          width = 0,
-          height = 0,
-          gid = 84,
-          visible = true,
-          properties = {
-            ["text"] = "[left], [right] : move\\n[up] : jump\\n[space] : action"
           }
         },
         {
@@ -133,10 +110,25 @@ return {
           y = 180,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 84,
           visible = true,
           properties = {
-            ["text"] = "Level 1\\nIce Temple"
+            ["text"] = "Level 1\\nIce Grotto"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 25,
+          y = 211,
+          width = 29,
+          height = 29,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["TO"] = "village"
           }
         }
       }
@@ -191,6 +183,51 @@ return {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 78, 78, 78, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 0, 0, 0, 0, 0, 0
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "Zones",
+      visible = false,
+      opacity = 1,
+      properties = {},
+      objects = {
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 326,
+          y = 9,
+          width = 309,
+          height = 229,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 158,
+          y = -9,
+          width = 295,
+          height = 216,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 0,
+          y = 165,
+          width = 399,
+          height = 72,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
       }
     }
   }

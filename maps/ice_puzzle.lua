@@ -15,9 +15,13 @@ return {
       tileheight = 20,
       spacing = 0,
       margin = 0,
-      image = "../../Programme/Springteufel/games/Xelda/pre/All2.png",
+      image = "../assets/tileset.png",
       imagewidth = 160,
-      imageheight = 360,
+      imageheight = 380,
+      tileoffset = {
+        x = 0,
+        y = 0
+      },
       properties = {},
       tiles = {}
     }
@@ -105,6 +109,7 @@ return {
           y = 160,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 72,
           visible = true,
           properties = {
@@ -121,6 +126,7 @@ return {
           y = 160,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 72,
           visible = true,
           properties = {
@@ -137,6 +143,7 @@ return {
           y = 160,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -151,6 +158,7 @@ return {
           y = 160,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -165,6 +173,7 @@ return {
           y = 140,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 37,
           visible = true,
           properties = {}
@@ -177,6 +186,7 @@ return {
           y = 340,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 38,
           visible = true,
           properties = {}
@@ -189,6 +199,7 @@ return {
           y = 340,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 39,
           visible = true,
           properties = {}
@@ -201,6 +212,7 @@ return {
           y = 160,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -215,6 +227,7 @@ return {
           y = 120,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -229,6 +242,7 @@ return {
           y = 140,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -243,6 +257,7 @@ return {
           y = 280,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -255,6 +270,7 @@ return {
           y = 340,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -267,6 +283,7 @@ return {
           y = 320,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -279,6 +296,7 @@ return {
           y = 280,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -291,6 +309,7 @@ return {
           y = 300,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -303,6 +322,7 @@ return {
           y = 320,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -315,6 +335,7 @@ return {
           y = 320,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -327,6 +348,7 @@ return {
           y = 320,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -339,6 +361,7 @@ return {
           y = 300,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -351,6 +374,7 @@ return {
           y = 300,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -363,6 +387,7 @@ return {
           y = 300,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -375,6 +400,7 @@ return {
           y = 280,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -387,6 +413,7 @@ return {
           y = 320,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -399,6 +426,7 @@ return {
           y = 320,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -411,6 +439,7 @@ return {
           y = 300,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -423,6 +452,7 @@ return {
           y = 320,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -435,6 +465,7 @@ return {
           y = 280,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -447,6 +478,7 @@ return {
           y = 300,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -459,6 +491,7 @@ return {
           y = 300,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -471,6 +504,7 @@ return {
           y = 280,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -483,6 +517,7 @@ return {
           y = 340,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -495,6 +530,7 @@ return {
           y = 320,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -507,6 +543,7 @@ return {
           y = 320,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -519,6 +556,7 @@ return {
           y = 300,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -531,6 +569,7 @@ return {
           y = 280,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -543,6 +582,7 @@ return {
           y = 280,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -555,6 +595,7 @@ return {
           y = 340,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -567,6 +608,7 @@ return {
           y = 260,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -579,6 +621,7 @@ return {
           y = 140,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 80,
           visible = true,
           properties = {
@@ -593,6 +636,7 @@ return {
           y = 140,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 84,
           visible = true,
           properties = {
@@ -607,6 +651,7 @@ return {
           y = 180,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -621,6 +666,7 @@ return {
           y = 180,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -635,6 +681,7 @@ return {
           y = 240,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -649,6 +696,7 @@ return {
           y = 240,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -663,6 +711,7 @@ return {
           y = 140,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -677,6 +726,7 @@ return {
           y = 67,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 80,
           visible = true,
           properties = {
@@ -692,6 +742,7 @@ return {
           y = 71,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 99,
           visible = true,
           properties = {
@@ -706,6 +757,7 @@ return {
           y = 260,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -720,6 +772,7 @@ return {
           y = 280,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -734,6 +787,7 @@ return {
           y = 280,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -748,6 +802,7 @@ return {
           y = 260,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -762,6 +817,7 @@ return {
           y = 240,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -776,6 +832,7 @@ return {
           y = 160,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -788,6 +845,7 @@ return {
           y = 160,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -800,6 +858,7 @@ return {
           y = 300,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -812,6 +871,7 @@ return {
           y = 300,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -824,6 +884,7 @@ return {
           y = 320,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -836,6 +897,7 @@ return {
           y = 340,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -848,6 +910,7 @@ return {
           y = 340,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -860,6 +923,7 @@ return {
           y = 300,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -872,6 +936,7 @@ return {
           y = 320,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -884,6 +949,7 @@ return {
           y = 340,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -896,6 +962,7 @@ return {
           y = 340,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -908,6 +975,7 @@ return {
           y = 320,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -920,6 +988,7 @@ return {
           y = 340,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -932,6 +1001,7 @@ return {
           y = 340,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 46,
           visible = true,
           properties = {}
@@ -944,6 +1014,7 @@ return {
           y = 340,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -956,6 +1027,7 @@ return {
           y = 300,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 46,
           visible = true,
           properties = {}
@@ -968,6 +1040,7 @@ return {
           y = 300,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 87,
           visible = true,
           properties = {}
@@ -980,6 +1053,7 @@ return {
           y = 126,
           width = 32,
           height = 37,
+          rotation = 0,
           visible = true,
           properties = {
             ["TO"] = "ice_puzzle_normal"
@@ -993,6 +1067,7 @@ return {
           y = 160,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -1007,6 +1082,7 @@ return {
           y = 160,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 72,
           visible = true,
           properties = {
@@ -1021,6 +1097,7 @@ return {
           y = 160,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -1035,6 +1112,7 @@ return {
           y = 140,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -1049,6 +1127,7 @@ return {
           y = 120,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -1063,6 +1142,7 @@ return {
           y = 260,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 31,
           visible = true,
           properties = {}
@@ -1075,6 +1155,7 @@ return {
           y = 253,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 31,
           visible = true,
           properties = {}
@@ -1087,6 +1168,7 @@ return {
           y = 252,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 31,
           visible = true,
           properties = {}
@@ -1099,6 +1181,7 @@ return {
           y = 272,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 31,
           visible = true,
           properties = {}
@@ -1111,6 +1194,7 @@ return {
           y = 180,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -1125,6 +1209,7 @@ return {
           y = 180,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -1139,6 +1224,7 @@ return {
           y = 180,
           width = 0,
           height = 0,
+          rotation = 0,
           gid = 88,
           visible = true,
           properties = {
@@ -1212,6 +1298,123 @@ return {
         137, 137, 112, 0, 0, 112, 112, 0, 0, 0, 112, 112, 112, 112, 112, 0, 0, 112, 0, 112, 112, 112, 112, 112, 112, 0, 0, 0, 112, 112, 112, 0, 112, 0, 0, 0, 0, 0, 112, 0, 0, 0, 112, 112, 0, 112, 137,
         137, 137, 112, 0, 112, 112, 112, 112, 112, 112, 112, 137, 137, 137, 112, 112, 112, 112, 112, 112, 137, 137, 137, 137, 112, 0, 112, 112, 112, 137, 112, 0, 112, 0, 112, 0, 0, 112, 112, 0, 0, 112, 112, 112, 0, 112, 137,
         137, 137, 112, 112, 112, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 112, 112, 112, 137, 137, 137, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 137, 112, 112, 112, 137
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "Zones",
+      visible = true,
+      opacity = 1,
+      properties = {},
+      objects = {
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 0,
+          y = 1,
+          width = 278,
+          height = 199,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 1,
+          y = 179,
+          width = 278,
+          height = 182,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 259,
+          y = 160,
+          width = 179,
+          height = 202,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 420,
+          y = 161,
+          width = 259,
+          height = 197,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 639,
+          y = 163,
+          width = 300,
+          height = 197,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 259,
+          y = 92,
+          width = 441,
+          height = 126,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 661,
+          y = 1,
+          width = 275,
+          height = 198,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 258,
+          y = 1,
+          width = 0,
+          height = 1,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 260,
+          y = -1,
+          width = 361,
+          height = 122,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
       }
     }
   }

@@ -3,13 +3,10 @@ return {
   luaversion = "5.1",
   orientation = "orthogonal",
   width = 50,
-  height = 26,
+  height = 20,
   tilewidth = 20,
   tileheight = 20,
-  nextobjectid = 60,
-  properties = {
-    ["chest"] = "3"
-  },
+  properties = {},
   tilesets = {
     {
       name = "All2",
@@ -26,7 +23,6 @@ return {
         y = 0
       },
       properties = {},
-      terrains = {},
       tiles = {}
     }
   },
@@ -37,13 +33,10 @@ return {
       x = 0,
       y = 0,
       width = 50,
-      height = 26,
+      height = 20,
       visible = true,
       opacity = 1,
-      properties = {
-        ["paralax_y"] = "0.5",
-        ["parallax_x"] = "0.5"
-      },
+      properties = {},
       encoding = "lua",
       data = {
         93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94,
@@ -52,14 +45,8 @@ return {
         101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102,
         93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94,
         101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102,
-        93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94,
-        101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102,
-        93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94,
-        101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102,
-        93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94,
-        101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102,
-        93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94,
-        101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102,
+        93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 57, 58, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94,
+        101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 65, 66, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102,
         93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94,
         101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102, 101, 102,
         93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94, 93, 94,
@@ -80,7 +67,7 @@ return {
       x = 0,
       y = 0,
       width = 50,
-      height = 26,
+      height = 20,
       visible = true,
       opacity = 1,
       properties = {},
@@ -92,15 +79,9 @@ return {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 97, 98, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 89, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 90, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 97, 98, 0, 0, 0, 0, 0, 0, 0, 0, 89, 90, 0, 0, 0, 0, 0, 0, 0, 97, 98, 0, 0, 0, 0, 0, 0, 0, 89, 90, 0, 0, 0, 0, 0, 0, 0, 0, 97, 98, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 97, 98, 0, 0, 0, 0, 0, 0, 0, 97, 98, 0, 0, 0, 0, 0, 0, 0, 97, 98, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -108,9 +89,9 @@ return {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 89, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 97, 98, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 90, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 97, 98, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
       }
     },
@@ -122,598 +103,70 @@ return {
       properties = {},
       objects = {
         {
-          id = 1,
           name = "",
           type = "",
           shape = "rectangle",
-          x = 320,
-          y = 301,
+          x = 280,
+          y = 300,
           width = 0,
           height = 0,
           rotation = 0,
           gid = 88,
           visible = true,
-          properties = {}
-        },
-        {
-          id = 2,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 680,
-          y = 460,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 87,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 3,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 100,
-          y = 440,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 87,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 4,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 840,
-          y = 460,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 87,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 5,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 40,
-          y = 440,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 87,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 6,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 20,
-          y = 400,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 87,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 7,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 260,
-          y = 480,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 87,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 8,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 80,
-          y = 440,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 87,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 9,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 540,
-          y = 480,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 87,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 10,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 400,
-          y = 440,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 87,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 11,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 940,
-          y = 480,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 80,
-          visible = true,
           properties = {
-            ["item"] = "KEY"
+            ["switch"] = "waterleft"
           }
         },
         {
-          id = 12,
           name = "",
           type = "",
           shape = "rectangle",
-          x = 920,
-          y = 260,
+          x = 580,
+          y = 320,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 88,
+          visible = true,
+          properties = {
+            ["switch"] = "waterright"
+          }
+        },
+        {
+          name = "",
+          type = "lock",
+          shape = "rectangle",
+          x = 320,
+          y = 320,
           width = 0,
           height = 0,
           rotation = 0,
           gid = 64,
           visible = true,
           properties = {
-            ["change"] = "key"
+            ["change"] = "waterleft"
           }
         },
         {
-          id = 13,
           name = "",
-          type = "",
-          shape = "rectangle",
-          x = 960,
-          y = 240,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!key"
-          }
-        },
-        {
-          id = 14,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 900,
-          y = 220,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!key"
-          }
-        },
-        {
-          id = 15,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 840,
-          y = 200,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!key"
-          }
-        },
-        {
-          id = 16,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 920,
-          y = 480,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 87,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 17,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 960,
-          y = 480,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 87,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 18,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 580,
-          y = 480,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 87,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 19,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 640,
-          y = 460,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 87,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 20,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 780,
-          y = 440,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 87,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 21,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 440,
-          y = 440,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 87,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 22,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 720,
-          y = 460,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 87,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 23,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 187,
-          y = 228,
-          width = 26,
-          height = 31,
-          rotation = 0,
-          visible = true,
-          properties = {
-            ["TO"] = "ice_entry"
-          }
-        },
-        {
-          id = 24,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 388,
-          y = 200,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 99,
-          visible = true,
-          properties = {
-            ["change"] = "eye1",
-            ["timer"] = "40"
-          }
-        },
-        {
-          id = 25,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 529,
-          y = 202,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 99,
-          visible = true,
-          properties = {
-            ["change"] = "eye2",
-            ["timer"] = "30"
-          }
-        },
-        {
-          id = 26,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 669,
-          y = 201,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 99,
-          visible = true,
-          properties = {
-            ["change"] = "eye3",
-            ["timer"] = "20"
-          }
-        },
-        {
-          id = 27,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 810,
-          y = 200,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 99,
-          visible = true,
-          properties = {
-            ["change"] = "eye4",
-            ["timer"] = "10"
-          }
-        },
-        {
-          id = 28,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 380,
-          y = 301,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!eye1"
-          }
-        },
-        {
-          id = 29,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 400,
-          y = 301,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!eye1"
-          }
-        },
-        {
-          id = 30,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 460,
-          y = 301,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 31,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 520,
-          y = 301,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!eye2"
-          }
-        },
-        {
-          id = 32,
-          name = "",
-          type = "",
+          type = "lock",
           shape = "rectangle",
           x = 540,
-          y = 301,
+          y = 360,
           width = 0,
           height = 0,
           rotation = 0,
-          gid = 88,
+          gid = 64,
           visible = true,
           properties = {
-            ["switch"] = "!eye2"
+            ["change"] = "waterright"
           }
         },
         {
-          id = 33,
           name = "",
           type = "",
           shape = "rectangle",
-          x = 600,
-          y = 301,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 34,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 660,
-          y = 301,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!eye3"
-          }
-        },
-        {
-          id = 35,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 680,
-          y = 301,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!eye3"
-          }
-        },
-        {
-          id = 36,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 740,
-          y = 301,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 37,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 800,
-          y = 301,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!eye4"
-          }
-        },
-        {
-          id = 38,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 820,
-          y = 301,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!eye4"
-          }
-        },
-        {
-          id = 39,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 780,
-          y = 180,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!key"
-          }
-        },
-        {
-          id = 40,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 720,
+          x = 200,
           y = 160,
           width = 0,
           height = 0,
@@ -721,245 +174,70 @@ return {
           gid = 88,
           visible = true,
           properties = {
-            ["switch"] = "!key"
+            ["switch"] = "left2"
           }
         },
         {
-          id = 41,
           name = "",
           type = "",
           shape = "rectangle",
-          x = 110,
-          y = 99,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 80,
-          visible = true,
-          properties = {
-            ["item"] = "CONTAINER"
-          }
-        },
-        {
-          id = 42,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 179,
-          y = 33,
-          width = 25,
-          height = 96,
-          rotation = 0,
-          visible = true,
-          properties = {
-            ["onfirsttouch"] = "left"
-          }
-        },
-        {
-          id = 43,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 140,
-          y = 120,
+          x = 740,
+          y = 140,
           width = 0,
           height = 0,
           rotation = 0,
           gid = 88,
           visible = true,
           properties = {
-            ["switch"] = "!left chest"
+            ["switch"] = "right2"
           }
         },
         {
-          id = 44,
           name = "",
           type = "",
           shape = "rectangle",
-          x = 140,
-          y = 100,
+          x = 691,
+          y = 71,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 99,
+          visible = true,
+          properties = {
+            ["change"] = "right2"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 246,
+          y = 70,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 99,
+          visible = true,
+          properties = {
+            ["change"] = "left2"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 200,
+          y = 140,
           width = 0,
           height = 0,
           rotation = 0,
           gid = 88,
           visible = true,
           properties = {
-            ["switch"] = "!left chest"
+            ["switch"] = "left2"
           }
         },
         {
-          id = 45,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 140,
-          y = 80,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!left chest"
-          }
-        },
-        {
-          id = 46,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 140,
-          y = 60,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!left chest"
-          }
-        },
-        {
-          id = 47,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 384,
-          y = 33,
-          width = 23,
-          height = 93,
-          rotation = 0,
-          visible = true,
-          properties = {
-            ["onfirsttouch"] = "right",
-            ["switch"] = "!left"
-          }
-        },
-        {
-          id = 48,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 420,
-          y = 60,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!right chest"
-          }
-        },
-        {
-          id = 49,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 420,
-          y = 80,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!right chest"
-          }
-        },
-        {
-          id = 50,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 420,
-          y = 100,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!right chest"
-          }
-        },
-        {
-          id = 51,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 420,
-          y = 120,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!right chest"
-          }
-        },
-        {
-          id = 52,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 180,
-          y = 120,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 17,
-          visible = true,
-          properties = {
-            ["onkill"] = "-chest",
-            ["switch"] = "!right"
-          }
-        },
-        {
-          id = 55,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 360,
-          y = 380,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 31,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 56,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 640,
-          y = 420,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 31,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 57,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 101,
-          y = 413,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          gid = 31,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 58,
           name = "",
           type = "",
           shape = "rectangle",
@@ -968,28 +246,1032 @@ return {
           width = 0,
           height = 0,
           rotation = 0,
-          gid = 134,
+          gid = 88,
           visible = true,
           properties = {
-            ["onkill"] = "-chest",
-            ["switch"] = "!right"
+            ["switch"] = "left2"
           }
         },
         {
-          id = 59,
           name = "",
           type = "",
           shape = "rectangle",
-          x = 220,
+          x = 740,
+          y = 160,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 88,
+          visible = true,
+          properties = {
+            ["switch"] = "right2"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 740,
           y = 120,
           width = 0,
           height = 0,
           rotation = 0,
-          gid = 17,
+          gid = 88,
           visible = true,
           properties = {
-            ["onkill"] = "-chest",
-            ["switch"] = "!right"
+            ["switch"] = "right2"
+          }
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 900,
+          y = 160,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 700,
+          y = 180,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 680,
+          y = 180,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 540,
+          y = 180,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 260,
+          y = 180,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 160,
+          y = 160,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 60,
+          y = 160,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 20,
+          y = 180,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 40,
+          y = 180,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 286,
+          y = 151,
+          width = 28,
+          height = 31,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["TO"] = "ice_key1"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 466,
+          y = 130,
+          width = 28,
+          height = 48,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["TO"] = "mainmenu"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 644,
+          y = 149,
+          width = 30,
+          height = 32,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["TO"] = "ice_key2"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 85,
+          y = 128,
+          width = 29,
+          height = 33,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["TO"] = "ice_timejump"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 848,
+          y = 127,
+          width = 27,
+          height = 34,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["TO"] = "ice_boss"
+          }
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 940,
+          y = 300,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 920,
+          y = 340,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 900,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 880,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 860,
+          y = 380,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 840,
+          y = 380,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 820,
+          y = 380,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 800,
+          y = 380,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 780,
+          y = 380,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 760,
+          y = 380,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 740,
+          y = 380,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 720,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 700,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 680,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 640,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 660,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 620,
+          y = 340,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 600,
+          y = 340,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 560,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 520,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 500,
+          y = 380,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 480,
+          y = 380,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 460,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 440,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 420,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 400,
+          y = 340,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 380,
+          y = 340,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 360,
+          y = 340,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 340,
+          y = 320,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 300,
+          y = 320,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 260,
+          y = 300,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 240,
+          y = 320,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 220,
+          y = 340,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 200,
+          y = 340,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 180,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 140,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 160,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 120,
+          y = 380,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 100,
+          y = 380,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 80,
+          y = 380,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 60,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "grass",
+          shape = "rectangle",
+          x = 40,
+          y = 360,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 145,
+          y = 324,
+          width = 30,
+          height = 35,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["TO"] = "ice_puzzle_easy"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 826,
+          y = 344,
+          width = 30,
+          height = 37,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["TO"] = "ice_time"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 280,
+          y = 280,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 88,
+          visible = true,
+          properties = {
+            ["switch"] = "waterleft"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 280,
+          y = 260,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 88,
+          visible = true,
+          properties = {
+            ["switch"] = "waterleft"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 280,
+          y = 240,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 88,
+          visible = true,
+          properties = {
+            ["switch"] = "waterleft"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 580,
+          y = 300,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 88,
+          visible = true,
+          properties = {
+            ["switch"] = "waterright"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 580,
+          y = 280,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 88,
+          visible = true,
+          properties = {
+            ["switch"] = "waterright"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 580,
+          y = 260,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 88,
+          visible = true,
+          properties = {
+            ["switch"] = "waterright"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 375,
+          y = 282,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 31,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 165,
+          y = 242,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 31,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 680,
+          y = 262,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 31,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 801,
+          y = 319,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 31,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 490,
+          y = 340,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 31,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 840,
+          y = 160,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 88,
+          visible = true,
+          properties = {
+            ["switch"] = "boss"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 860,
+          y = 160,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 88,
+          visible = true,
+          properties = {
+            ["switch"] = "boss"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 840,
+          y = 140,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 88,
+          visible = true,
+          properties = {
+            ["switch"] = "boss"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 860,
+          y = 140,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 88,
+          visible = true,
+          properties = {
+            ["switch"] = "boss"
+          }
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 800,
+          y = 160,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          gid = 95,
+          visible = true,
+          properties = {
+            ["bigkey"] = "ice",
+            ["change"] = "boss"
           }
         }
       }
@@ -1000,23 +1282,12 @@ return {
       x = 0,
       y = 0,
       width = 50,
-      height = 26,
+      height = 20,
       visible = true,
-      opacity = 0.38,
-      properties = {
-        ["parallax_x"] = "1",
-        ["parallax_y"] = "1"
-      },
+      opacity = 0.27,
+      properties = {},
       encoding = "lua",
       data = {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -1034,6 +1305,8 @@ return {
         111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111,
         111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111,
         111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111,
+        111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111,
+        111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111,
         111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111, 111
       }
     },
@@ -1043,38 +1316,113 @@ return {
       x = 0,
       y = 0,
       width = 50,
-      height = 26,
+      height = 20,
       visible = true,
       opacity = 1,
       properties = {},
       encoding = "lua",
       data = {
-        137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112,
-        137, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112,
-        137, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112,
-        137, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112,
-        137, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112,
-        137, 112, 0, 0, 0, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112,
-        137, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112,
-        112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112,
-        112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112,
-        112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112,
-        112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112,
-        112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112,
-        112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112,
-        112, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 112, 112, 112,
-        112, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 137, 137, 137, 137,
-        112, 0, 0, 0, 0, 0, 0, 112, 112, 112, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 137, 137, 137, 137,
-        112, 0, 0, 0, 0, 0, 0, 112, 112, 112, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 137, 137, 137,
-        112, 0, 0, 0, 0, 0, 112, 112, 112, 112, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 137, 137, 137,
-        112, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 112,
-        112, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112,
-        112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112,
-        137, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112,
-        137, 112, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 112,
-        137, 137, 137, 137, 137, 112, 112, 112, 0, 112, 0, 0, 0, 0, 0, 0, 0, 112, 112, 137, 137, 137, 137, 112, 112, 0, 0, 0, 0, 0, 112, 112, 112, 112, 112, 112, 112, 112, 137, 137, 112, 112, 112, 112, 112, 112, 0, 0, 0, 112,
-        137, 137, 137, 137, 137, 137, 137, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 137, 137, 137, 137, 137, 137, 112, 112, 112, 112, 112, 112, 112, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 112, 112, 112, 112, 112,
-        137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137
+        137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137,
+        137, 112, 112, 112, 112, 112, 112, 112, 112, 112, 137, 112, 112, 112, 112, 112, 112, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 112, 112, 112, 112, 112, 112, 112, 137, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 137,
+        137, 112, 0, 0, 112, 112, 0, 0, 0, 112, 137, 112, 0, 0, 0, 0, 112, 112, 112, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 112, 112, 0, 0, 0, 0, 0, 112, 137, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 137,
+        112, 112, 0, 0, 0, 0, 0, 0, 0, 112, 137, 112, 0, 0, 0, 0, 0, 0, 112, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 112, 0, 0, 0, 0, 0, 0, 112, 137, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 137,
+        112, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 0, 0, 0, 0, 0, 0, 112, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 112, 0, 0, 0, 0, 0, 0, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 137,
+        112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 137,
+        112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 137,
+        112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 137,
+        112, 0, 0, 112, 112, 112, 112, 112, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 0, 0, 112, 137,
+        112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 0, 0, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 137,
+        137, 137, 137, 137, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 0, 0, 0, 0, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 137, 137, 137, 137, 137,
+        137, 137, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 112, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 137, 137, 137, 137,
+        137, 137, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 137, 137,
+        137, 137, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 137,
+        137, 137, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 137,
+        137, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 137,
+        137, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 137, 137,
+        137, 112, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 137, 137, 137, 137, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 112, 137, 137,
+        137, 112, 112, 112, 0, 0, 0, 112, 112, 112, 112, 137, 137, 137, 137, 137, 137, 137, 137, 137, 112, 112, 112, 112, 0, 0, 112, 112, 112, 112, 137, 112, 112, 112, 112, 112, 112, 0, 0, 0, 0, 0, 0, 0, 112, 112, 112, 137, 137, 137,
+        137, 137, 137, 112, 112, 112, 112, 112, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 137, 112, 112, 112, 112, 137, 137, 137, 137, 137, 137, 137, 137, 137, 112, 112, 112, 112, 112, 112, 112, 112, 112, 137, 137, 137, 137, 137
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "Zones",
+      visible = true,
+      opacity = 1,
+      properties = {},
+      objects = {
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 178.667,
+          y = 20,
+          width = 602.667,
+          height = 201.333,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = -2.66667,
+          y = 21.3333,
+          width = 224,
+          height = 180,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 718.667,
+          y = 18.6667,
+          width = 262.667,
+          height = 182.667,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 254.667,
+          y = 180,
+          width = 364,
+          height = 220,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 20,
+          y = 200,
+          width = 296,
+          height = 200,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 561.333,
+          y = 200,
+          width = 418.667,
+          height = 200,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
       }
     }
   }
