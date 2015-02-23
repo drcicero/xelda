@@ -1,143 +1,117 @@
---- Saving and Loading
--- require $serialize, $scripting
-
-local serialize = require "serialize"
-local change_level = require "map.maps"
-local scripting = require "map.scripting"
-
-local M = {}
-local indent = false
-
-local function save(slot, place)
-  scripting.hooks.unload()
-
-  local now = os.time()
-  slot.playtime = slot.playtime + now - M.sessionstart
-  slot.lastsaved = now
-  slot.version = GAME_VERSION
-  M.sessionstart = now
-
-  -- pull avatar,
-  -- remove REMOVED for real
-  slot.avatar = avatar
-  local pool = slot[slot.mapname].pool
-  for i=#pool,1,-1 do
-    local o = pool[i]
-    if o == avatar then 
-      table.remove(pool, i)
-
-    elseif o.type == "REMOVED" then 
-      table.remove(pool, i)
-
-    end
-  end
-
-  assert(love.filesystem.write(place,
-    "return " .. serialize(slot, nil, indent)
-  ))
-
-  print("SAVED")
-
-  -- plug avatar
-  slot.avatar = nil
-  table.insert(pool, avatar)
-
-  scripting.hooks.load()
-end
-
---- 
-function M.save_slot (slot)
-  save(slot, slot.slotname .. ".save")
-end
-
---- slot is either nil, a filename, or a table
-function M.load_slot (slot)
-  transient = nil
-
-  if type(slot) == "nil" then
-    local scripted = require "scripts.main"
-    persistence = scripted.create_new_game()
-    persistence.slotname = "Slot " .. (#M.get_slots() + 1)
-    persistence.playtime = 0
-    print("\nNEW GAME")
-
-  elseif type(slot) == "string" then
---    persistence = assert(love.filesystem.load(slot .. ".save"))()
-    error("\nLOADED " .. quote(persistence.slotname))
-
-  else
-    persistence = slot
-    print("\nOPENED " .. quote(slot.slotname))
-
-  end
-
-  -- start session, pull avatar
-  M.sessionstart = os.time()
-  avatar = persistence.avatar
-
-  -- open level
-  change_level(persistence.mapname)
-end
-
---- 
-function M.autosave ()
-  save(persistence, "save.auto")
-end
-
---- 
-function M.autoload ()
-  transient = nil
-  persistence = assert(love.filesystem.load("save.auto"))()
-
-  -- start session, pull avatar
---  M.sessionstart = os.time()
-  avatar = persistence.avatar
---  persistence.vars.kills = persistence.vars.kills + 1
-
-  -- open level
-  change_level(persistence.mapname)
-end
-
---- 
-function M.move_slot (slot, newname)
-  love.filesystem.remove(slot.slotname .. ".save")
-  print("MOVED", slot.slotname, "TO", newname)
-  slot.slotname = newname
-
-  assert(love.filesystem.write(slot.slotname .. ".save",
-    "return " .. serialize(slot, nil, indent)
-  ))
-end
-
---- 
-function M.clean_trash ()
-  for i,slot in ipairs(M.get_trash()) do
-    love.filesystem.remove(slot.slotname .. ".save")
-  end
-end
-
-
-local function get_slots (filter)
-  slots = {}
-  love.filesystem.getDirectoryItems(".", function (file) 
+local serialize = require("serialize")
+local change_level = require("map.maps")
+local scripting = require("map.scripting")
+local quote = (require("serialize")).quote
+serialize = (require("serialize")).serialize
+local GAME_VERSION, love, pprint, w, h = GAME_VERSION, love, pprint, w, h
+local sessionstart
+local indent = true
+local get_slots_
+get_slots_ = function(filter)
+  local slots = { }
+  love.filesystem.getDirectoryItems(".", function(file)
     if file:sub(-5) == ".save" then
       local slot = assert(love.filesystem.load(file))()
-      if slot.version == GAME_VERSION
-      and filter(slot) then
-        table.insert(slots, slot)
+      if slot.version == GAME_VERSION and filter(slot) then
+        return table.insert(slots, slot)
       end
     end
   end)
-  table.sort(slots, function (a,b) return a.lastsaved > b.lastsaved end)
+  table.sort(slots, function(a, b)
+    return a.lastsaved > b.lastsaved
+  end)
   return slots
 end
-
---- returns slots
-function M.get_slots () return get_slots(function (slot)
-  return slot.trash == nil end) end
-
---- returns trashed slots
-function M.get_trash () return get_slots(function (slot)
-  return slot.trash end) end
-
-return M
+local get_slots
+get_slots = function()
+  return get_slots_(function(slot)
+    return slot.trash == nil
+  end)
+end
+local get_trash
+get_trash = function()
+  return get_slots_(function(slot)
+    return slot.trash
+  end)
+end
+local save
+save = function(slot, place)
+  scripting.hooks.unload()
+  now = os.time()
+  slot.playtime = slot.playtime + now - sessionstart
+  slot.lastsaved = now
+  slot.version = GAME_VERSION
+  sessionstart = now
+  slot.avatar = avatar
+  local pool = slot[slot.mapname].pool
+  for i = #pool, 1, -1 do
+    local o = pool[i]
+    if o == avatar then
+      table.remove(pool, i)
+    elseif o.type == "REMOVED" then
+      table.remove(pool, i)
+    end
+  end
+  assert(love.filesystem.write(place, "return " .. (serialize(slot, nil, indent))))
+  print("SAVED")
+  slot.avatar = nil
+  table.insert(pool, avatar)
+  return scripting.hooks.load()
+end
+local save_slot
+save_slot = function(slot)
+  return save(slot, slot.filename .. ".save")
+end
+local load_slot
+load_slot = function(slot)
+  transient = nil
+  if "nil" == type(slot) then
+    local scripted = require("scripts.main")
+    persistence = scripted.create_new_game()
+    local slots
+    slots = get_slots()
+    persistence.filename = #slots + 1
+    persistence.slotname = "Slot " .. (#slots + 1)
+    persistence.playtime = 0
+    print("\nNEW GAME")
+  elseif "string" == type(slot) then
+    error("\nLOADED " .. (persistence.slotname))
+  else
+    persistence = slot
+    print("\nOPENED " .. (slot.slotname))
+  end
+  sessionstart = os.time()
+  avatar = persistence.avatar
+  return change_level(persistence.mapname)
+end
+local autosave
+autosave = function()
+  return save(persistence, "save.auto")
+end
+local autoload
+autoload = function()
+  transient = nil
+  persistence = assert(love.filesystem.load("save.auto"))()
+  avatar = persistence.avatar
+  return change_level(persistence.mapname)
+end
+local move_slot
+move_slot = function(slot, newname)
+  slot.name = newname
+end
+local clean_trash
+clean_trash = function()
+  for i, slot in ipairs(get_trash()) do
+    love.filesystem.remove(slot.filename .. ".save")
+  end
+end
+return {
+  autoload = autoload,
+  autosave = autosave,
+  load_slot = load_slot,
+  save_slot = save_slot,
+  get_slots = get_slots,
+  get_trash = get_trash,
+  move_slot = move_slot,
+  clean_trash = clean_trash
+}

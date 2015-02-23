@@ -12,10 +12,10 @@ return function () return menu.column {
     x=50, y=200, w=300,
 
     menu.label("Pause")
-      :set("style", menu.styles.header),
+      :set("type", "header"),
     menu.label(""),
     menu.button("Continue", menu.pop)
-      :set("style", menu.styles.primary),
+      :set("type", "primary"),
     menu.label(""),
     menu.button("Options", function() app.push(options()) end),
     menu.button("Credits", function() app.push(credits()) end),

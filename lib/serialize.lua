@@ -1,6 +1,7 @@
 --- Serializing
 -- TODO: make serialize respect same objs
 
+local serialize
 local function make_key (it, indent)
   return (
      -- if its a string of alphanumeric chars or the underscore leave it,
@@ -10,12 +11,8 @@ local function make_key (it, indent)
   )
 end
 
-function quote (it)
-  return "'" .. ( it
-    :gsub("\\", "\\\\")
-    :gsub("'", "\\'")
-    :gsub("[\a\t\f\v\n]", "\\%1")
-    ) .. "'"
+local function quote (it)
+  return ("%q"):format(it)
 end
 
 ---
@@ -52,7 +49,7 @@ function serialize(it, replace, indent, ancestors, path)
     return "nil"
 
   elseif t == "string" then
-    return quote(it)
+    return ("%q"):format(it)
 
   elseif t == "table" then
     local next_indent, sep
@@ -123,7 +120,7 @@ function serialize(it, replace, indent, ancestors, path)
 end
 
 --- print the array elements of 'tab', seperated by 'tab.sep' or space, append 'tab.stop' or newline.
-function pprint(tab)
+local function pprint(tab)
   local sep = tab.sep or " "
   local stop = tab.stop or "\n"
   io.write(serialize(tab[1], nil, true))
@@ -131,4 +128,4 @@ function pprint(tab)
   io.write(stop)
 end
 
-return serialize
+return {serialize=serialize, quote=quote, make_key=make_key, pprint=pprint}

@@ -32,5 +32,9 @@ return function () return menu.column {
   menu.button("Return", menu.pop)
     :set("type", "pop"),
 
-} end
+} :set("resize", function (self)
+    self.x = w/2 - self.w/2
+    self.y = h/2 - self.h/2
+  end)
+end
 

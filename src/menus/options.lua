@@ -75,6 +75,10 @@ Return ;pop
     form.svol.sel = math.floor(audio.svol*(#form.svol.range-1)+1)
 --    form.fixfps.sel = timestep and 1 or 2
   end)
+  :set("resize", function (self)
+    self.x = w/2 - self.w/2
+    self.y = h/2 - self.h/2
+  end)
 --  :set("exit", function (self)
 --  end)
 end

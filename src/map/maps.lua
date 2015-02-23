@@ -39,6 +39,7 @@ local is_transient_type = {
 local function clean_map_manager (from)
   -- clear transient data of old level
   if from then
+    print("clean_map_manager", from, persistence[from])
     scripting.hooks.unload()
 
     -- pull avatar,

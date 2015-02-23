@@ -6,6 +6,8 @@
 local floor = math.floor
 local audio = require "audio"
 local app = require "frames"
+local serialize = (require "serialize").serialize
+
 local g = love.graphics
 
 

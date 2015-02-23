@@ -1,8 +1,8 @@
 local app = require "frames"
 local menu = require "menu"
 local audio = require "audio"
-
 local cron = require "cron"
+
 local options = require "menus.options"
 local credits = require "menus.credits"
 local saveload = require "saveload"
@@ -37,7 +37,8 @@ function M.slots ()
 
   result.focus = function (self)
     for i = #self,1,-1 do
-      table.remove(self)
+      self[i].parent = nil
+      self[i] = nil
     end
 
     slots = saveload.get_slots()
@@ -78,7 +79,7 @@ function M.slots ()
   result:focus()
 
   result.load = function (self)
-    menu.app.load(self)
+    menu.column.load(self)
     self.noanim = nil
   end
 
@@ -91,12 +92,12 @@ function M.slots ()
       saveload.load_slot(slot)
     end
 
-    return menu.app.update(self)
+    return menu.column.update(self)
   end
 
   the_title_png = love.graphics.newImage("assets/title.png")
   result.draw = function (self)
-    menu.app.draw(self)
+    menu.column.draw(self)
 
     love.graphics.setColor(255,255,255, self.title_a * self.alpha)
     local wz = math.min(w/1024, h/700)
@@ -112,6 +113,7 @@ function M.slots ()
     self.y = h-self.h
   end
 
+  print ("were here")
   return result
 end
 
@@ -126,23 +128,25 @@ function M.slot (slot) return function ()
     menu.input("slotname", slot.slotname)
       :set("type", "header")
       :set("change", function (self)
-        if love.filesystem.exists(self.title .. ".save") then
-          print("This name already exists.")
+--        if love.filesystem.exists(self.title .. ".save") then
+--          print("This name already exists.")
+--          self.title = slot.slotname
+--          self.parent:layout()
+
+--        else
+        if self.title == "" then
           self.title = slot.slotname
           self.parent:layout()
 
-        elseif self.title == "" then
-          print("bad name")
-          self.title = slot.slotname
-          self.parent:layout()
+          app.push(menu.column(
+            menu.label("Empty name is not valid."),
+            menu.button("Ok", menu.pop):set("type", "pop")))
 
         else
+          slot.slotname = self.title
           if slot.playtime ~= 0 then
-            saveload.move_slot(slot, self.title)
-            slot.slotname = self.title
-
+            saveload.save_slot(slot)
           else
-            slot.slotname = self.title
             persistence.slotname = self.title
           end
         end
@@ -187,6 +191,11 @@ function M.slot (slot) return function ()
     table.insert(list, menu.label(
       "Playtime: " .. time(slot.playtime))
       :set("type", "light"))
+  end
+
+  list.resize = function (self)
+    self.x = w/2 - self.w/2
+    self.y = h/2 - self.h/2
   end
 
   return list
@@ -234,7 +243,7 @@ function M.trash_slots ()
       saveload.load_slot(slot)
     end
 
-    return menu.app.update(self)
+    return menu.column.update(self)
   end
 
   list.resize = function (self)
