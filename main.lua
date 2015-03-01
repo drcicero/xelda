@@ -8,7 +8,7 @@
 -- The game is setup in #love.load , then every frame #love.draw and #love.update
 -- are called.
 
-GAME_VERSION = "0.7"
+GAME_VERSION = "0.8"
 DEBUG = false
 
 -- FIXME canvas are invisible?
@@ -44,16 +44,9 @@ end
 
 
 local debugtimer = 0
+
 ---
 function app.top.update ()
---  fullscreentimer = fullscreentimer-1
---  if fullscreentimer < 0 and love.keyboard.isDown("f11") then
---    local fs = love.window.getFullscreen()
---    love.window.setFullscreen(not fs, "desktop")
---    love.resized()
---    fullscreentimer = 20
--- end
-
   debugtimer = debugtimer-1
   if debugtimer < 0 and pressed["d"] then
     DEBUG = not DEBUG
@@ -61,9 +54,6 @@ function app.top.update ()
   end
 end
 
---giantsrc = "assets/.OpenSans.woff"
---giant = love.graphics.newFont(giantsrc, w/7)
---- 
 function app.top.resize (self, x, y)
   w, h = x, y
   if transient then

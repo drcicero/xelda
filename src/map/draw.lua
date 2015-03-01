@@ -72,14 +72,13 @@ function M.layer_init (layer)
     g.setCanvas(cache)
     g.setColor(255, 255, 255, 255*layer.opacity)
     g.draw(sps[layer], x, y, 0, parallax_x, parallax_y)
-
     g.setCanvas()
   end
 end
 
 --- 
 function M.draw_layers (transient, pool)
-  local not_yet_pool_drawn = true
+  not_yet_pool_drawn = false
 
   for i,layer in ipairs(transient.layers) do
     if layer.type == "tilelayer" then
@@ -89,19 +88,18 @@ function M.draw_layers (transient, pool)
       M.draw_tilelayer(layer, parallax_x, parallax_y)
 
     elseif layer.type == "objectgroup" then
-      if not_yet_pool_drawn and layer.name=="objs" then
-        not_yet_pool_drawn = false
-        scripting.hooks.draw()
-        table.foreach(pool, M.draw_obj)
+      if layer.name == "objs" then
+        scripting.hook("draw")
+        not_yet_pool_drawn = true
       end
 
-      table.foreach(layer.objects, M.draw_obj)
+      for i,o in ipairs(layer.objects) do M.draw_obj(o) end
     end
   end
 
   if not_yet_pool_drawn then
-    scripting.hooks.draw()
-    table.foreach(pool, objs.draw)
+    scripting.hook("draw")
+--    table.foreach(pool, objs.draw)
   end
 end
 
@@ -129,12 +127,15 @@ function M.draw_tilelayer (layer, parallax_x, parallax_y)
 end
 
 --- 
-function M.draw_obj (_, o)
+function M.draw_obj (o)
+  -- valid type
   if o.type ~= "REMOVED" and not o.disabled and o.type ~= "META" then
+    -- in camera
     if camera.x - camera.w/2 - tw/2 < o.x
     and o.x < camera.x + camera.w/2 + tw/2
     and camera.y - camera.h/2 < o.y
     and o.y < camera.y + camera.h/2 + tw then
+      -- sprite
       local noturn = o.noturn
       local sx = noturn and 1 or o.facing
       local r  = (o.r==math.huge or o.r==nil) and 0 or o.r
@@ -143,7 +144,8 @@ function M.draw_obj (_, o)
       g.draw(M.tileset, M.quads[sprites_indexOf[o.type]],
         o.x,o.y, r, sx*oz,oz, o.ix,o.iy)
 
-      if o.type == "EYE" then -- das auge des Auges
+      -- the eye of the eye ;)
+      if o.type == "EYE" then
         g.setColor(0,0,0,255)
         local x, y = avatar.x-o.x, avatar.y-o.y
         local len = math.sqrt(x * x + y * y)/3

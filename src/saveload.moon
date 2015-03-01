@@ -1,16 +1,14 @@
 --- Saving and Loading
 -- require $serialize, $map
 
-export persistence, transient, avatar, now
+export persistence, transient, avatar
+-- read only globals
+GAME_VERSION, love, pprint, w, h = GAME_VERSION, love, pprint, w, h
 
-serialize = require "serialize"
-change_level = require "map.maps"
+maps = require "map.maps"
 scripting = require "map.scripting"
-quote = (require "serialize").quote
 serialize = (require "serialize").serialize
 
--- globals
-GAME_VERSION, love, pprint, w, h = GAME_VERSION, love, pprint, w, h
 
 local sessionstart
 indent = true
@@ -33,39 +31,23 @@ get_slots = () -> get_slots_ (slot)-> slot.trash == nil
 --- returns trashed slots
 get_trash = () -> get_slots_ (slot)-> slot.trash
 
-save = (slot, place) ->
-    scripting.hooks.unload!
 
+save = (slot, place) ->
+    local now
     now = os.time!
+
     slot.playtime  = slot.playtime + now - sessionstart
     slot.lastsaved = now
     slot.version = GAME_VERSION
     sessionstart = now
 
-    -- TODO move this to map.maps
-    -- pull avatar,
-    -- remove REMOVED for real
-    slot.avatar = avatar
-    pool = slot[slot.mapname].pool
-    for i=#pool,1,-1 do
-        o = pool[i]
-        if o == avatar
-            table.remove pool, i
-
-        elseif o.type == "REMOVED"
-            table.remove pool, i
-
-
+    scripting.hook "before_save"
+    maps.compress!
     assert love.filesystem.write place,
         "return " .. (serialize slot, nil, indent)
     print "SAVED"
-
-
-    -- TODO move this to map.maps
-    -- plug avatar
-    slot.avatar = nil
-    table.insert pool, avatar
-    scripting.hooks.load!
+    maps.decompress!
+    scripting.hook "after_save"
 
 
 --- 
@@ -75,51 +57,38 @@ save_slot = (slot) ->
 
 --- slot is either nil, a filename, or a table
 load_slot = (slot) ->
-    transient = nil
-
-    if "nil" == type slot
-        scripted = require "scripts.main"
-        persistence = scripted.create_new_game!
-        local slots
-        slots = get_slots!
-        persistence.filename = #slots + 1
-        persistence.slotname = "Slot " .. (#slots + 1)
-        persistence.playtime = 0
+    if nil == slot
         print "\nNEW GAME"
+        persistence = (require "scripts.main").create_new_game!
 
-    elseif "string" == type slot
-    --    persistence = assert(love.filesystem.load(slot .. ".save"))!
-        error "\nLOADED " .. (persistence.slotname)
+        local num_slots
+        num_slots = #get_slots!
+
+        persistence.filename = num_slots + 1
+        persistence.slotname = "Slot " .. (num_slots + 1)
+        persistence.playtime = 0
 
     else
+        print "\nOPEN " .. (slot.slotname)
         persistence = slot
-        print "\nOPENED " .. (slot.slotname)
 
-    -- start session, pull avatar
     sessionstart = os.time!
-    avatar = persistence.avatar
+    maps.open_level persistence.mapname
 
-    -- open level
-    change_level persistence.mapname
-
-
---- 
-autosave = () ->
-    save persistence, "save.auto"
+    scripting.hook "focus"  if topisgame
 
 
 --- 
-autoload = () ->
-    transient = nil
+autosave = ->
+--    save persistence, "save.auto"
+
+--- 
+autoload = ->
     persistence = assert(love.filesystem.load "save.auto")!
+    persistence.vars.kills = (persistence.vars.kills or 0) + 1
+    maps.open_level persistence.mapname
 
-    -- start session, pull avatar
-  --  sessionstart = os.time()
-    avatar = persistence.avatar
-  --  persistence.vars.kills = persistence.vars.kills + 1
-
-    -- open level
-    change_level persistence.mapname
+    scripting.hook "focus"  if topisgame
 
 
 --- 

@@ -3,9 +3,8 @@ local g = love.graphics
 local app = require("frames")
 local cron = require("cron")
 local audio = require("audio")
-local serialize = (require("serialize")).serialize
 local styles = require("menus.style")
-local getW, getH, anim
+local getW, getH
 local pad = 4
 local lastX, lastY = 0, 0
 local doit
@@ -21,6 +20,7 @@ local inside
 inside = function(self, child, x, y)
   local x_bounds = 0 < x and x < self.x + self.w
   local y_bounds = self.y + child.y < y and y < self.y + child.y + child.h
+  return x_bound and y_bounds
 end
 local mixin_table
 mixin_table = function(self, other)

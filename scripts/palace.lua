@@ -8,13 +8,15 @@ local dialog = scripting.dialog
 local wander_by = scripting.wander_by
 
 return {
-  load = function ()
-    for i,o in pairs(scripting.byClass("carpet")) do
-      o.gravity = 0
-      o.vy = 0
-    end
+  focus = function ()
+    cutscene("intialize", function ()
+      for i,o in pairs(scripting.byClass("carpet")) do
+        o.gravity = 0
+        o.vy = 0
+      end
 
-    scripting.byId("goleft").properties.onfirsttouch = "$scene"
+      scripting.byId("goleft").properties.onfirsttouch = "$scene"
+    end)
   end,
 
   funcs = {

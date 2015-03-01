@@ -10,8 +10,7 @@ function M.create_new_game()
     r = -0.4*math.pi,
     gravity = 0,
   }
-
-  objs.unclean(nil, avatar, nil, nil, true)
+  objs.decompress(avatar)
 
   return {
     mapname = "rinks_room",

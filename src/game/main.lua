@@ -23,6 +23,7 @@ require "game.update"
 local g = love.graphics
 
 local game = {name="game"}
+change_level_timer = 0
 hud_objs = {}
 tw = 20
 topisgame = false
@@ -95,7 +96,7 @@ function game.update (self, dt, from_draw)
     table.foreach(
       persistence[persistence.mapname].pool,
       update_obj )
-    scripting.hooks.update()
+    scripting.hook("update")
 
     if quit then
       local tmp = quit
@@ -111,7 +112,7 @@ end
 --- set topisgame
 function game.focus (self, e)
   topisgame = true
-  scripting.hooks.focus()
+  scripting.hook("focus")
 end
 
 --- del topisgame
@@ -281,8 +282,8 @@ function draw_shadow ()
 end
 
 
-function game.clear()
-  draw.clear_layers()
-end
+--function game.clear()
+--  draw.clear_layers()
+--end
 
 return game

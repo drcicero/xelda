@@ -92,7 +92,7 @@ end
 function grid (o, vx, vy)
   local oleft, otop     = o.x + vx - o.ox, o.y + vy - o.oy
   local oright, obottom = oleft + o.width, otop + o.height
-  for b,_ in pairs(types.GRID) do
+  for b,_ in pairs(transient.types.GRID) do
     local bleft, btop     = b.x - b.ox,      b.y - b.oy
     local bright, bbottom = bleft + b.width, btop + b.height
 

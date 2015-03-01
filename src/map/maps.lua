@@ -8,239 +8,211 @@ local objs = require "map.objs"
 local draw = require "map.draw"
 local camera = require "map.camera"
 local scripting = require "map.scripting"
+local is_transient_type = require "map.is_transient_type"
+
+local parse_map = require "map.parse_map"
 
 local g = love.graphics
 
--- TODO
--- state
--- transient
--- state.const
--- transient.const
--- TODO or maybe not
+-- TODO FEATURE save other levels to disk, dont keep them in memory
+-- TODO FEATURE use classes?
 
 --- globals
--- transient, types, avatar, persistence
+-- level, avatar, persistence
+levelclock = nil
 transient = nil
-types = nil
 avatar = nil
-
 persistence = {}
 
-local is_transient_type = {
-  TABLET=1, SHIELD=1, GRID=1, META=1,
-  GRASS=1, RUBY1=1, HEART=1, ARROWS=1,
-  SLIME=1, ESLIME=1, FISH=1, FISH2=1,
-  ELECTRO=1, ARROW=1, SWORD=1, PUFF=1,
-  REMOVED=1,
-}
+local function get_level()
+  return persistence[persistence.mapname]
+end
 
 
---- private
-local function clean_map_manager (from)
-  -- clear transient data of old level
-  if from then
-    print("clean_map_manager", from, persistence[from])
-    scripting.hooks.unload()
-
-    -- pull avatar,
-    -- remove type == "REMOVED" for real,
-    -- remove transient types,
-    -- and clean rest
-    local stage = persistence[from]
-    for i=#stage.pool,1,-1 do
-      local o = stage.pool[i]
-      if o == avatar or is_transient_type[o.type] then
-        table.remove(stage.pool, i)
-
-      else
-        objs.clean(o)
-      end
+local function contains (list, thing)
+  for i,o in ipairs(list) do
+    if list[i] == thing then
+      return true
     end
   end
+  return false
+end
 
-  -- layer cache
+
+local function compress () -- prepare_saving
+  print("compress")
+
+--  scripting.hook("unload")
+
+  -- pull avatar, compress objs
+  persistence.avatar = avatar
+  local pool = persistence[persistence.mapname].pool
+  for i=#pool,1,-1 do local o = pool[i]
+    if o == avatar then
+      table.remove(pool, i)
+    else
+      objs.compress(o)
+    end
+  end
+end
+
+
+local function decompress () -- complete_loading
+  print("decompress")
+  transient.byid = {}
+  local pool = persistence[persistence.mapname].pool
+  for i=#pool,1,-1 do local o = pool[i]
+    if o.name ~= "" and o.name ~= nil then
+      transient.byid[o.name] = o
+    end
+    objs.cacheType(o)
+    objs.decompress(o)
+  end
+
+  -- layers
   draw.clear_layers()
-
-  -- type cache
-  types = {META={}, REMOVED={}}
-  for i,s in ipairs(sprites) do types[s] = {} end
-end
-
-
---- private.
--- returns (the constant state of the map, dynamic state of the map)
-local function load_map (src)
-  local default_state = { 
-    vars = {}, -- game logic variables
-    pool = {}, -- obj pool
-    water_y = 0,
-  }
-
-  local transient = assert(love.filesystem.load("maps/" .. src .. ".lua"))()
-
-  -- build default vars
-  for k,v in pairs(transient.properties) do
-    default_state.vars[k] = assert(loadstring("return " .. v))()
-  end
-
-  -- adapt objs and extract the persistent objs into default_pool
   for i,layer in ipairs(transient.layers) do
-    if layer.name == "Zones" then
-      -- extract
-      transient.zones = layer.objects
-      layer.objects = {}
-
-    elseif layer.type == "objectgroup" then
-      local objs = {}
-
-      for j, o in ipairs(layer.objects) do
-        -- rename
-        o.class, o.type = o.type, nil
-        o.r, o.rotation = o.rotation and math.rad(o.rotation) or nil, nil
-        if o.r == 0 then o.r = math.huge end
-
-        -- convert gid (number) to type (string)
-        o.type, o.gid = o.gid and (sprites[o.gid] or "DUMMY") or "META", nil
-
-        -- offset objects
-        if o.width == 0 then -- TODO why this condition?
-          o.width, o.height = nil, nil
-
-          o.x = o.x + tw/2
-          o.y = o.y - 1
-
-          if o.type=="GRID" then
-            o.width = 20
-            o.height = 20
-          end
-        end
-
-        -- clean draw-specific attrs
-        o.shape = nil
-        o.visible = nil
-
---        -- transient or persistent?
---        local is_transient = layer.name ~= "objs" or is_transient_type[o.type]
---        if is_transient then o.is_transient = true end
-        table.insert(default_state.pool, o)
-      end
-
-      transient.layers[i] = {
-        type="objectgroup",
-        opacity=1,
-        objects={},
-        name=layer.name
-      }
---      if layer.name=="objs" then transient.pool = objs end
-
-    elseif layer.name == "Ground" then
-      transient.solidmap = layer.data
-
-    elseif layer.name == "Water" then
-      transient.watermap = layer.data
-      layer.properties.parallax_x = 0.4
-      layer.properties.parallax_y = 0.2
-      layer.opacity = 0.5
-
-    elseif layer.name == "background" then
-      layer.properties.parallax_x = 0.3
-      layer.properties.parallax_y = 0.3
-
-    end
-  end
-
-  return transient, default_state
-end
-
-
---- private
-local function unclean_map_manager (from, to)
-  levelclock = cron.new_clock()
-
-  -- create transient data and default state of new level 
-  local default_state
-  transient, default_state = load_map(to)
-
-  -- try loading or use default
-  local state = persistence[to] or default_state
-  persistence[to] = state
-  persistence.mapname = to
-
-  -- change music
-  local newmusic = transient.properties.landmusic or "Ruins"
-  if not (audio.channels.default and audio.channels.default.name == newmusic) then
-    audio.music(newmusic, "default")
-  end
-
-  -- unclean objs
-  table.foreachi(state.pool, objs.unclean)
-  for i,layer in ipairs(transient.layers) do
-    if layer.type == "objectgroup" then
-      table.foreachi(layer.objects, objs.unclean)
-
-    elseif layer.type == "tilelayer" then
-      -- layer cache
+    if layer.type == "tilelayer" then
       draw.layer_init(layer)
     end
   end
 
-  -- plug avatar, only if not already plugged
-  local found = false
-  for i,o in ipairs(state.pool) do
-    if state.pool[i] == avatar then
-      found = true break
-    end
+  -- push avatar
+  avatar, persistence.avatar = persistence.avatar, nil
+  local pool = persistence[persistence.mapname].pool
+  if not contains(pool, avatar) then
+    table.insert(pool, avatar)
+  else
+    print("WARN: loaded level already contains avatar?")
   end
-  if not found then
-    table.insert(state.pool, avatar)
+  camera.resized()
+
+  -- music
+  local newmusic = transient.properties.landmusic or "Ruins"
+  if not (audio.channels.default and audio.channels.default.name == newmusic) then
+    audio.music(newmusic, "default")
   end
+end
 
 
-  if from then
-    --print("from", from)
+local function load_level (to)
+  print("load_level")
+  levelclock = cron.new_clock()
 
-    if state ~= default_state then
-      for i = 1, #default_state.pool do
-        local o = default_state.pool[i]
-        if is_transient_type[o.type] then
-          table.insert(state.pool, o)
-          objs.unclean(nil, o)
-        end
-      end
-    end
+  local default_state
+  transient, default_state = parse_map(to)
 
-    local found = false
-    for meta,_ in pairs(types.META) do
-      if meta.properties.TO == from then
-        avatar.x = meta.x + meta.width/2
-        avatar.y = meta.y + meta.height-5
-        found = true
+  -- first time or load?
+  local state = persistence[to] or default_state
+  persistence[to] = state
+  persistence.mapname = to
+
+  -- if this level was open before, then replace default objects
+  -- with saved objects
+  if state ~= default_state then
+    for i=1, #transient.layers do
+      local layer = transient.layers[i]
+      if layer.name == "objs" then
+        layer.objects = state.pool
         break
       end
     end
+  end
+end
 
-    if not found then
-      error("Warning: No Door from " .. from ..
-            " to " .. persistence.mapname)
+
+local function close_level ()
+  print("close_level")
+  compress()
+end
+
+local function open_level (to)
+  print("open_level")
+  load_level(to)
+  decompress()
+end
+
+
+-- TODO migrate following to game
+
+local function delete_transient_objs ()
+  print("delete_transient_objs")
+  local from = persistence.mapname
+
+  scripting.hook("unload")
+
+  -- delete transients objs
+  local pool = persistence[from].pool
+  for i=#pool,1,-1 do local o = pool[i]
+    if is_transient_type[o.type] then
+      table.remove(pool, i)
+    end
+  end
+end
+
+
+local function load_transient_objs(to)
+  print("load_transient_objs")
+  local default_state
+  _, default_state = parse_map(to)
+
+  local pool = persistence[persistence.mapname].pool
+
+  for i=1, #transient.layers do
+    local layer = transient.layers[i]
+    if layer.name == "objs" then
+      for i = 1, #default_state.pool do
+        local o = default_state.pool[i]
+        if is_transient_type[o.type] then
+          if o.name ~= "" and o.name ~= nil then
+            transient.byid[o.name] = o
+          end
+          objs.cacheType(o)
+          objs.decompress(o)
+          table.insert(pool, o)
+        end
+      end
+      break
+    end
+  end
+end
+
+
+local function set_position_to_door (from)
+  print("set_position_to_door")
+  for meta,_ in pairs(transient.types.META) do
+    if meta.properties.TO == from then
+      avatar.x = meta.x + meta.width/2
+      avatar.y = meta.y + meta.height-5
+      camera.jump(avatar)
+      return
     end
   end
 
-  -- focus camera
-  camera.resized()
-
-  scripting.hooks.load()
-  if topisgame then scripting.hooks.focus() end
+  error("Warning: No Door from " .. from ..
+        " to " .. persistence.mapname)
 end
 
 
---- go to map with name 'name'
-local function change_level (to)
-  change_level_timer = 100
-  local from = transient and persistence.mapname
+local function use_door_to (to)
+  print("use_door_to")
+  local from = persistence.mapname
 
-  clean_map_manager(from)
-  unclean_map_manager(from, to)
+  delete_transient_objs()
+  compress()
+  open_level(to)
+  load_transient_objs(to)
+  set_position_to_door(from)
+
+  if topisgame then scripting.hook("focus") end
 end
 
 
-return change_level
+return {
+  use_door_to = use_door_to,
+  get_level = get_level,
+  open_level = open_level,
+  compress = compress,
+  decompress = decompress,
+  is_transient_type=is_transient_type,
+}

@@ -2,16 +2,16 @@
 -- requires $frames, $audio, $cron
 
 local app = require "frames"
-local audio = require "audio"
 local cron = require "cron"
+local audio = require "audio"
 
 local M = {hooks={}, levels={}}
 
 
-local chars = {
-  Xelda = love.graphics.newImage "assets/xelda.png",
-  Watson = love.graphics.newImage "assets/watson.png",
-}
+--local chars = {
+--  Xelda = love.graphics.newImage "assets/xelda.png",
+--  Watson = love.graphics.newImage "assets/watson.png",
+--}
 
 
 local script, scripterr
@@ -198,26 +198,34 @@ end
 
 --- find obj in pool by id. if noerr is true returns nil when no obj is found.
 function M.byId (id, pool, noerr)
-  if pool == nil then
-    local res = M.byId(id, persistence[persistence.mapname].pool, true)
-    if res then return res end
+  pprint {transient.byid}
+  
+  local o = transient.byid[id]
+  if o == nil and not noerr then
+    error("no elem by id: " .. id)
+  end
 
---    res = M.byId(id, transient.pool, true)
+  return o
+--  if pool == nil then
+--    local res = M.byId(id, persistence[persistence.mapname].pool, true)
 --    if res then return res end
 
-    if noerr then return nil
-    else error("no elem by id: " .. id) end
+----    res = M.byId(id, transient.pool, true)
+----    if res then return res end
 
-  else
-    for i,o in ipairs(pool) do
-      if o.name == id then
-        return o
-      end
-    end
+--    if noerr then return nil
+--    else error("no elem by id: " .. id) end
 
-    if noerr then return nil
-    else error("no elem by id: " .. id) end
-  end
+--  else
+--    for i,o in ipairs(pool) do
+--      if o.name == id then
+--        return o
+--      end
+--    end
+
+--    if noerr then return nil
+--    else error("no elem by id: " .. id) end
+--  end
 end
 
 --- find objs in pool by class. if result is a table, its elements will also be returned.
@@ -263,45 +271,18 @@ end
 --- calls hook from plugins
 
 ---
-function M.hooks.load ()
-  local map = persistence.mapname
-  local level = M.levels[map]
-  if not level then
-    if love.filesystem.exists("scripts/" .. map .. ".lua") then
-      level = require("scripts." .. map)
+function M.hook (name)
+  local level = M.levels[persistence.mapname]
+  if level[name] then level[name]() end
+end
 
-    else
-      level = {}
+function M.hooks.load (src)
+  local level = M.levels[src] or
+    love.filesystem.exists("scripts/" .. src .. ".lua") and
+    require("scripts." .. src) or {}
 
-    end
-    M.levels[map] = level
-  end
-
+  M.levels[src] = level
   if level.load then level.load() end
-end
-
----
-function M.hooks.focus ()
-  local level = M.levels[persistence.mapname]
-  if level.focus then level.focus() end
-end
-
----
-function M.hooks.unload ()
-  local level = M.levels[persistence.mapname]
-  if level.unload then level.unload() end
-end
-
----
-function M.hooks.update ()
-  local level = M.levels[persistence.mapname]
-  if level.update then level.update() end
-end
-
----
-function M.hooks.draw ()
-  local level = M.levels[persistence.mapname]
-  if level.draw then level.draw() end
 end
 
 return M

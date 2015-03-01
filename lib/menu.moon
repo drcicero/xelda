@@ -11,13 +11,10 @@ app = require "frames"
 cron = require "cron"
 audio = require "audio"
 
-serialize = (require "serialize").serialize
-
 styles = require "menus.style"
 
 
-local getW, getH, anim
-
+local getW, getH
 
 -- private
 pad = 4
@@ -36,6 +33,7 @@ doit = =>
 inside = (child, x, y) =>
     x_bounds = 0 < x and x < @x + @w
     y_bounds = @y + child.y < y and y < @y + child.y + child.h
+    x_bound and y_bounds
 
 
 mixin_table = (other) =>
@@ -279,7 +277,7 @@ class column
                      line = line\sub 1, -2
                      break if line == "" or last < 0x80 or last >= 0xc0
 
-                self[@selector].title = line
+                @[@selector].title = line
 
             elseif e == "return" then
                 love.textinput = nil
@@ -294,7 +292,6 @@ class column
                 when "up"    then @\_findPrevSelector!
                 when "left"  then child\left!  if child.left
                 when "right" then child\right! if child.right
-
                 when " ", "return" then doit child
                 else                    play = false
 

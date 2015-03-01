@@ -64,7 +64,7 @@ end
 
 
 --- adapt camera to different screensize
-function camera.resized (zoom)
+function camera.resized ()
   camera.jump(avatar)
 end
 

@@ -59,6 +59,7 @@ function control ()
       persistence[here] = nil
       scripting.levels[here] = nil
       change_level(here)
+      change_level_timer = 60
     end
  end
 end

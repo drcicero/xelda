@@ -1,9 +1,7 @@
-local serialize = require("serialize")
-local change_level = require("map.maps")
-local scripting = require("map.scripting")
-local quote = (require("serialize")).quote
-serialize = (require("serialize")).serialize
 local GAME_VERSION, love, pprint, w, h = GAME_VERSION, love, pprint, w, h
+local maps = require("map.maps")
+local scripting = require("map.scripting")
+local serialize = (require("serialize")).serialize
 local sessionstart
 local indent = true
 local get_slots_
@@ -36,27 +34,18 @@ get_trash = function()
 end
 local save
 save = function(slot, place)
-  scripting.hooks.unload()
+  local now
   now = os.time()
   slot.playtime = slot.playtime + now - sessionstart
   slot.lastsaved = now
   slot.version = GAME_VERSION
   sessionstart = now
-  slot.avatar = avatar
-  local pool = slot[slot.mapname].pool
-  for i = #pool, 1, -1 do
-    local o = pool[i]
-    if o == avatar then
-      table.remove(pool, i)
-    elseif o.type == "REMOVED" then
-      table.remove(pool, i)
-    end
-  end
+  scripting.hook("before_save")
+  maps.compress()
   assert(love.filesystem.write(place, "return " .. (serialize(slot, nil, indent))))
   print("SAVED")
-  slot.avatar = nil
-  table.insert(pool, avatar)
-  return scripting.hooks.load()
+  maps.decompress()
+  return scripting.hook("after_save")
 end
 local save_slot
 save_slot = function(slot)
@@ -64,36 +53,34 @@ save_slot = function(slot)
 end
 local load_slot
 load_slot = function(slot)
-  transient = nil
-  if "nil" == type(slot) then
-    local scripted = require("scripts.main")
-    persistence = scripted.create_new_game()
-    local slots
-    slots = get_slots()
-    persistence.filename = #slots + 1
-    persistence.slotname = "Slot " .. (#slots + 1)
-    persistence.playtime = 0
+  if nil == slot then
     print("\nNEW GAME")
-  elseif "string" == type(slot) then
-    error("\nLOADED " .. (persistence.slotname))
+    persistence = (require("scripts.main")).create_new_game()
+    local num_slots
+    num_slots = #get_slots()
+    persistence.filename = num_slots + 1
+    persistence.slotname = "Slot " .. (num_slots + 1)
+    persistence.playtime = 0
   else
+    print("\nOPEN " .. (slot.slotname))
     persistence = slot
-    print("\nOPENED " .. (slot.slotname))
   end
   sessionstart = os.time()
-  avatar = persistence.avatar
-  return change_level(persistence.mapname)
+  maps.open_level(persistence.mapname)
+  if topisgame then
+    return scripting.hook("focus")
+  end
 end
 local autosave
-autosave = function()
-  return save(persistence, "save.auto")
-end
+autosave = function() end
 local autoload
 autoload = function()
-  transient = nil
   persistence = assert(love.filesystem.load("save.auto"))()
-  avatar = persistence.avatar
-  return change_level(persistence.mapname)
+  persistence.vars.kills = (persistence.vars.kills or 0) + 1
+  maps.open_level(persistence.mapname)
+  if topisgame then
+    return scripting.hook("focus")
+  end
 end
 local move_slot
 move_slot = function(slot, newname)

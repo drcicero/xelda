@@ -19,13 +19,8 @@ function setVar (name, bool, obj)
   local mapname = persistence.mapname
   local vars = persistence[mapname].vars
   if name:sub(1,1) == "$" then
-    return scripting.levels[mapname].funcs[name:sub(2)](obj, bool)
-
-  elseif name:sub(1,1) == "-" then
-    name = name:sub(2)
-    if not type(vars[name]) == "number" then vars[name] = 0 end
-    vars[name] = vars[name] - 1
---    print("set " .. name .. " = " .. persistence[persistence.mapname].vars[name])
+    local first_space = name:find(" ") or #name
+    return scripting.levels[mapname].funcs[name:sub(2, first_space)](obj, bool, name:sub(first_space+1))
 
   else
     if name:sub(1,1) == "!" then
@@ -34,7 +29,6 @@ function setVar (name, bool, obj)
     end
 
     if vars[name] ~= bool then
---      print("set " .. name .. " = " .. tostring(bool))
       vars[name] = bool
     end
   end

@@ -1,58 +1,60 @@
 --- All about objs
 
 local g = love.graphics
-
 local M = {}
 
---- set type of object. (update type cache)
+---
+function M.changeType (o, type)
+  transient.types[o.type][o] = nil
+  o.type = type
+  transient.types[type][o] = 1
+end
+
 function M.setType (o, type)
-	if o.type then
-    	types[o.type][o] = nil
-	end
-	
-	types[type][o] = 1
-	o.type = type
-	
-	return o
+  o.type = type
+  transient.types[type][o] = 1
+end
+
+function M.cacheType (o)
+  transient.types[o.type][o] = 1
 end
 
 
 --- reuse one of the removed objs or make a new one
--- TODO belongs to map 
-local function getNewObj ()
-  local o
-
-  for k,_ in pairs(types.REMOVED) do
-    o = k
-    break
+local function getAlmostNewObj ()
+  for k,_ in pairs(transient.types.REMOVED) do
+    return k
   end
 
-  if o == nil then
-    o = {}
-    table.insert(
-      persistence[persistence.mapname].pool,
-      o
-    )
-  end
-
+  local o = {type="REMOVED"}
+  table.insert(persistence[persistence.mapname].pool, o)
   return o
 end
 
 
 --- spawn obj of type at pos (x,y)
--- TODO belongs to map
 function M.spawn (type, x, y)
-  local o = getNewObj()
-  M.unclean(nil, o, nil, type)
---  o.is_transient = is_transient_type[type]
+  local o = getAlmostNewObj()
+  M.changeType(o, type)
+  M.cacheType(o)
+  M.decompress(o)
   o.x, o.y = x, y
   return o
 end
 
+function M.changeId (o, name)
+  if o.name then
+    transient.byid[name] = nil
+  end
 
---- del obj
+  o.name = name
+  transient.byid[name] = o
+end
+
+
+---
 function M.del (o)
-  M.setType(o, "REMOVED")
+  M.changeType(o, "REMOVED")
   for k,v in pairs(o) do o[k] = nil end
   o.type = "REMOVED"
 end
@@ -72,66 +74,25 @@ local default_obj = {
 }
 
 
--- prepare for saving, remove redundant data
-function M.clean (o)
---  unfreeze(o)
-
-  if o.ox == o.width/2 then o.ox = nil end
+---
+function M.compress (o)
+  if o.ox == o.width/2  then o.ox = nil end
   if o.oy == o.height-1 then o.oy = nil end
-  -- if eq(o.properties, {}) then o.properties = nil end
   for k,v in pairs(default_obj) do
-    if o[k] == v then
-      o[k] = nil
-    end
+    if o[k] == v then o[k] = nil end
   end
 end
 
 
--- finish loading, create transient data
-function M.unclean (_, o, _, type, dontsettype)
---  unfreeze(o)
-
-  if not dontsettype then 
-    if type == nil and o.type == nil then error("notype") end
-    type = type or o.type -- or "DUMMY"
-    M.setType(o, type)
-  end
-
+---
+function M.decompress (o)
   for k,v in pairs(default_obj) do
     if o[k] == nil then o[k] = v end
   end
-  if o.ox == nil then o.ox = o.width/2 end
+  if o.ox == nil then o.ox = o.width/2  end
   if o.oy == nil then o.oy = o.height-1 end
+
   if o.properties == nil then o.properties = {} end
-
-  if o.properties.switch then
-    o.disabled = getVar(o.properties.switch)
-  end
-
---  freeze(o)
 end
-
---function unfreeze (o)
---  setmetatable(o, {})
---end
-
---function freeze (o)
---  setmetatable(o, {__newindex=function (self, key, val)
---    error("tried to change " .. make_key(key) .. " = " .. serialize(val) .. " of frozen ".. serialize(self), 2)
---  end})
---end
-
---function copy_obj (o)
---  print("copy_obj")
---  local new = {}
---  unclean_obj(nil, new, nil, o.type)
-
---  print("old", serialize(o))
---  for k,v in pairs(o) do new[k] = v end
---  for k,v in pairs(o.properties) do new.properties[k] = v end
-
---  return new
---end
-
 
 return M

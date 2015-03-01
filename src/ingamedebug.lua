@@ -61,7 +61,7 @@ return function ()
 --    g.print(serialize(avatar), 300, 0)
 
     local i = 0
-    for t,objs in pairs(types) do
+    for t,objs in pairs(transient.types) do
       local c = count(objs)
       if c > 0 then
         i=i+1

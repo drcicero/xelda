@@ -8,7 +8,7 @@ local cron = require "cron"
 local sfx = require "sfx"
 local saveload = require "saveload"
 
-local change_level = require "map.maps"
+local maps = require "map.maps"
 local objs = require "map.objs"
 local camera = require "map.camera"
 
@@ -24,7 +24,7 @@ local touchclass = {
     FISH=1, FISH2=1, SLIME=1, ESLIME=1,
     WOLF=1, WOLF_HOWL=1, WOLF_DUCK_1=1, WOLF_DUCK_2=1, WOLF_RUN=1, WOLF_JUMP=1,
     PIG=1, SKELETON=1, GHOST=1}] = function (o)
-    for p,_ in pairs(types.ARROW) do
+    for p,_ in pairs(transient.types.ARROW) do
       if p.timer <= 0
       and circ_col(
         o.x, o.y-tw/2,
@@ -438,9 +438,9 @@ local updates = {
         and o.x < b.x+tw/2 and b.y-tw/2 < o.y and o.y < b.y+tw/2
     end
 
-    if table.anykey(types.YELLOW, match)
-    or table.anykey(types.CYAN, match)
-    or table.anykey(types.MAGENTA, match) then
+    if table.anykey(transient.types.YELLOW, match)
+    or table.anykey(transient.types.CYAN, match)
+    or table.anykey(transient.types.MAGENTA, match) then
       theblock.x = o.x
       theblock.y = o.y - 6
       theblock.vx = 0
@@ -473,7 +473,7 @@ local updates = {
     end
 
     -- the correct bigkey
-    if not table.anykey(types.BIGKEY, match) then
+    if not table.anykey(transient.types.BIGKEY, match) then
       emit(o, "change", false)
     end
   end,
@@ -556,7 +556,8 @@ local updates = {
               persistence.vars.grab = false
             end
 
-            change_level(o.properties.TO)
+            maps.use_door_to(o.properties.TO)
+            change_level_timer = 60
 
             if persistence.vars.grab then
               persistence.vars.grab =
@@ -659,6 +660,7 @@ function update_obj (i, o)
     return
   end
 
+--  pprint {persistence[persistence.mapname]}
   o.timer = o.timer-1
 
   if o.type ~= "GRID"
