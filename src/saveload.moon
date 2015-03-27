@@ -42,6 +42,7 @@ save = (slot, place) ->
     sessionstart = now
 
     scripting.hook "before_save"
+    print("return " .. (serialize slot, nil, indent))
     maps.compress!
     assert love.filesystem.write place,
         "return " .. (serialize slot, nil, indent)
@@ -69,7 +70,7 @@ load_slot = (slot) ->
         persistence.playtime = 0
 
     else
-        print "\nOPEN " .. (slot.slotname)
+        print "\nLOAD " .. (slot.slotname)
         persistence = slot
 
     sessionstart = os.time!

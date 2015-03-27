@@ -92,7 +92,7 @@ local function show_dialog (name, prevtext, text, after)
 
   tmp, avatar = avatar, name
   if name.properties.image == "Watson" then audio.play "he" end
-  levelclock.add {dur=1, f=function(t)
+  transient.levelclock.add {dur=1, f=function(t)
     name.r = .1*math.sin(t * math.pi*2)
     name.z = 1+.1*math.sin(t * math.pi)
   end, ended=function()
@@ -198,8 +198,6 @@ end
 
 --- find obj in pool by id. if noerr is true returns nil when no obj is found.
 function M.byId (id, pool, noerr)
-  pprint {transient.byid}
-  
   local o = transient.byid[id]
   if o == nil and not noerr then
     error("no elem by id: " .. id)
@@ -249,12 +247,12 @@ end
 
 ---
 -- fly the obj 'fairy' in curves by (x,y), if level_or_scene is true
--- levelclock will be used instead of sceneclock.
+-- transient.levelclock will be used instead of sceneclock.
 function M.wander_by (fairy, x, y, level_or_scene)
 --  local tmp = avatar
 --  avatar = fairy
 
-  local clock = level_or_scene and levelclock or sceneclock
+  local clock = level_or_scene and transient.levelclock or sceneclock
   local dur   = level_or_scene and .75 or 1.5
   local ended = not level_or_scene and resume or nil
 
@@ -282,7 +280,6 @@ function M.hooks.load (src)
     require("scripts." .. src) or {}
 
   M.levels[src] = level
-  if level.load then level.load() end
 end
 
 return M

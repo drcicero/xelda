@@ -91,9 +91,8 @@ function M.draw_layers (transient, pool)
       if layer.name == "objs" then
         scripting.hook("draw")
         not_yet_pool_drawn = true
+        for i,o in ipairs(layer.objects) do M.draw_obj(o) end
       end
-
-      for i,o in ipairs(layer.objects) do M.draw_obj(o) end
     end
   end
 

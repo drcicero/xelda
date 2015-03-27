@@ -243,10 +243,10 @@ function control_move(o)
       o.oy = o.oy + doy
       o.y = o.y + diy
       CONTROL = false
-      levelclock.add {dur=.25, ended=function()
+      transient.levelclock.add {dur=.25, ended=function()
         CONTROL = true
       end}
-      levelclock.add {dur=.3, f=cron.to(o, "r", 0), ended=function()
+      transient.levelclock.add {dur=.3, f=cron.to(o, "r", 0), ended=function()
         o.r = nil
         o.friction = nil
         o.airfriction = nil

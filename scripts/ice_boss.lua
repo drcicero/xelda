@@ -65,11 +65,11 @@ end
 local function boss_fight_end ()
   -- delete all boss lasts
   for i,o in ipairs(boss.lasts) do
-    levelclock.add {dur=.6*(i-1)+2, ended=function()
+    transient.levelclock.add {dur=.6*(i-1)+2, ended=function()
       sfx.hitboss(o.x, o.y)
 
       o.alpha = 255
-      levelclock.add {dur=.5, f=cron.to(o, "alpha", 0), ended=function()
+      transient.levelclock.add {dur=.5, f=cron.to(o, "alpha", 0), ended=function()
         objs.del(o)
       end}
     end}
@@ -79,10 +79,10 @@ local function boss_fight_end ()
   -- delete all slimes
   for i,o in ipairs(persistence[persistence.mapname].pool) do
     if o.type == "SLIME" or o.type == "ESLIME" then
-      levelclock.add {dur=1*i, ended=function()
+      transient.levelclock.add {dur=1*i, ended=function()
         sfx.hitboss(o.x, o.y)
         o.alpha = 255
-        levelclock.add {dur=1.1, f=cron.to(o, "alpha", 0), ended=function()
+        transient.levelclock.add {dur=1.1, f=cron.to(o, "alpha", 0), ended=function()
           objs.del(o)
         end}
       end}
@@ -90,7 +90,7 @@ local function boss_fight_end ()
   end
 
   -- play win music
-  levelclock.add {dur=5, ended=function()
+  transient.levelclock.add {dur=5, ended=function()
     setVar("victory", true)
     audio.music("07")
     setVar("noescape", false)
@@ -226,24 +226,23 @@ return {
   },
 
 
-  load = function ()
-    local level = persistence[persistence.mapnam]
-    level.water_y_end = false
-    level.water_y = -20 * 20
-    byId("eye1").properties.change = "$eye_change " .. tostring(-12 * 20)
-    byId("eye2").properties.change = "$eye_change " .. tostring(- 8 * 20)
-    byId("eye3").properties.change = "$eye_change " .. tostring(  0     )
-
-    local bossstart = byId("bossstart")
-    bossstart.properties.ontouch = "$bossstart_boss"
-    bossstart.properties.onfirsttouch = "$bossstart_onfirsttouch"
-	end,
-
-
   focus = function ()
     audio.music(getVar "victory" and "07"
              or boss             and "Raw"
              or                       nil)
+
+    cutscene("init", function ()
+      local level = persistence[persistence.mapnam]
+      level.water_y_end = false
+      level.water_y = -20 * 20
+      byId("eye1").properties.change = "$eye_change " .. tostring(-12 * 20)
+      byId("eye2").properties.change = "$eye_change " .. tostring(- 8 * 20)
+      byId("eye3").properties.change = "$eye_change " .. tostring(  0     )
+
+      local bossstart = byId("bossstart")
+      bossstart.properties.ontouch = "$bossstart_boss"
+      bossstart.properties.onfirsttouch = "$bossstart_onfirsttouch"
+    end)
   end,
 
 

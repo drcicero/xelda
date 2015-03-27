@@ -34,25 +34,22 @@ local M = {
     end
   end,
 
-  load = function ()
-    nonag = nil
-    local sword_ = byId("sword", nil, true)
-    if sword_ and sword_.properties.ghost == nil then
+  focus = function ()
+    cutscene("init", function ()
+      nonag = nil
+
+      local sword_ = byId("sword", nil, true)
       sword_.y = sword_.y + 12
       sword_.ix = 10; sword_.iy = 10
       sword_.ox = 10; sword_.oy = 10
       sword_.properties.ghost = true
-    end
+	
+      byId("lasttablet").properties.onfirsttouch = "$lasttablet_onfirsttouch"
+      byId("mid").properties.onfirsttouch = "$read"
+      byId("drawing").properties.onfirsttouch = "$drawing"
 
-    byId("lasttablet").properties.onfirsttouch = "$lasttablet_onfirsttouch"
-    byId("mid").properties.onfirsttouch = "$read"
-    byId("drawing").properties.onfirsttouch = "$drawing"
-  end,
-
-  focus = function ()
-    cutscene("hello", function ()
       local fairy = objs.spawn("FAIRY", 40.5*20, 9*20)
-      fairy.name = "fairy"
+      objs.changeId(fairy, "fairy")
 --      fairy.type = "TABLET"
 --      fairy.properties.text = "Why did the King summon his archenemy Nonag? That does not make any sense."
       fairy.properties.image = "Watson"
@@ -163,15 +160,15 @@ cutscene("drawing", function ()
 
   audio.play("explosion", nil, nil, nil, .5)
 
-  local moon = byId("moon")
-  moon.z = 1
-  sceneclock.add {dur=3, f=cron.by(moon, "y", 150), ease=cron.ease.Accel}
-  sceneclock.add {dur=3, f=cron.to(moon, "z", 5), ease=cron.ease.Accel}
-  sceneclock.add {dur=1, f=cron.to(moon, "alpha", 0), ease=cron.ease.Smooth}
-  sceneclock.add {dur=3, f=function (x)
-    camera.x = camera.x + (math.random()-0.5)*2 * x*10
-    camera.y = camera.y + (math.random()-0.5)*2 * x*10
-  end, ease=cron.ease.Accel}
+--  local moon = byId("moon")
+--  moon.z = 1
+--  sceneclock.add {dur=3, f=cron.by(moon, "y", 150), ease=cron.ease.Accel}
+--  sceneclock.add {dur=3, f=cron.to(moon, "z", 5), ease=cron.ease.Accel}
+--  sceneclock.add {dur=1, f=cron.to(moon, "alpha", 0), ease=cron.ease.Smooth}
+--  sceneclock.add {dur=3, f=function (x)
+--    camera.x = camera.x + (math.random()-0.5)*2 * x*10
+--    camera.y = camera.y + (math.random()-0.5)*2 * x*10
+--  end, ease=cron.ease.Accel}
 
   dialog(fairy, "Oh my, lord! The moon!!!")
   dialog("\nWhat was that???")

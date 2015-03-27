@@ -41,6 +41,7 @@ save = function(slot, place)
   slot.version = GAME_VERSION
   sessionstart = now
   scripting.hook("before_save")
+  print("return " .. (serialize(slot, nil, indent)))
   maps.compress()
   assert(love.filesystem.write(place, "return " .. (serialize(slot, nil, indent))))
   print("SAVED")
@@ -62,7 +63,7 @@ load_slot = function(slot)
     persistence.slotname = "Slot " .. (num_slots + 1)
     persistence.playtime = 0
   else
-    print("\nOPEN " .. (slot.slotname))
+    print("\nLOAD " .. (slot.slotname))
     persistence = slot
   end
   sessionstart = os.time()

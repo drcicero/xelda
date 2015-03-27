@@ -154,7 +154,7 @@ function hurt_enemy (o)
     if o.alpha == 255 then
       sfx.hurtenemy(o.x, o.y-10)
 
-      o.alpha = 0; levelclock.add {dur=.5, f=cron.to(o, "alpha", 255)}
+      o.alpha = 0; transient.levelclock.add {dur=.5, f=cron.to(o, "alpha", 255)}
       objs.setType(o, "WOLF_JUMP")
       o.vx = avatar.facing * 5
       o.vy = -6

@@ -80,7 +80,7 @@ function game.update (self, dt, from_draw)
     change_level_timer = change_level_timer-1
 
     hudclock.update()
-    levelclock.update()
+    transient.levelclock.update()
     events.update()
 
     camera.follow(avatar)
