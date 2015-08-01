@@ -1,11 +1,15 @@
 --- Tilemap Collision
 
+local persistence = require "state"
+
 local floor = math.floor
 local g = love.graphics
 local tw = 20
 
+local function tileOf(x) return floor(x / tw) end
+
 --- are all tiles (x,y) for x in [x_from, x_to], y in [y_from, y_to] not solid
-function unsolid_area (x_from, x_to, y_from, y_to)
+local function unsolid_area (x_from, x_to, y_from, y_to)
   if DEBUG then
     g.setColor(255,0,0,150)
     g.rectangle("line",
@@ -33,7 +37,7 @@ function unsolid_area (x_from, x_to, y_from, y_to)
 end
 
 --- helper function for #solid and #water
-function maptile_at_(tilemap, tx, ty, default)
+local function maptile_at_(tilemap, tx, ty, default)
   if DEBUG then
     g.setColor(255, 0, 0, 51)
     g.rectangle("fill", tx*tw, ty*tw, tw, tw)
@@ -49,13 +53,15 @@ function maptile_at_(tilemap, tx, ty, default)
 end
 
 --- is the maptile at (x,y) solid?
-function maptile_at(tilemap, x, y, default) return
+local function maptile_at(tilemap, x, y, default) return
   maptile_at_(tilemap, floor(x/tw), floor(y/tw), default) end
 
 --- is the maptile at (x,y) solid?
-function solid(x, y) return transient.solidmap and
+local function solid(x, y) return transient.solidmap and
   maptile_at(transient.solidmap, x, y, true) end
 
 --- is the maptile at (x,y) liquid?
 function water(x, y) return transient.watermap and
   maptile_at(transient.watermap, x, y-15+persistence[persistence.mapname].water_y, false) end
+
+return {tileOf=tileOf, maptile_at=maptile_at, solid=solid, water=water, unsolid_area=unsolid_area}

@@ -90,9 +90,13 @@ end
 
 --- is any grid-obj overlapping with the point {x,y} o
 function grid (o, vx, vy)
+  return get_first_overlap(transient.types.GRID, o, vx, vy) ~= nil end
+
+--- is any-obj of the given type overlapping with the point {x,y} o
+function get_first_overlap (type, o, vx, vy)
   local oleft, otop     = o.x + vx - o.ox, o.y + vy - o.oy
   local oright, obottom = oleft + o.width, otop + o.height
-  for b,_ in pairs(transient.types.GRID) do
+  for b,_ in pairs(type) do
     local bleft, btop     = b.x - b.ox,      b.y - b.oy
     local bright, bbottom = bleft + b.width, btop + b.height
 
@@ -105,9 +109,8 @@ function grid (o, vx, vy)
     if not b.disabled
     and oleft < bright  and bleft < oright
     and otop  < bbottom and btop  < obottom then
-      return true
+      return b
     end
   end
-  return false
 end
- 
+

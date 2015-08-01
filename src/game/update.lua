@@ -1,21 +1,23 @@
 --- Game.update
--- requires $frames, $audio
+-- requires $lib.frames, $lib.audio
 
-local app = require "frames"
-local audio = require "audio"
 local cron = require "cron"
+local audio = require "audio"
+local widgets = require "widgets"
 
 local sfx = require "sfx"
 local saveload = require "saveload"
+local persistence = require "state"
 
 local maps = require "map.maps"
-local objs = require "map.objs"
+local pool = require "pool"
 local camera = require "map.camera"
+local scripting = require "map.scripting"
 
-require "switchs"
+local move_obj = require "game.move"
+
 require "game.collision"
-require "game.control"
-
+local tilemapcollision = require "game.tilemap_collision"
 
 ---
 local touchclass = {
@@ -31,7 +33,7 @@ local touchclass = {
         p.x-math.cos(p.r)*10, p.y-math.sin(p.r)*10,
         tw/2, tw/4
       ) then
-        objs.del(p)
+        pool.del(p)
         hurt_enemy(o)
         return
       end
@@ -100,7 +102,7 @@ function hurt_player (o)
       local originalmvol = audio.mvol
       local loaded = false
 
-      app.push {
+      widgets.push {
         update = function () return loaded end,
         draw = function ()
           local x = now - start
@@ -108,7 +110,7 @@ function hurt_player (o)
           if x >= 2 then
             x = 0
             audio.setMVol(originalmvol)
-            app.pop()
+            widgets.pop()
             return
 
           elseif x >= 1 then
@@ -132,16 +134,16 @@ end
 function hurt_enemy (o)
   if o.type == "EYE" then
     if o.properties.multi then
-      objs.setType(o, "EYE")
-      objs.timer = 0
-      emit(o, "change", objs.r == 0)
+      pool.setType(o, "EYE")
+      o.timer = 0
+      scripting.emit(o, "change", o.r == 0)
 
     else
       sfx.killenemy(o.x, o.y-10)
 
-      objs.setType(o, "EYE2")
+      pool.setType(o, "EYE2")
       o.properties.closed = true
-      emit(o, "change", true)
+      scripting.emit(o, "change", true)
    end
 
   elseif (o.type == "WOLF"
@@ -155,7 +157,7 @@ function hurt_enemy (o)
       sfx.hurtenemy(o.x, o.y-10)
 
       o.alpha = 0; transient.levelclock.add {dur=.5, f=cron.to(o, "alpha", 255)}
-      objs.setType(o, "WOLF_JUMP")
+      pool.setType(o, "WOLF_JUMP")
       o.vx = avatar.facing * 5
       o.vy = -6
       o.properties.health = o.properties.health and o.properties.health - 1 or 2
@@ -167,7 +169,7 @@ function hurt_enemy (o)
     o.type = "CUT_GRASS"
 
     if math.random() > 0.5 then
-      local x = objs.spawn(
+      local x = pool.spawn(
         persistence.vars.health < persistence.vars.hearts*2 and math.random() > 0.5 and "HEART"
         or persistence.vars.bow and math.random() > 0.5 and "ARROWS" or "RUBY1",
         o.x, o.y-tw
@@ -177,15 +179,16 @@ function hurt_enemy (o)
     end
 
   else
+    -- TODO WOLF KILL DOES NOT CALL 'ONKILL'
     if o.properties.onkill then
-      emit(o, "onkill", true)
+      scripting.emit(o, "onkill", true)
     end
 
     if not o.anormalkill then
       sfx.killenemy(o.x, o.y-10)
 
       if math.random() > 0.5 then
-        local x = objs.spawn(
+        local x = pool.spawn(
           persistence.vars.health < persistence.vars.hearts*2 and math.random() > 0.5 and "HEART"
           or persistence.vars.bow and math.random() > 0.5 and "ARROWS" or "RUBY1",
           o.x, o.y-tw
@@ -194,7 +197,7 @@ function hurt_enemy (o)
         x.vy = -4
       end
 
-      objs.del(o)
+      pool.del(o)
     end
 
   end
@@ -219,11 +222,11 @@ local function update_fish (o)
   -- special form
   if o.timer < 0 and math.abs(o.x - avatar.x) < 40 then
     sfx.enemyboost(o.x, o.y-10)
-    objs.setType(o, "FISH2")
+    pool.setType(o, "FISH2")
     o.timer = 200
 
   elseif o.timer == 100 then
-    objs.setType(o, "FISH")
+    pool.setType(o, "FISH")
   end
 end
 
@@ -291,7 +294,7 @@ local function update_slime (o)
   if o.wall
 --  or solid(o.x + o.vx + o.facing * 10, o.y)
 --  or grid(o, o.vx + o.facing * 10, 0)
-  or not solid(o.x + o.vx*tw, o.y + tw/2 + 2) then
+  or not tilemapcollision.solid(o.x + o.vx*tw, o.y + tw/2 + 2) then
     o.facing = -o.facing
   end
 
@@ -300,12 +303,12 @@ local function update_slime (o)
   if o.timer < 0 then
     if pl_col(o.x, o.y, 70) then
       sfx.enemyboost(o.x, o.y-10)
-      objs.setType(o, "ESLIME")
+      pool.setType(o, "ESLIME")
       o.timer = 300
     end
 
   elseif 100 < o.timer and o.timer % 20 == 0 then
-    local ele = objs.spawn("ELECTRO", o.x + math.random()*10-5, o.y - 15 + math.random()*10-5)
+    local ele = pool.spawn("ELECTRO", o.x + math.random()*10-5, o.y - 15 + math.random()*10-5)
     audio.play("electro", ele.x, ele.y)
     ele.properties.ax = o.vx + math.random()*2-1
     ele.properties.ay = math.random()*2-1
@@ -315,7 +318,7 @@ local function update_slime (o)
     ele.ox = 10  ele.oy = 10
 
   elseif o.timer == 100 then
-    objs.setType(o, "SLIME")
+    pool.setType(o, "SLIME")
   end
 end
 
@@ -331,8 +334,8 @@ local function update_trigger (o)
     if pressed[" "] and o.timer < 0 then
       o.timer = 50
       sfx.killenemy(o.x, o.y-10)
-      emit(o, "change", o.type == "TRIGGER")
-      objs.setType(o, o.type=="TRIGGER" and "TRIGGER2" or "TRIGGER")
+      scripting.emit(o, "change", o.type == "TRIGGER")
+      pool.setType(o, o.type=="TRIGGER" and "TRIGGER2" or "TRIGGER")
     end
   end
 end
@@ -349,13 +352,13 @@ local function update_chest (o)
       sfx.openchest(o.x, o.y-10)
 
       local x, y = o.x, o.y
-      local i = objs.spawn(o.properties.item, o.x, o.y-tw)
+      local i = pool.spawn(o.properties.item, o.x, o.y-tw)
       i.gravity = 0
       i.dont_update = true
-      objs.del(o)
+      pool.del(o)
 
       local start, dur = now, 4
-      app.push({
+      widgets.push({
         update = function ()
           local t = (now - start) / dur
 
@@ -371,7 +374,7 @@ local function update_chest (o)
             audio.music(mus, "default")
             i.gravity = nil
             i.dont_update = nil
-            app.pop()
+            widgets.pop()
           end
         end
       })
@@ -385,7 +388,7 @@ local function update_arrow (o)
     if o.timer > 1 then
       o.alpha = 255*o.timer/40
     elseif o.timer == 1 then
-      objs.del(o)
+      pool.del(o)
     else
       o.timer = 40
     end
@@ -419,7 +422,7 @@ local updates = {
 --    o.z = o.properties.zstart + o.properties.zend * -o.timer/d
     o.vy = o.vy + (o.gravity or 0.05)
     if -o.timer >= d then
-      objs.del(o)
+      pool.del(o)
     end
   end,
 
@@ -445,16 +448,16 @@ local updates = {
       theblock.y = o.y - 6
       theblock.vx = 0
       theblock.vy = 0
-      emit(o, theblock.type, true)
+      scripting.emit(o, theblock.type, true)
 
-      if theblock.type ~= "CYAN"    then emit(o, "CYAN", false)    end
-      if theblock.type ~= "MAGENTA" then emit(o, "MAGENTA", false) end
-      if theblock.type ~= "YELLOW"  then emit(o, "YELLOW", false)  end
+      if theblock.type ~= "CYAN"    then scripting.emit(o, "CYAN", false)    end
+      if theblock.type ~= "MAGENTA" then scripting.emit(o, "MAGENTA", false) end
+      if theblock.type ~= "YELLOW"  then scripting.emit(o, "YELLOW", false)  end
 
     else
-      emit(o, "CYAN", false)
-      emit(o, "MAGENTA", false)
-      emit(o, "YELLOW", false)
+      scripting.emit(o, "CYAN", false)
+      scripting.emit(o, "MAGENTA", false)
+      scripting.emit(o, "YELLOW", false)
     end
 
   end,
@@ -465,16 +468,16 @@ local updates = {
       and persistence.vars.grab ~= b and b.x-tw/2 < o.x
       and o.x < b.x+tw/2 and b.y-tw/2 < o.y and o.y < b.y+tw/2 then
         sfx.unlock(o.x, o.y-10)
-        objs.del(b)
-        emit(o, "change", true)
-        objs.setType(o, "BIG_LOCK_OPEN")
+        pool.del(b)
+        scripting.emit(o, "change", true)
+        pool.setType(o, "BIG_LOCK_OPEN")
         return true
       end
     end
 
     -- the correct bigkey
     if not table.anykey(transient.types.BIGKEY, match) then
-      emit(o, "change", false)
+      scripting.emit(o, "change", false)
     end
   end,
 
@@ -489,8 +492,8 @@ local updates = {
         if pressed[" "] then
           sfx.unlock(o.x, o.y-10)
           persistence.vars.keys = persistence.vars.keys - 1
-          emit(o, "change", true)
-          objs.del(o)
+          scripting.emit(o, "change", true)
+          pool.del(o)
         end
 
       else
@@ -530,11 +533,11 @@ local updates = {
     if topisgame
     and box_col(avatar, o, tw,tw, o.width, o.height) then
       if o.properties.onfirsttouch then
-        emit(o, "onfirsttouch", true)
+        scripting.emit(o, "onfirsttouch", true)
         o.properties.onfirsttouch = nil
       end
       if o.properties.ontouch then
-        emit(o, "ontouch", true)
+        scripting.emit(o, "ontouch", true)
       end
 
       if o.properties.TO then
@@ -551,7 +554,7 @@ local updates = {
 
             if persistence.vars.grab
             and persistence.vars.grab.type == "BIGKEY" then
-              objs.del(persistence.vars.grab)
+              pool.del(persistence.vars.grab)
             else
               persistence.vars.grab = false
             end
@@ -561,7 +564,7 @@ local updates = {
 
             if persistence.vars.grab then
               persistence.vars.grab =
-                objs.spawn("BIGKEY", avatar.x, avatar.y)
+                pool.spawn("BIGKEY", avatar.x, avatar.y)
             end
 
             saveload.autosave()
@@ -582,7 +585,7 @@ local updates = {
       sfx.getheart(o.x, o.y-10)
       move_to_inventory(o, 15*persistence.vars.health+20+10, 10+20+10, function ()
         change_health(1)
-        objs.del(o)
+        pool.del(o)
       end)
     end
   end,
@@ -595,7 +598,7 @@ local updates = {
         if persistence.vars.health < persistence.vars.hearts*2 then
           change_health(1)
         end
-        objs.del(o)
+        pool.del(o)
       end)
     end
   end,
@@ -623,7 +626,7 @@ local updates = {
       sfx.getheart(o.x, o.y-10)
       persistence.vars.bow = true
       persistence.vars.arrows = 15
-      objs.del(o)
+      pool.del(o)
     end
   end,
 
@@ -635,7 +638,7 @@ local updates = {
       o.alpha = 255 * (1 + o.timer / 50)
   --    o.vx, o.vy = o.properties.ax, o.properties.ay
       if o.timer == -40 then
-        objs.del(o)
+        pool.del(o)
       end
     end
   end,
@@ -646,7 +649,7 @@ function update_obj (i, o)
   if o.type == "REMOVED" then return end
 
   if o.properties.switch then
-    local d = getVar(o.properties.switch)
+    local d = scripting.getVar(o.properties.switch)
     if o.disabled ~= d then
       sfx.abled(o.x, o.y-10)
       o.disabled = d
@@ -690,10 +693,12 @@ function update_obj (i, o)
   elseif not persistence.vars.grab
   and ({CYAN=1, YELLOW=1, MAGENTA=1, BIGKEY=1})[o.type]
   and pl_col(o.x, o.y-tw/2, tw/4) then
-    table.insert(bubbles, {x=o.x, y=o.y, text="[c] : carry"})
-    if not persistence.vars.occupied and pressed.c then
-      persistence.vars.occupied = true
-      persistence.vars.grab = o
+    if not persistence.vars.occupied then
+      table.insert(bubbles, {x=o.x, y=o.y, text="[space] : carry"})
+      space_register = (function (o) return function ()
+        persistence.vars.occupied = true
+        persistence.vars.grab = o
+      end end)(o)
     end
   end
 
@@ -713,7 +718,7 @@ function move_to_inventory(o, x, y, endfunc)
     y = o.y - camera.y + camera.h/2,
     ix = 10, iy = 10,
   }
-  objs.del(o)
+  pool.del(o)
 
   local i = table.insert(hud_objs, newo)
 
@@ -733,133 +738,3 @@ end
 --  for i,o in ipairs(arr) do if o==o then return i end end
 --end
 
----
-function move_obj (o)
-  if o.type == "REMOVED" then error("wtf") end
-  local w = "ARROW" == o.type and 2 or tw/2
-
-  if not o.noturn and not o.noface then
-    if     o.vx < -.1 then o.facing = -1
-    elseif o.vx >  .1 then o.facing =  1 end
-  end
-
-  local floor = math.floor
-  local function tileOf (x) return floor(x / tw) end
-
-  if o.ghost or o.properties.ghost then
-    o.x = o.x + o.vx
-    o.y = o.y + o.vy
-
-  else
---  o.wall = false
---  if not o.ghost and not o.properties.ghost then
---    if o.vx ~= 0 then
---      if solid(o.x + o.vx + o.facing*w, o.y)
---      or grid(o, o.vx, 0) then
---        o.vx = 0
---        o.wall = true
-
---      else
---        if o.ground and math.abs(o.vx) > 0.1
---        and (o.type:find("RINK")~=nil or o.type:find("XELDA")~=nil
---        or o.type:find("SLIME")~=nil  or o.type:find("FISH")~=nil) then
---          o.properties.schwupptimer = (o.properties.schwupptimer or 0)-math.random()
---          if o.properties.schwupptimer < 0 then
---            audio.play("hah3", o.x, o.y, 0.9)
---            o.properties.schwupptimer = 10
---          end
---        end
---      end
---    end
-
---    o.ground = o.vy >= 0 and (
---      solid(o.x, o.y+o.vy+1) or
---      (not grid(o, 0, 0) and grid(o, 0, o.vy+1)) or
---      (not o.type=="BLOCK" and grid(o, 0, 0) and block(o.x, o.y+o.vy+1))
---    )
-
-    if o.y == nil then pprint {o} end -- TODO find error after ice_boss
-    o.water = water(o.x, o.y+tw/2+2)
-    o.wall = false
-    o.ground = false
-
-    o.vy = o.vy + (o.gravity or .5) / (o.water and 15 or 1)
-
---    if o.ground or (o.vy < 0
---    and (solid(o.x, o.y+o.vy-w*2+1) or grid(o, 0, o.vy+1))) then
---      if o.vy > 2 then audio.play("hit", o.x, o.y-200) end
---      o.vy = 0
---    end
---  end
-
-
-    -- horizontal
-    if o.vx ~= 0 then
-      local vx, y = o.vx, o.y
-      local right = vx > 0 and 1 or 0
-      local front = o.x - o.ox + right * o.width
-
-      -- is the area of tiles, we want to enter, nonsolid
-      if unsolid_area (
-        right + tileOf(front + (1-right) * vx), -- x_from
-        right + tileOf(front + right * vx), -- x_to
-        tileOf(y - o.oy - 1), -- y_from
-        tileOf(y - o.oy - 1 + o.height) + 1 -- y_to
-      ) and not grid(o, vx, 0) then
-        o.x = o.x + vx
-
-      else
-        o.wall = true
-        o.vx = 0
-
-        if math.abs(vx) > 2.5 then
-          sfx.hitground(o.x, o.y-o.height+o.oy, math.abs(vx) > 11 and 2 or 1)
-        end
-      end
-    end
-
-    -- vertical
-    if o.vy ~= 0 then
-      local vy, x = o.vy, o.x
-      local up = vy > 0 and 1 or 0
-      local front = o.y - o.oy + up * o.height - 1
-
-      -- is the area of tiles, we want to enter, nonsolid
-      if unsolid_area (
-        tileOf(x - o.ox), -- x_from
-        tileOf(x - o.ox + o.width) + 1, -- x_to
-        up + tileOf(front + (1-up) * vy), -- y_from
-        up + tileOf(front + up * vy) -- y_to
-      ) and not grid(o, 0, vy) then
-        o.y = o.y + vy
-
-      else
-        o.vy = 0
-
-        if vy > 0 then
---          o.y = ?
-          o.ground = true
-        end
-
-        if math.abs(vy) > 2.5 then
-          sfx.hitground(o.x, o.y-o.height+o.oy, math.abs(vy) > 11 and 2 or 1)
-        end
-
-      end
-    end
-
-    if o.water then
-      o.vx = .9 * o.vx
-      o.vy = .9 * o.vy
-
-    else
-      if o.ground then
-        o.vx = o.vx * (o.friction or .8)
-
-      else
-        o.vx = o.vx * (o.airfriction or .8)
-
-      end
-    end
-  end
-end

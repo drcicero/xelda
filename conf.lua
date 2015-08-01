@@ -1,4 +1,3 @@
---- Love2d Config
 function love.conf(t)
   t.title  = "Xeldas Saga"
   t.author = "David Richter"
@@ -19,4 +18,3 @@ function love.conf(t)
   t.modules.joystick   = false
   t.modules.thread     = false
 end
-

@@ -1,8 +1,9 @@
 local audio = require "audio"
 
-local objs = require "map.objs"
+local pool = require "pool"
 local camera = require "map.camera"
 local scripting = require "map.scripting"
+local dialog = scripting.dialog
 
 function shock(dur, rad)
   audio.play "hit"
@@ -15,7 +16,7 @@ end
 
 function schnorch (avatar)
   audio.play "hah"
-  local schnorch = objs.spawn("Z", avatar.x, avatar.y)
+  local schnorch = pool.spawn("Z", avatar.x, avatar.y)
   schnorch.vx = math.random()*4-1
   schnorch.vy = math.random()*-.5-.5
   schnorch.gravity = 0.02
@@ -27,7 +28,7 @@ function schnorch (avatar)
 
     schnorch.alpha = schnorch.alpha - 3
     if schnorch.alpha == 0 then
-      objs.del(schnorch)
+      pool.del(schnorch)
       sceneclock.del(tween)
     end
   end
@@ -36,7 +37,7 @@ end
 
 return {
   focus = function ()
-    cutscene("hello", function ()
+    scripting.cutscene("hello", function ()
       local rink = avatar
       local accumulator = 0
       local sleepytween = sceneclock.add {f=function (x)
@@ -47,17 +48,17 @@ return {
         end
       end}
 
-      fairy = objs.spawn("FAIRY", 160, 90)
+      fairy = pool.spawn("FAIRY", 160, 90)
       fairy.properties.image = "Watson"
       fairy.gravity = 0
       scripting.wander_by(fairy, -60, -20)
 
-      scripting.dialog(fairy, "Good Morning, Rink.")
-      scripting.dialog("\nI was sent by the king. He wants to see you.")
+      dialog(fairy, "Good Morning, Rink.")
+      dialog("\nI was sent by the king. He wants to see you.")
       schnorch(rink)
-      scripting.dialog(fairy, "It is a matter of death and light...         of darkness...       and life...")
+      dialog(fairy, "It is a matter of death and light...         of darkness...       and life...")
       schnorch(rink)
-      scripting.dialog("\nListen!      Hey!      Wakeup!     LISTEN!       ...       ...       ...         !")
+      dialog("\nListen!      Hey!      Wakeup!     LISTEN!       ...       ...       ...         !")
       schnorch(rink)
 
       shock(3, 10)
@@ -69,11 +70,11 @@ return {
       audio.play "explosion"
       rink.type = "SLEEPY_RINK"
       audio.music(nil, "default")
-      scripting.dialog(fairy, "THE PRINCESS WAS KIDNAPPED!")
+      dialog(fairy, "THE PRINCESS WAS KIDNAPPED!")
 
-      scripting.dialog(fairy, "Phew. Follow me.")
+      dialog(fairy, "Phew. Follow me.")
       scripting.wander_by(fairy, 60, 20)
-      objs.del(fairy)
+      pool.del(fairy)
 
 --      rink.vx = 4
     end)

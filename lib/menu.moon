@@ -1,13 +1,13 @@
---- Menu
+--- Menu widgets
 -- Display a interactive column-based dialog box.
 -- It can be used to make menus or other simple guis.
 --
--- requires $frames, $cron, $audio
+-- requires $widgets, $cron, $audio
 
 love, w, h = love, w, h
 g = love.graphics
 
-app = require "frames"
+widgets = require "widgets"
 cron = require "cron"
 audio = require "audio"
 
@@ -23,8 +23,8 @@ lastX, lastY = 0, 0
 
 doit = =>
     if "table" == type @action
-        app.pop!
-        app.push @action
+        widgets.pop!
+        widgets.push @action
 
     else
         @\action @parent
@@ -121,17 +121,20 @@ layout = =>
 
 
 -- public
---- this is a shortcut for '(f) -> app.pop(); app.push(f())'
+--- this is a shortcut for '(f) -> widgets.pop(); widgets.push(f())'
 goto = (blueprint) -> ->
-    app.pop!
-    app.push blueprint!
+    widgets.pop!
+    widgets.push blueprint!
 
+--- shortcut for widgets.push
+push = (blueprint) -> ->
+    widgets.push blueprint!
 
 --- 
 pop = (selected, self, func, time) ->
-    app.stack[#app.stack]\_anim "hide", "left",
-        app.stack[#app.stack].noanim and 0 or time, ->
-            app.pop!
+    widgets.stack[#widgets.stack]\_anim "hide", "left",
+        widgets.stack[#widgets.stack].noanim and 0 or time, ->
+            widgets.pop!
             func!  if func
 
 
@@ -189,13 +192,19 @@ class column
     set: set
 
     _findNextSelector: =>
+        ctr = 0
         while true
             @selector = (@selector + 1 - 1) % #self + 1
+            ctr = ctr + 1
+            error("ERR: no action in column") if ctr == #self
             break if @[@selector].action
 
     _findPrevSelector: =>
+        ctr = 0
         while true
             @selector = (@selector - 1 - 1) % #self + 1
+            ctr = ctr + 1
+            error("ERR: no action in column") if ctr == #self
             break if @[@selector].action
 
 
@@ -365,4 +374,4 @@ class column
             onfinished!  if onfinished
 
 
-:column, :range, :input, :label, :button, :pop, :goto, :menuclock
+:column, :range, :input, :label, :button, :push, :pop, :goto, :menuclock

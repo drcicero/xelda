@@ -1,9 +1,10 @@
 --- Tiled Interface
--- requires $scripting
+-- requires $src.map.scripting
 
-local objs = require "map.objs"
 local camera = require "map.camera"
 local scripting = require "map.scripting"
+
+local persistence = require "state" -- TODO can be eliminated
 
 local M = {}
 local tw

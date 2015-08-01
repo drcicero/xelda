@@ -1,5 +1,7 @@
 --- read tiled maps
 local scripting = require "map.scripting"
+local entities = require "entities"
+local sprites = require "assets/tileset" -- TODO unneeded
 
 --- returns a tuple (level, persistent part of the level).
 --
@@ -28,7 +30,9 @@ local function parse_map (src)
       layer.objects = {}
 
     elseif layer.type == "objectgroup" then
-      for j, o in ipairs(layer.objects) do
+      for j=1,#layer.objects do
+        local o = layer.objects[j]
+
         -- rename
         o.class, o.type = o.type, nil
         o.r, o.rotation = o.rotation and math.rad(o.rotation) or nil, nil
@@ -38,7 +42,9 @@ local function parse_map (src)
         o.type, o.gid = o.gid and (sprites[o.gid] or "DUMMY") or "META", nil
 
         -- offset objects
-        if o.width == 0 then -- TODO why this condition?
+        -- TODO why this condition?
+        if o.width == 0
+        or o.width == 20 then
           o.width, o.height = nil, nil
 
           o.x = o.x + tw/2
@@ -47,6 +53,22 @@ local function parse_map (src)
           if o.type=="GRID" then
             o.width = 20
             o.height = 20
+
+          elseif o.type=="LADDER" then
+            o.properties.ghost = true
+            o.width  = 20
+            o.height = 20
+            o.name   = math.random()
+
+            for i=1,3 do
+              local no = {
+                type="LADDER", x=o.x, y=o.y, properties={fixedon=o.name},
+                width=20, height=20, name=math.random()
+              }
+              entities.decompress(no)
+              layer.objects[#layer.objects+1] = no
+              o = no
+            end
           end
         end
 
@@ -57,6 +79,7 @@ local function parse_map (src)
 
       if layer.name == "objs" then
         default_state.pool = layer.objects
+        layer.objects = {}
       end
 
     elseif layer.name == "Ground" then

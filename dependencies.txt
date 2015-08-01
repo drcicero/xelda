@@ -1,0 +1,108 @@
+main.lua
+  audio, widgets, serialize.pprint
+  intro
+  map.camera
+
+lib/menu.lua
+  cron, audio, widgets
+  styles
+
+src/game/control.lua
+  cron, audio
+  sfx
+  map.camera, scripting
+  entities
+
+src/game/main.lua
+  widgets.push, cron.new_clock
+  ingamedebug
+  menus.pause
+
+src/game/move.lua
+  sfx
+
+src/game/update.lua
+  cron, audio, widgets
+  sfx, saveload
+  map.maps, camera, scripting
+  entites
+
+src/ingamedebug.lua
+  audio, widgets, serialize.serialize
+
+src/intro.lua
+  audio, widgets, clamp
+  game.main
+  menus.slots
+
+src/map/maps.lua
+  audio, cron.new_clock
+
+src/map/scripting.lua
+  cron, audio, widgets, serialize.serialize
+
+src/menus/slots.lua
+  widgets, menu, audio, cron
+  map.maps
+  menu.options, credits
+  saveload
+
+src/saveload.lua
+  map.maps, scripting
+  serialize.serialize
+
+src/sfx.lua
+  audio
+  map.entites, map.camera
+
+--------------------------------------------------------------------------------
+
+scripts/ice_boss.lua
+  cron, audio, sfx
+  map.objs, camera, scripting
+
+scripts/ice_key2.lua
+  map.scripting
+  switchs
+
+scripts/ice_puzzle_normal.lua
+  map.scripting
+  switchs
+
+scripts/ice_time.lua
+  local scripting = require "map.scripting"
+  require "switchs"
+
+scripts/main.lua
+  local objs = require "map.objs"
+
+scripts/palace.lua
+  local cron = require "cron"
+  local audio = require "audio"
+  local objs = require "map.objs"
+  local scripting = require "map.scripting"
+
+scripts/rinks_house.lua
+  local objs = require "map.objs"
+  local scripting = require "map.scripting"
+
+scripts/rinks_room.lua
+  local audio = require "audio"
+  local objs = require "map.objs"
+  local camera = require "map.camera"
+  local scripting = require "map.scripting"
+
+scripts/sanctuum.lua
+  local sfx = require "sfx"
+  local cron = require "cron"
+  local audio = require "audio"
+  local events = require "events"
+  require "game.collision"
+  local objs = require "map.objs"
+  local camera = require "map.camera"
+  local scripting = require "map.scripting"
+
+scripts/village.lua
+  local objs = require "map.objs"
+  local scripting = require "map.scripting"
+

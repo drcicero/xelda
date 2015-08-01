@@ -1,11 +1,14 @@
-local app = require "frames"
+local cron = require "cron"
 local menu = require "menu"
 local audio = require "audio"
-local cron = require "cron"
+
+local saveload = require "saveload"
+local persistence = require "state"
+
+local maps = require "map.maps"
 
 local options = require "menus.options"
 local credits = require "menus.credits"
-local saveload = require "saveload"
 
 local M = {}
 
@@ -42,16 +45,50 @@ function M.slots ()
     end
 
     slots = saveload.get_slots()
-    saveload.load_slot(slots[1])
-    for i,slot in ipairs(slots) do
-      table.insert(self, menu.button(
-        slot.slotname,
-        function () app.push(M.slot(slot)()) end
-      ):set("type", "push"))
+    if saveload.exists_auto() then
+      table.insert(self, menu.label("Oops, i found a autosave."))
+      table.insert(self, menu.label("This probably means the game crashed the last time, sorry."))
+      table.insert(self, menu.label("Do you want to try to load it?"))
+      table.insert(self, menu.label(""))
+      table.insert(self, menu.button("Load autosave", menu.pop):set("type", "primary"))
+      table.insert(self, menu.button("Discard autosave", function ()
+        saveload.clear_auto()
+        self:focus()
+      end):set("type", "pop"))
+
+      saveload.autoload()
+      self:layout()
+      self:resize()
+
+      self.update = function (self)
+        return menu.column.update(self)
+      end
+
+      return
     end
-    table.insert(self, menu.button("New slot", function ()
-      app.push(M.slot(persistence)())
-    end):set("type", "push"))
+
+    self.update = function (self)
+      introclock.update()
+
+      local slot = slots[self.selector]
+      if slot ~= nil
+      and persistence.meta.slotname ~= slot.slotname then
+        saveload.load_slot(slot)
+      elseif slot == nil
+      and persistence.meta.playtime ~= 0 then
+        saveload.load_slot(saveload.make_slot())
+      end
+
+      return menu.column.update(self)
+    end
+
+    saveload.load_slot(slots[1] or saveload.make_slot())
+    for i,slot in ipairs(slots) do
+      table.insert(self, menu.button(slot.slotname,
+        menu.push(M.slot(slot)) ):set("type", "push"))
+    end
+    table.insert(self, menu.button("New slot",
+      menu.push(M.slot(persistence.meta)) ):set("type", "push"))
     if #self >= 1 then
       self[1]:set("type", "primary")
     end
@@ -61,16 +98,15 @@ function M.slots ()
       table.insert(self, menu.label(""))
       table.insert(self,
         menu.button("Trash (" .. tostring(#trash_slots) .. " items)",
-          function () app.push(M.trash_slots()) end
-        ):set("type", "push")
+          menu.push(M.trash_slots) ):set("type", "push")
       )
     end
 
     table.insert(self, menu.label(""))
     table.insert(self,
-      menu.button("Options", function() app.push(options()) end))
+      menu.button("Options", menu.push(options) ))
     table.insert(self,
-      menu.button("Credits", function() app.push(credits()) end))
+      menu.button("Credits", menu.push(credits) ))
     table.insert(self, menu.button("Quit",
       love.event.quit))
 
@@ -81,18 +117,6 @@ function M.slots ()
   result.load = function (self)
     menu.column.load(self)
     self.noanim = nil
-  end
-
-  result.update = function (self)
-    introclock.update()
-
-    local slot = slots[self.selector]
-    if slot ~= nil and persistence.slotname ~= slot.slotname
-    or slot == nil and persistence.playtime ~= 0 then
-      saveload.load_slot(slot)
-    end
-
-    return menu.column.update(self)
   end
 
   the_title_png = love.graphics.newImage("assets/title.png")
@@ -138,16 +162,16 @@ function M.slot (slot) return function ()
           self.title = slot.slotname
           self.parent:layout()
 
-          app.push(menu.column(
+          menu.push(menu.column(
             menu.label("Empty name is not valid."),
-            menu.button("Ok", menu.pop):set("type", "pop")))
+            menu.button("Ok", menu.pop):set("type", "pop")))()
 
         else
           slot.slotname = self.title
           if slot.playtime ~= 0 then
             saveload.save_slot(slot)
           else
-            persistence.slotname = self.title
+            persistence.meta.slotname = self.title
           end
         end
       end),
@@ -189,7 +213,7 @@ function M.slot (slot) return function ()
       "Last save:\n" .. os.date("%X %a, %d %b %y", slot.lastsaved))
       :set("type", "light"))
     table.insert(list, menu.label(
-      "Playtime: " .. time(slot.playtime))
+      "Playtime: " .. time(slot.playtime or 0))
       :set("type", "light"))
   end
 
@@ -227,7 +251,7 @@ function M.trash_slots ()
   local trash_slots = saveload.get_trash(true)
   for i,slot in ipairs(trash_slots) do
     table.insert(list, menu.button(slot.slotname,
-      function() app.push(M.slot(slot)()) end))
+      menu.push(M.slot(slot))))
   end
 
   table.insert(list, menu.label(""))
@@ -238,8 +262,8 @@ function M.trash_slots ()
 
   list.update = function (self)
     local slot = trash_slots[self.selector - 3]
-    if slot ~= nil and persistence.slotname ~= slot.slotname
-    or slot == nil and persistence.playtime ~= 0 then
+    if slot ~= nil and persistence.meta.slotname ~= slot.slotname
+    or slot == nil and persistence.meta.playtime ~= 0 then
       saveload.load_slot(slot)
     end
 

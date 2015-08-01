@@ -1,78 +1,101 @@
 --- Level loading
 -- requires $cron, $audio, $draw, $scripting
 
-cron = require "cron"
 audio = require "audio"
+cron_new_clock = (require "cron").new_clock
 
-objs = require "map.objs"
+pool = require "pool" -- former transient
+entities = require "entities"
+persistence = require "state" -- former persistence
+
 draw = require "map.draw"
 camera = require "map.camera"
 scripting = require "map.scripting"
 is_transient_type = require "map.is_transient_type"
-
 parse_map = require "map.parse_map"
 
 g = love.graphics
 
-
--- TODO FEATURE save other levels to disk, dont keep them in memory
--- TODO FEATURE use classes?
-
 --- globals
-export avatar, transient, persistence
-persistence = {}
+export avatar, transient
 
+--------------------------------------------------------------------------------
 
-get_level = ->
-  persistence[persistence.mapname]
-
+ensure_music = (ch)->
+  unless audio.channels[ch] and audio.channels[ch].name == newmusic
+    audio.music newmusic, ch
 
 contains = (list, thing)->
   for i, o in ipairs(list)
     return true  if list[i] == thing
-
   return false
 
+--------------------------------------------------------------------------------
 
-compress = ()->
-  -- pull avatar, compress objs
-  persistence.avatar = avatar
-
+compress_objs = ->
   local pool, o
   pool = persistence[persistence.mapname].pool
   for i = #pool, 1, -1
     o = pool[i]
-    if o == avatar or o.type == "REMOVED"
+    if o.type=="REMOVED" or is_transient_type[o.type]
       table.remove pool, i
     else
-      objs.compress o
+      entities.compress o
+
+
+decompress_objs = ->
+  local pool2
+  pool2 = persistence[persistence.mapname].pool
+  transient.byid = {}
+  for i = #pool2,1,-1
+    local o
+    o = pool2[i]
+    pool.init o
+    if o.properties.switch
+      o.disabled = scripting.getVar o.properties.switch
 
   return
 
 
-decompress = ()->
-  transient.byid = {}
-  local pool
+insert_objs = ->
+  local layer
+  for _,layer in ipairs(transient.layers)
+    if layer.name == "objs"
+      layer.objects = persistence[persistence.mapname].pool
+      return
+
+  error "there must be a layer called 'objs'"
+
+
+partial_level_reset = ->
+  local pool2, state, default_state
+  _, default_state = parse_map persistence.mapname
+
+  pool2 = persistence[persistence.mapname].pool
+  for _,o in ipairs(default_state.pool)
+    if is_transient_type[o.type]
+      pool.init o
+      table.insert pool2, o
+
+  return
+
+--------------------------------------------------------------------------------
+
+exclude_avatar = ->
+  local pool, o
+  persistence.avatar, avatar = avatar, nil
+
   pool = persistence[persistence.mapname].pool
-  for i = #pool,1,-1
-    local o
-    o = pool[i]
-    transient.byid[o.name] = o  if o.name ~= "" and o.name ~= nil
-    objs.cacheType o
-    objs.decompress o
+  for i = #pool, 1, -1
+    if pool[i] == persistence.avatar
+      table.remove pool, i
 
-  -- layers
-  draw.clear_layers!
-  for i,layer in ipairs(transient.layers)
-    if layer.type == "tilelayer"
-      draw.layer_init(layer)
 
-  -- push avatar
+include_avatar = ->
   if persistence.avatar == nil
     error "ERR: no avatar to load"
 
---  avatar, persistence.avatar = persistence.avatar, nil
-  avatar = persistence.avatar
+  avatar, persistence.avatar = persistence.avatar, nil
 
   local pool
   pool = persistence[persistence.mapname].pool
@@ -82,82 +105,10 @@ decompress = ()->
     table.insert pool, avatar
 
   camera.resized!
-
-  -- music
-  local newmusic
-  newmusic = transient.properties.landmusic or "Ruins"
-  unless (audio.channels.default and audio.channels.default.name == newmusic)
-    audio.music newmusic, "default"
-
   return
 
 
-load_level = (to)->
-  persistence.mapname = to
-
-  local state, default_state
-  transient, default_state = parse_map to
-  state = persistence[to] or default_state -- first time or load?
-  persistence[to] = state
-
-  transient.levelclock = cron.new_clock()
-
-  -- if loading, replace default objects with saved objects
-  local layer
-  if state ~= default_state
-    for i=1, #transient.layers
-      layer = transient.layers[i]
-      if layer.name == "objs"
-        layer.objects = state.pool
-        break
-
-  return
-
-
-open_level = (to)->
-  load_level to
-  decompress!
-
-
--- TODO migrate following to game
-delete_transient_objs = ->
-  local prev, pool, o
-  prev = persistence.mapname
-
-  -- scripting.hook "unload"
-
-  -- delete transients objs
-  pool = persistence[prev].pool
-  for i = #pool,1,-1
-    o = pool[i]
-    if is_transient_type[o.type]
-      table.remove(pool, i)
-
-  return
-
-
-load_transient_objs = (to)->
-  local pool, default_state
-  _, default_state = parse_map(to)
-
-  pool = persistence[persistence.mapname].pool
-
-  local layer, o
-  for i = 1, #transient.layers
-    if transient.layers[i].name == "objs"
-      for j = 1, #default_state.pool
-        o = default_state.pool[j]
-        if is_transient_type[o.type]
-          transient.byid[o.name] = o  if o.name ~= "" and o.name ~= nil
-          objs.cacheType o
-          objs.decompress o
-          table.insert pool, o
-
-      break
-
-  return
-
-set_position_to_door = (prev)->
+come_from = (prev)->
   for meta,_ in pairs transient.types.META
     if meta.properties.TO == prev
       avatar.x = meta.x + meta.width/2
@@ -165,20 +116,53 @@ set_position_to_door = (prev)->
       camera.jump avatar
       return
 
-  error("Warning: No Door from " .. prev .. " to " .. persistence.mapname)
+  error "ERR: No Door in [" .. persistence.mapname .. "] to [" .. prev .. "]"
+
+--------------------------------------------------------------------------------
+
+close_curtain = ->
+  exclude_avatar!
+  compress_objs!
+  return
+
+
+open_curtain = ->
+  decompress_objs!
+  include_avatar!
+  ensure_music "default", transient.properties.landmusic or "Ruins"
+
+  -- layers
+  draw.clear_layers!
+  for i,layer in ipairs transient.layers
+    if layer.type == "tilelayer"
+      draw.layer_init layer
+
+  return
+
+--------------------------------------------------------------------------------
+
+init_level = ->
+  local state, default_state
+  transient, default_state = parse_map persistence.mapname
+  state = persistence[persistence.mapname] or default_state -- first time or load?
+  persistence[persistence.mapname] = state
+  insert_objs!
+
+  transient.levelclock = cron_new_clock!
+  open_curtain!
+  return
 
 
 use_door_to = (to)->
   local prev
-  prev = persistence.mapname
 
-  delete_transient_objs!
-  compress!
-  open_level to
-  load_transient_objs to
-  set_position_to_door prev
+  close_curtain!
+  prev, persistence.mapname = persistence.mapname, to
+  init_level!
+  partial_level_reset!
+  come_from prev
 
   scripting.hook "focus"  if topisgame
 
 
-{:use_door_to, :get_level, :open_level, :compress, :decompress}
+{:use_door_to, :init_level, :include_avatar, :exclude_avatar}

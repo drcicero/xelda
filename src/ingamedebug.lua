@@ -5,8 +5,10 @@
 
 local floor = math.floor
 local audio = require "audio"
-local app = require "frames"
+local widgets = require "widgets"
 local serialize = (require "serialize").serialize
+
+local persistence = require "state"
 
 local g = love.graphics
 
@@ -31,25 +33,30 @@ function print_globals ()
 end
 
 return function ()
-  if app.timestep then
+  g.setColor(255, 255, 255, 50)
+  g.setFont(font)
+  if widgets.timestep then
     s = s .. "fps: " .. love.timer.getFPS()
-
   else
     s = s .. "updates: " .. tostring(updates)
   end
 
-  g.setColor(255, 255, 255, 50)
-  g.setFont(font)
+  s = s .. "\nfluffs: " .. count(transient.types.PUFF)
   if DEBUG then
 --    s = s .. "\ncollisions: " .. floor(collisions)
 --          .. "\nobjs: " .. floor(objs)
 
-    s = s .. "\n\navatar.lua:"
-    s = s .. "\n  vx: " .. avatar.vx
-    s = s .. "\n  vy: " .. avatar.vy
+    s = s .. "\n\nlevel [" .. persistence.mapname .. "]"
+    for k,v in pairs(persistence[persistence.mapname].vars) do
+      s = s .. "\n  [" .. k .. "]= ".. serialize(v)
+    end
 
-    s = s .. "\n\napp.lua:"
-    for i, state in pairs(app.stack) do
+    s = s .. "\n\navatar.lua:"
+    s = s .. "\n  vx: " .. math.floor(avatar.vx*100)/100
+    s = s .. "\n  vy: " .. math.floor(avatar.vy*100)/100
+
+    s = s .. "\n\nwidgets.lua:"
+    for i, state in pairs(widgets.stack) do
       s = s .. "\n  " .. (state.name or tostring(state))
     end
 

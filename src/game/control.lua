@@ -2,15 +2,24 @@
 -- Control the object in the global variable 'avatar'. Moving, jumping,
 -- attacking, rolling, etc.
 --
--- requires $cron, $objs, $audio, $camera
+-- requires $lib.cron, $lib.audio, $src.sfx, $src.map.camera, $src.map.scripting
 
 local cron = require "cron"
 local audio = require "audio"
 
 local sfx = require "sfx"
-local objs = require "map.objs"
+local persistence = require "state"
+
+local pool = require "pool"
 local camera = require "map.camera"
 local scripting = require "map.scripting"
+
+local function up()    return pressed.up    or pressed.j or pressed.w end
+local function down()  return pressed.down  or pressed.k or pressed.s end
+local function left()  return pressed.left  or pressed.h or pressed.a end
+local function right() return pressed.right or pressed.l or pressed.d end
+
+local function b2n(bool) return bool and 1 or 0 end
 
 sword = false
 local doing = nil
@@ -18,7 +27,7 @@ local doing = nil
 function unsword ()
   if sword then
     persistence.vars.occupied = false
-    objs.del(sword)
+    pool.del(sword)
     sword = false
     pressed[" "] = false
     doing = nil
@@ -33,39 +42,8 @@ local rolling_timer = 0
 
 local CONTROL = true
 
---- control global 'avatar', call secondary control functions
-function control ()
-  local o = avatar
-  o.type = persistence.vars.avatar_name
-
-  show_health_feedback(o)
-  control_secondary_music(o)
-
-  if CONTROL then
-    control_grab(o)
-    control_sword(o)
-
-    if o.water then
-      control_swim(o)
-
-    else
-      control_bow(o)
-      control_move(o)
-    end
-
-    if DEBUG and pressed["r"] then
-      local here = persistence.mapname
-      persistence.mapname = nil
-      persistence[here] = nil
-      scripting.levels[here] = nil
-      change_level(here)
-      change_level_timer = 60
-    end
- end
-end
-
 ---
-function show_health_feedback(o)
+local function quake_camera_on_low_health(o)
   if persistence.vars.health == 2 then
     camera.x = camera.x + math.random()
     camera.y = camera.y + math.random()
@@ -79,7 +57,7 @@ function show_health_feedback(o)
 end
 
 ---
-function control_secondary_music(o)
+local function control_secondary_music(o)
   if o.water then
     if audio.channels.default.vol ~= 1/3 then
       audio.music("droplets", "droplets")
@@ -96,8 +74,8 @@ function control_secondary_music(o)
 end
 
 ---
-function control_grab(o)
-  if persistence.vars.grab and not pressed.c then
+local function control_grab(o)
+  if persistence.vars.grab and not pressed[" "] then
     persistence.vars.occupied = false
     persistence.vars.grab = nil
   end
@@ -117,9 +95,9 @@ function control_grab(o)
 end
 
 ---
-function control_sword(o)
+local function control_sword(o)
   if persistence.vars.sword then
-    if sword then --and sword.type ~= "REMOVED"
+    if sword and sword.type ~= "REMOVED" then
       sword.timer = sword.timer-1
 
       o.type = persistence.vars.avatar_name .. "_ATTACK"
@@ -135,38 +113,45 @@ function control_sword(o)
       end
 
     elseif not persistence.vars.occupied and pressed[" "] then
-      persistence.vars.occupied = true
-      o.noface = true
-      o.type = persistence.vars.avatar_name .. "_ATTACK"
+      if space_register ~= nil then
+        space_register()
 
-      sword = objs.spawn("SWORD", o.x, o.y-8)
-      sfx.drawsword(o.x+o.facing*15, o.y-10)
+      else
+        persistence.vars.occupied = true
+        o.noface = true
+        o.type = persistence.vars.avatar_name .. "_ATTACK"
 
-      sword.timer = 5
-      sword.ox = -4
-      sword.oy = 2.5
-      sword.height = 5
-      sword.ix = -4
-      sword.iy = 10
+        sword = pool.spawn("SWORD", o.x, o.y-8)
+        sfx.drawsword(o.x+o.facing*15, o.y-10)
 
-      local a = -sword.timer/5
-      sword.x, sword.y = o.x, o.y-8
-      sword.vx, sword.vy = o.facing, 0
-      sword.r = o.facing==1 and a or - a
+        sword.timer = 5
+        sword.ox = -4
+        sword.oy = 2.5
+        sword.height = 5
+        sword.ix = -4
+        sword.iy = 10
+
+        local a = -sword.timer/5
+        sword.x, sword.y = o.x, o.y-8
+        sword.vx, sword.vy = o.facing, 0
+        sword.r = o.facing==1 and a or - a
+      end
     end
   end
+
+  space_register = nil
 end
 
 ---
-function control_swim(o)
+local function control_swim(o)
   local o = avatar
-  if pressed.up then       o.vy = o.vy - 0.2
-  elseif pressed.down then o.vy = o.vy + 0.2 end
+  if up() then       o.vy = o.vy - 0.2
+  elseif down() then o.vy = o.vy + 0.2 end
 
-  if pressed.left then      o.vx = o.vx - 0.2
-  elseif pressed.right then o.vx = o.vx + 0.2 end
+  if left() then      o.vx = o.vx - 0.2
+  elseif right() then o.vx = o.vx + 0.2 end
 
-  if pressed.up and
+  if up() and
 --    (solid(o.x-15, o.y) or solid(o.x+15, o.y)) and
   not water(o.x, o.y-5) then
     o.vy = o.vy - 0.9 --6
@@ -181,7 +166,7 @@ function control_swim(o)
 end
 
 ---
-function control_bow (o)
+local function control_bow (o)
   arrow_timer = arrow_timer - 1
   if arrow then
     local x = math.abs(math.cos(now/.5)) * -o.facing
@@ -196,7 +181,7 @@ function control_bow (o)
       persistence.vars.occupied = false
       o.noface = false
 
-      objs.setType(arrow, "ARROW")
+      pool.setType(arrow, "ARROW")
       arrow.properties.ghost = false
       arrow = false
       arrow_timer = 30
@@ -211,7 +196,7 @@ function control_bow (o)
     persistence.vars.arrows = persistence.vars.arrows-1
     o.noface = true
 
-    arrow = objs.spawn("SHOOTING", o.x, o.y)
+    arrow = pool.spawn("SHOOTING", o.x, o.y)
     arrow.properties.ghost = true
     arrow.noturn = true
     arrow.airfriction = 0.99
@@ -223,10 +208,10 @@ function control_bow (o)
 end
 
 ---
-function control_move(o)
+local function control_move(o)
   if (o.r == nil or o.r == math.huge) and o.ground then
     rolling_timer = rolling_timer + 1
-    if pressed.down and rolling_timer > 40 then
+    if down() and rolling_timer > 40 then
       sfx.jump(o.x, o.y-10)
 
       rolling_timer = 0
@@ -256,7 +241,7 @@ function control_move(o)
       end}
 
     -- jump
-    elseif pressed.up then
+    elseif up() then
       sfx.jump(o.x, o.y)
       o.vy = -7
     end
@@ -268,11 +253,11 @@ function control_move(o)
 --    end
   end
 
-  if     pressed.left  then o.vx = o.vx - (o.type ~= persistence.vars.avatar_name and 0.1 or 0.5)
-  elseif pressed.right then o.vx = o.vx + (o.type ~= persistence.vars.avatar_name and 0.1 or 0.5) end
+  if     left()  then o.vx = o.vx - (o.type ~= persistence.vars.avatar_name and 0.1 or 0.5)
+  elseif right() then o.vx = o.vx + (o.type ~= persistence.vars.avatar_name and 0.1 or 0.5) end
 
   if o.type == persistence.vars.avatar_name then
-    if (pressed.left or pressed.right) then
+    if left() or right() then
       local as = {"_WALK", "", "_WALK2"}
       o.type = o.type .. as[math.floor(math.sin(now/.1)*1.2+2.5)]
     elseif now % .3 < .15 and now % 3 < .45 then
@@ -280,3 +265,40 @@ function control_move(o)
     end
   end
 end
+
+--- control global 'avatar', call secondary control functions
+local function control ()
+  local o = avatar
+  o.type = persistence.vars.avatar_name
+
+  quake_camera_on_low_health(o)
+  control_secondary_music(o)
+
+  if CONTROL then
+    -- either or
+    control_grab(o)
+    control_sword(o)
+
+    if o.ladder then
+      o.vx = b2n(right()) - b2n(left())
+      o.vy = b2n(down())  - b2n(up())
+    elseif o.water then
+      control_swim(o)
+    else
+      control_bow(o)
+      control_move(o)
+    end
+
+    if DEBUG and pressed.r then
+      local here = persistence.mapname
+      persistence.mapname = nil
+      persistence[here] = nil
+      scripting.levels[here] = nil
+      change_level(here)
+      change_level_timer = 60
+    end
+ end
+end
+
+-- also defines sword or others
+return control

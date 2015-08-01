@@ -1,11 +1,10 @@
 --- Serializing
--- TODO: make serialize respect same objs
 
 local serialize
 local function make_key (it, indent)
   return (
      -- if its a string of alphanumeric chars or the underscore leave it,
-     type(it) == "string" and it:match("[%w_]+") ~= nil and it
+     type(it) == "string" and it:match("^[%w_]+$") ~= nil and it
      -- else wrap it in brackets and serialize it.
      or "[" .. serialize(it, nil, indent) .. "]"
   )

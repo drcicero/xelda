@@ -1,17 +1,6 @@
 local M = {}
 
-local objs = require "map.objs"
-
 function M.create_new_game()
-  local avatar = {
-    type = "SLEEPY_RINK_BLINK",
-    x = 2*20,
-    y = 3.5*20,
-    r = -0.4*math.pi,
-    gravity = 0,
-  }
-  objs.decompress(avatar)
-
   return {
     mapname = "rinks_room",
 
@@ -22,8 +11,15 @@ function M.create_new_game()
       sword = false,
     },
 
-    avatar = avatar
+    avatar = {
+      type = "SLEEPY_RINK_BLINK",
+      x = 2*20,
+      y = 3.5*20,
+      r = -0.4*math.pi,
+      gravity = 0,
+    },
   }
 end
 
 return M
+

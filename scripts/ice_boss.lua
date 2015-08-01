@@ -2,17 +2,19 @@ local cron = require "cron"
 local audio = require "audio"
 
 local sfx = require "sfx"
+local persistence = require "state"
 
-local objs = require "map.objs"
-local camera = require "map.camera"
+local move_obj = require "game.move"
+
+local pool = require "pool"
+local draw = require "map.draw"
 local scripting = require "map.scripting"
 local byId = scripting.byId
-local byClass = scripting.byClass
-local wander_by = scripting.wander_by
+
+local g = love.graphics
 
 local boss
-local bossimg = love.graphics.newImage("assets/boss.png")
-
+local bossimg = g.newImage("assets/boss.png")
 
 function shallowcopy (m)
   local t = {}
@@ -37,21 +39,21 @@ end
 local function spawn_mobs ()
   sfx_bosstrigger()
 
-  local o = objs.spawn("SLIME", 8*20, 8*20)
+  local o = pool.spawn("SLIME", 8*20, 8*20)
   o.vx = 1
 
-  local o = objs.spawn("SLIME", 21*20, 8*20)
+  local o = pool.spawn("SLIME", 21*20, 8*20)
   o.vx = -1
 end
 
 
-local reset_boss_lasts()
+local function reset_boss_lasts()
   for i = #boss.lasts,1,-1 do
     local o = boss.lasts[i]
     if o.properties.delete then
       table.remove(boss.lasts, i)
       sfx.hitboss(o.x, o.y)
-      objs.del(o)
+      pool.del(o)
 
     else
       o.airfriction = 0.99
@@ -67,36 +69,31 @@ local function boss_fight_end ()
   for i,o in ipairs(boss.lasts) do
     transient.levelclock.add {dur=.6*(i-1)+2, ended=function()
       sfx.hitboss(o.x, o.y)
-
       o.alpha = 255
       transient.levelclock.add {dur=.5, f=cron.to(o, "alpha", 0), ended=function()
-        objs.del(o)
+        pool.del(o)
       end}
     end}
   end
   boss = nil
 
   -- delete all slimes
-  for i,o in ipairs(persistence[persistence.mapname].pool) do
-    if o.type == "SLIME" or o.type == "ESLIME" then
-      transient.levelclock.add {dur=1*i, ended=function()
-        sfx.hitboss(o.x, o.y)
-        o.alpha = 255
-        transient.levelclock.add {dur=1.1, f=cron.to(o, "alpha", 0), ended=function()
-          objs.del(o)
-        end}
-      end}
-    end
+  for o,_ in pairs(transient.types.SLIME) do
+    sfx.hurtenemy(o.x, o.y)
+    pool.del(o)
+  end
+  for o,_ in pairs(transient.types.ESLIME) do
+    sfx.hurtenemy(o.x, o.y)
+    pool.del(o)
   end
 
   -- play win music
   transient.levelclock.add {dur=5, ended=function()
-    setVar("victory", true)
+    scripting.setVar("victory", true)
     audio.music("07")
-    setVar("noescape", false)
+    scripting.setVar("noescape", false)
   end}
 end
-
 
 local function are_all_eyes_closed ()
   for i,o in ipairs(boss.lasts) do 
@@ -132,7 +129,10 @@ local phase = {
   up = function (bosshead)
     bosshead.vx = bosshead.vx + (0 - bosshead.vx)/6
     bosshead.vy = bosshead.vy + (-6 - bosshead.vy)/6
-    if not bosshead.water then boss.phase = "right" audio.play "hit" end
+    if not bosshead.water then
+      boss.phase = "right"
+      audio.play "hit"
+    end
   end,
   
   right = function (bosshead)
@@ -162,7 +162,10 @@ local phase = {
   
   right2 = function (bosshead)
     bosshead.vx = bosshead.vx + (0 - bosshead.vx)/100
-    if bosshead.water then boss.phase = "down" audio.play "hit" end
+    if bosshead.water then
+      boss.phase = "down"
+      audio.play "hit"
+    end
   end,
   
   down = function (bosshead)
@@ -187,7 +190,7 @@ return {
       audio.music "Raw"
       boss = { phase="up", lasts = {}, notyet = 1, timer = 0, }
       for i=1, 10 do
-        local o = objs.spawn("EYE2", 75, 300)
+        local o = pool.spawn("EYE2", 75, 300)
         table.insert(boss.lasts, o)
         o.name = "boss.lasts[" .. i .. "]"
         o.class = "bosslasts"
@@ -197,9 +200,8 @@ return {
         o.friction = 0.9
         o.gravity = 0.09
       end
-      setVar("noescape", true)
+      scripting.setVar("noescape", true)
     end,
-
 
     hurt_boss = function (self)
       self.properties.delete = true
@@ -207,9 +209,8 @@ return {
       if are_all_eyes_closed() then
         reset_boss_lasts()
 
-        if #boss.lasts == 1 then 
+        if #boss.lasts == 3 then
           boss_fight_end()
-
         else
           spawn_mobs()
           boss.lasts[1].vx = 2
@@ -219,50 +220,52 @@ return {
       end
     end,
 
-    eye_change = function (self, arg)
+    eye_change = function (self, bool, arg)
       audio.play("water", nil, nil, nil, 3)
-      persistence.ice_boss.water_y_end = tonumber(arg)
+      persistence[persistence.mapname].water_y_end = tonumber(arg)
     end,
   },
 
-
   focus = function ()
-    audio.music(getVar "victory" and "07"
-             or boss             and "Raw"
-             or                       nil)
+    audio.music(scripting.getVar "victory" and "07"
+                or boss and "Raw"
+                or nil)
 
-    cutscene("init", function ()
-      local level = persistence[persistence.mapnam]
+    local bossstart = byId("bossstart")
+    bossstart.properties.onfirsttouch = "$bossstart_onfirsttouch"
+
+    byId("eye1").properties.change = "$eye_change " .. tostring(-12 * 20)
+    byId("eye2").properties.change = "$eye_change " .. tostring(- 8 * 20)
+    byId("eye3").properties.change = "$eye_change " .. tostring(  0     )
+
+    scripting.cutscene("init", function ()
+      local level = persistence[persistence.mapname]
       level.water_y_end = false
       level.water_y = -20 * 20
-      byId("eye1").properties.change = "$eye_change " .. tostring(-12 * 20)
-      byId("eye2").properties.change = "$eye_change " .. tostring(- 8 * 20)
-      byId("eye3").properties.change = "$eye_change " .. tostring(  0     )
-
-      local bossstart = byId("bossstart")
-      bossstart.properties.ontouch = "$bossstart_boss"
-      bossstart.properties.onfirsttouch = "$bossstart_onfirsttouch"
     end)
   end,
 
-
   draw = function ()
-    for k,o in ipairs(boss.lasts) do
-      love.graphics.setColor(255,255,255, o.alpha)
-      love.graphics.draw(bossimg, o.x, o.y,
-        -math.atan2(o.vx, o.vy)+math.pi/2,
-        2, 2, 12.5, 12.5)
+    if boss then
+      for k,o in ipairs(boss.lasts) do
+        g.setColor(255,255,255, o.alpha)
+        g.draw(bossimg, o.x, o.y,
+          -math.atan2(o.vx, o.vy)+math.pi/2,
+          2, 2, 12.5, 12.5)
 
-      if not o.properties.closed then
-        local a, b = 100+math.random()*155, math.random()*100
-        love.graphics.setColor(a, b, b, 255)
-        love.graphics.setLineWidth(1 + math.random()*4)
+        draw.draw_obj(o)
 
-        local x = math.cos(o.properties.da_angle - boss.timer/60)
-        local y = math.sin(o.properties.da_angle - boss.timer/60)
+        if not o.properties.closed then
+          local a, b = 100+math.random()*155, math.random()*100
+          g.setColor(a, b, b, 255)
+          g.setLineWidth(1 + math.random()*4)
 
-        love.graphics.line(o.x, o.y-10, o.x + x*200, o.y-10 + y*200)
-        love.graphics.setLineWidth(1)
+          local x = math.cos(o.properties.da_angle - boss.timer/60)
+          local y = math.sin(o.properties.da_angle - boss.timer/60)
+
+          g.line(o.x, o.y-10, o.x + x*200, o.y-10 + y*200)
+          g.setLineWidth(1)
+        end
       end
     end
   end,
@@ -273,7 +276,7 @@ return {
       level.water_y = level.water_y + (level.water_y_end > level.water_y and 1 or -1)
     end
 
-    if boss then
+    if boss and boss.phase ~= "stop" then
       local bosshead = boss.lasts[1]
 
       boss.timer = boss.timer - 1

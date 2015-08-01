@@ -1,32 +1,37 @@
-local app = require "frames"
 local menu = require "menu"
+local l, b = menu.label, menu.button
+
+local state = require "state"
+local saveload = require "saveload"
 
 local slots = require "menus.slots"
 local options = require "menus.options"
 local credits = require "menus.credits"
-local saveload = require "saveload"
 
-return function () return menu.column {
+return function ()
+  return menu.column {
     name = "pausemenu",
-    bg = {0,0,0,150}, fill = {0,0,0,100}, pad = 10,
-    x=50, y=200, w=300,
+    bg = {0,0,0,150}, fill = {0,0,0,100},
+    x=50, y=200, w=300, pad=10,
 
-    menu.label("Pause")
-      :set("type", "header"),
-    menu.label(""),
-    menu.button("Continue", menu.pop)
-      :set("type", "primary"),
-    menu.label(""),
-    menu.button("Options", function() app.push(options()) end),
-    menu.button("Credits", function() app.push(credits()) end),
-    menu.label(""),
-    menu.button("Dont Save and Quit", menu.goto(slots.slots)),
-    menu.button("Save and Quit", function ()
-      saveload.save_slot(persistence)
+    l("Pause")              :set("type", "header"),
+    l(""),
+    b("Continue", menu.pop) :set("type", "primary"),
+    l(""),
+    b("Options", function() menu.push(options()) end),
+    b("Credits", function() menu.push(credits()) end),
+    l(""),
+--    b("Kill Progress and Quit", function ()
+--      saveload.clear_auto()
+--      menu.goto(slots.slots))
+--    end,
+    b("Save and Quit", function ()
+      saveload.save(state, state.meta.filename..".save")
+      saveload.clear_auto()
       menu.goto(slots.slots)()
     end),
 
-}:set("resize", function (self)
-  self.y = h-self.h
-end)
+  }:set("resize", function (self)
+    self.y = h-self.h
+  end)
 end

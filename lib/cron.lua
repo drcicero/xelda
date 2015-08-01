@@ -27,25 +27,20 @@ return s
 
 local M = {}
 
---- returns a new Space. See #space.add .
+--- returns a new Clockspace. See #space.add .
 function M.new_clock ()
   local space = {}
   space.now = 0
   space.jobs = {}
 
-  ---- Space
+  ---- Clockspace --------------------------------------------------------------
   --- Add a new job:
   -- a job is a table with the properties {start, dur, [f, [ease]], [ended]}, where
-  --
-  -- start is the time the job should start,
-  --
-  -- dur is the duration the job should run,
-  --
-  -- f is a function that is called every update with a number beginning at 0 and ending after with 1,
-  --
-  -- ease is a key of one of the cron.ease functions, that may skew the argument to f, and
-  --
-  -- ended is a function that is called once the job stops.
+  -- <ul><li>start is the time the job should start,
+  -- <li>dur is the duration the job should run,
+  -- <li>f is a function that is called every update with a number beginning at 0 and ending after with 1,
+  -- <li>ease is a key of one of the cron.ease functions, that may skew the argument to f, and
+  -- <li>ended is a function that is called once the job stops.</ul>
   function space.add (job)
     job.start = space.now
     space.jobs[job] = true
@@ -92,7 +87,7 @@ function M.new_clock ()
   return space
 end
 
----- Easing/Interpolation Functions.
+---- Easing/Interpolation Functions. -------------------------------------------
 -- Methods that return smooth changes from 0 to 1. See
 -- <a href=http://www.wolframalpha.com/input/?i=plot+x+and+%283-2x%29+x%C2%B2+and+x%C2%B2+and+2x-x%C2%B2+from+0+to+1 >
 -- a plot of all four functions</a> , to compare them visually.
@@ -100,18 +95,14 @@ M.ease = {}
 
 --- = x (Linear Interpolation)
 function M.ease.Linear(x) return x end
-
 --- = (3 - 2x) x²  (Swing / Ease / Smooth Interpolation)
 function M.ease.Swing(x) return x*x*(3-2*x) end
-
 --- = x²  (Accellerating Interpolation)
 function M.ease.Accel(x) return x*x end
-
 --- = 2x - x²  (Deccelerating Interpolation)
 function M.ease.Deccel(x) return 2*x-x*x end
 
-
----- Mutating functions.
+---- Mutating functions. -------------------------------------------------------
 
 --- Tween number property to a value.
 function M.to (table, key, goal)

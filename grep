@@ -1,3 +1,7 @@
 #!/usr/bin/env sh
 
-grep $@ *.lua src/*.lua lib/*.lua src/*/*.lua scripts/*.lua
+grep "$@" *.moon *.lua \
+            src/*.moon src/*.lua \
+            lib/*.moon lib/*.lua \
+            src/*/*.moon src/*/*.lua \
+            scripts/*.moon scripts/*.lua

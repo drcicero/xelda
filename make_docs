@@ -1,3 +1,7 @@
 #! /usr/bin/env sh
 
-/home/david/git/docl/docl -d .doc --lift main.lua *.lua src/*.lua lib/*.lua src/*/*.lua
+cd /home/david/git/Xelda
+/home/david/git/docl/docl \
+  --dir .doc --lift main.lua \
+  src/*.lua lib/*.lua src/*/*.lua \
+  src/*.moon lib/*.moon src/*/*.moon

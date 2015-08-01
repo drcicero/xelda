@@ -1,11 +1,10 @@
 --- Audio
 -- Play sounds and music.
 --
--- Tutorial: Put all audio files inside the folder assets, they must be in a three character
--- format to be found. Call audio.load before playing any audio file.
+-- Put all audio files inside the folder 'assets', they must be in '.mp3'
+-- format to be found. Call $lib.audio#M.audio.load before playing any audio file.
 --
--- Now you can use $effects.audio#audio.play and $effects.audio#audio.music to play them using their filename
--- without the format as a string.
+-- Please use the wrapper $src.sfx instead.
 
 local clamp = require "clamp"
 
@@ -59,8 +58,8 @@ audio.channels = {}
 -- 'channel' : the default is '"default"', create new channels
 -- by passing new strings. setting a new music for a channel will overwrite this channels music.
 --
--- You can change the music master volume with $effects.audio#audio.setMvol .
--- See also $audio.effects#audio.setVol and $audio.effects#audio.setPitch.
+-- You can change the music master volume with $lib.audio#M.setMvol .
+-- See also $lib.audio#M.setVol and $lib.audio#M.setPitch.
 function audio.music (name, channelid)
   channelid = channelid or "default"
   local channel = audio.channels[channelid]

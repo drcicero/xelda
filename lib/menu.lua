@@ -1,6 +1,6 @@
 local love, w, h = love, w, h
 local g = love.graphics
-local app = require("frames")
+local widgets = require("widgets")
 local cron = require("cron")
 local audio = require("audio")
 local styles = require("menus.style")
@@ -10,8 +10,8 @@ local lastX, lastY = 0, 0
 local doit
 doit = function(self)
   if "table" == type(self.action) then
-    app.pop()
-    return app.push(self.action)
+    widgets.pop()
+    return widgets.push(self.action)
   else
     return self:action(self.parent)
   end
@@ -108,14 +108,20 @@ end
 local goto
 goto = function(blueprint)
   return function()
-    app.pop()
-    return app.push(blueprint())
+    widgets.pop()
+    return widgets.push(blueprint())
+  end
+end
+local push
+push = function(blueprint)
+  return function()
+    return widgets.push(blueprint())
   end
 end
 local pop
 pop = function(selected, self, func, time)
-  return app.stack[#app.stack]:_anim("hide", "left", app.stack[#app.stack].noanim and 0 or time, function()
-    app.pop()
+  return widgets.stack[#widgets.stack]:_anim("hide", "left", widgets.stack[#widgets.stack].noanim and 0 or time, function()
+    widgets.pop()
     if func then
       return func()
     end
@@ -207,16 +213,26 @@ do
     layout = layout,
     set = set,
     _findNextSelector = function(self)
+      local ctr = 0
       while true do
         self.selector = (self.selector + 1 - 1) % #self + 1
+        ctr = ctr + 1
+        if ctr == #self then
+          error("ERR: no action in column")
+        end
         if self[self.selector].action then
           break
         end
       end
     end,
     _findPrevSelector = function(self)
+      local ctr = 0
       while true do
         self.selector = (self.selector - 1 - 1) % #self + 1
+        ctr = ctr + 1
+        if ctr == #self then
+          error("ERR: no action in column")
+        end
         if self[self.selector].action then
           break
         end
@@ -425,6 +441,7 @@ return {
   input = input,
   label = label,
   button = button,
+  push = push,
   pop = pop,
   goto = goto,
   menuclock = menuclock

@@ -1,17 +1,16 @@
 local scripting = require "map.scripting"
 local byId = scripting.byId
-require "switchs"
 
 return {
   funcs = {
     start = function ()
-      setVar("time", true)
+      scripting.setVar("time", true)
     end,
 
     stop = function (self, bool)
       if bool then
         local yel = byId "yel"
-        setVar("time", false)
+        scripting.setVar("time", false)
         yel.y = 240
       end
     end,

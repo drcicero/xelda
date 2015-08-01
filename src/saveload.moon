@@ -1,7 +1,11 @@
 --- Saving and Loading
 -- require $serialize, $map
 
-export persistence, transient, avatar
+persistence = require "state"
+entities = require "entities"
+
+-- read-write globals
+export transient, avatar
 -- read only globals
 GAME_VERSION, love, pprint, w, h = GAME_VERSION, love, pprint, w, h
 
@@ -9,99 +13,110 @@ maps = require "map.maps"
 scripting = require "map.scripting"
 serialize = (require "serialize").serialize
 
+--------------------------------------------------------------------------------
 
 local sessionstart
-indent = true
+INDENT = true
 
----
-get_slots_ = (filter) ->
+--------------------------------------------------------------------------------
+
+_get_slots = (filter) ->
+    local slots
     slots = {}
     love.filesystem.getDirectoryItems ".", (file) ->
         if file\sub(-5) == ".save"
             slot = assert(love.filesystem.load file)!
-            if slot.version == GAME_VERSION and filter slot
-                table.insert slots, slot
+            if slot.meta.version == GAME_VERSION and filter slot
+                table.insert slots, slot.meta
 
-    table.sort slots, (a, b)-> a.lastsaved > b.lastsaved
-    slots
+    table.sort slots, (a, b)-> a.lastsaved>b.lastsaved
+    return slots
 
+get_slots = -> _get_slots (slot) -> not slot.meta.trash
+get_trash = -> _get_slots (slot) -> slot.meta.trash
 
---- returns slots
-get_slots = () -> get_slots_ (slot)-> slot.trash == nil
---- returns trashed slots
-get_trash = () -> get_slots_ (slot)-> slot.trash
+clean_trash = ->
+    for i, slot in ipairs get_trash!
+        love.filesystem.remove slot.filename .. ".save"
 
+--------------------------------------------------------------------------------
 
-save = (slot, place) ->
+save = (slot, path) ->
     local now
     now = os.time!
 
-    slot.playtime  = slot.playtime + now - sessionstart
-    slot.lastsaved = now
-    slot.version = GAME_VERSION
+    slot.meta.playtime = slot.meta.playtime + now - sessionstart
+    slot.meta.lastsaved = now
+    slot.meta.version = GAME_VERSION
     sessionstart = now
 
     scripting.hook "before_save"
-    print("return " .. (serialize slot, nil, indent))
-    maps.compress!
-    assert love.filesystem.write place,
-        "return " .. (serialize slot, nil, indent)
-    print "SAVED"
-    maps.decompress!
+    maps.exclude_avatar!
+    assert love.filesystem.write path,
+      "return " .. (serialize slot, nil, INDENT)
+--    print "SAVED"
+    maps.include_avatar!
     scripting.hook "after_save"
 
 
---- 
-save_slot = (slot) ->
-    save slot, slot.filename .. ".save"
-
-
---- slot is either nil, a filename, or a table
-load_slot = (slot) ->
-    if nil == slot
-        print "\nNEW GAME"
-        persistence = (require "scripts.main").create_new_game!
-
-        local num_slots
-        num_slots = #get_slots!
-
-        persistence.filename = num_slots + 1
-        persistence.slotname = "Slot " .. (num_slots + 1)
-        persistence.playtime = 0
-
-    else
-        print "\nLOAD " .. (slot.slotname)
-        persistence = slot
+load = (slot) ->
+    for k,v in pairs persistence
+        persistence[k] = nil
+    for k,v in pairs slot
+        persistence[k] = v
 
     sessionstart = os.time!
-    maps.open_level persistence.mapname
-
+    maps.init_level!
     scripting.hook "focus"  if topisgame
 
+--------------------------------------------------------------------------------
 
---- 
-autosave = ->
---    save persistence, "save.auto"
+make_slot = ->
+    local n
+    n = (#get_slots! + 1)
+    return {
+        filename: n
+        slotname: "Slot " .. n
+        playtime: 0
+    }
 
---- 
-autoload = ->
-    persistence = assert(love.filesystem.load "save.auto")!
+--move_slot = (slot, newname) -> slot.meta.name = newname
+
+save_slot = (slot) ->
+    local realslot
+    realslot = assert(love.filesystem.load slot.filename..".save")!
+    realslot.meta = slot
+
+    save realslot, slot.filename .. ".save"
+
+
+load_slot = (slot) ->
+    local realslot
+
+    if slot.playtime == 0
+      realslot = (require "scripts.main").create_new_game!
+      realslot.meta = slot
+      entities.decompress realslot.avatar
+
+    else
+      realslot = assert(love.filesystem.load slot.filename..".save")!
+
+    load realslot
+    return
+
+--------------------------------------------------------------------------------
+
+exists_auto = -> love.filesystem.exists "save.auto"
+clear_auto  = -> love.filesystem.remove "save.auto"
+autosave    = -> save persistence, "save.auto"
+
+autoload    = ->
+    load assert(love.filesystem.load "save.auto")!
     persistence.vars.kills = (persistence.vars.kills or 0) + 1
-    maps.open_level persistence.mapname
+    autosave!
 
-    scripting.hook "focus"  if topisgame
+--------------------------------------------------------------------------------
 
-
---- 
-move_slot = (slot, newname) ->
-    slot.name = newname
-
-
---- 
-clean_trash = () ->
-    for i, slot in ipairs get_trash! do
-        love.filesystem.remove slot.filename .. ".save"
-
-
-{:autoload, :autosave, :load_slot, :save_slot,
-:get_slots, :get_trash, :move_slot, :clean_trash}
+{:exists_auto, :clear_auto, :autoload, :autosave,
+:load_slot, :save_slot, :get_slots, :make_slot,
+:get_trash, :clean_trash, :save}

@@ -1,13 +1,13 @@
---- This is a module
+--- The intro Widget
 
-local app = require "frames"
 local audio = require "audio"
+local widgets = require "widgets"
 
 local clamp = require "clamp"
 local game = require "game.main"
 local slots = require "menus.slots"
 
-local m = {}
+local M = {}
 
 text = {
   "",
@@ -29,7 +29,7 @@ text = {
   "Time passed, and the kingdom was at peace again.",
   "Only the ocean remained restless.",
 
---  "For it knew, it was not the end of the Evil.",
+--  "For it knew, it was not the end.",
 
 --  "This is the saga of our land, that was passed over for generations.",
 --  "But the time has come to give birth to another legend.",
@@ -48,18 +48,18 @@ local title = {
   love.graphics.newImage("assets/title_5.png"),
   love.graphics.newImage("assets/title_6.png"),
 }
-function m.load()
+function M.load()
   audio.music "Ruins"
 end
 
 function end_intro()
-  app.pop()
-  app.push(game)
-  app.push(slots.slots())
+  widgets.pop()
+  widgets.push(game)
+  widgets.push(slots.slots())
 end
 
 local x = false
-function m.update(self)
+function M.update(self)
   if love.keyboard.isDown(" ") or love.keyboard.isDown("return") then
     end_intro()
   end
@@ -76,7 +76,7 @@ function m.update(self)
   end
 end
 
-function m.draw(self)
+function M.draw(self)
   local delta = now-start
   local T = delta * #text / time
 --  print(T)
@@ -105,4 +105,4 @@ function m.draw(self)
     w/3, h-font:getHeight()*5, w/3, "center")
 end
 
-return m
+return M

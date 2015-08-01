@@ -3,26 +3,27 @@ local camera = {}
 local clamp = require "clamp"
 
 
-local function find_zone(avatar)
+local function point_in_rect (p, r)
+  return r.x < p.x and p.x < r.x + r.width
+     and r.y < p.y and p.y < r.y + r.height
+end
+
+local function set_zone(avatar)
   if transient.zones then
     local o = transient.zone
-    if not (o and o.x < avatar.x and avatar.x < o.x + o.width
-    and o.y < avatar.y and avatar.y < o.y + o.height) then
-      for i,o in pairs(transient.zones) do
-        if o.x < avatar.x and avatar.x < o.x + o.width
-        and o.y < avatar.y and avatar.y < o.y + o.height then
-          transient.zone = o
+    if o==nil or not point_in_rect(avatar, o) then
+      for i,z in pairs(transient.zones) do
+        if point_in_rect(avatar, z) then
+          o, transient.zone = z, z
         end
       end
     end
+    if o == nil then
+      print("OMFG: no zone")
+      return
+    end
 
-    o = transient.zone
---    if o.properties.use_min then
---      extrema = math.min
---    else
---      extrema = math.max
---    end
-
+--    extrema = o.properties.use_min and math.min or math.max
     camera.zoom = math.max(h/o.width, h/o.height) * .9
     camera.w = w /camera.zoom
     camera.h = h /camera.zoom
@@ -45,7 +46,7 @@ end
 
 --- center on obj
 function camera.jump(obj)
-  find_zone(obj)
+  set_zone(obj)
 
   camera.x = clamp(camera.min_x, obj.x, camera.max_x, true)
   camera.y = clamp(camera.min_y, obj.y, camera.max_y, true)
@@ -54,12 +55,12 @@ end
 
 --- follow obj
 function camera.follow(obj)
-  find_zone(obj)
+  set_zone(obj)
 
-  camera.x = camera.x + (clamp(
-    camera.min_x, obj.x, camera.max_x, true) - camera.x) / 12
-  camera.y = camera.y + (clamp(
-    camera.min_y, obj.y, camera.max_y, true) - camera.y) / 24
+  local x = clamp(camera.min_x, obj.x, camera.max_x, true)
+  local y = clamp(camera.min_y, obj.y, camera.max_y, true)
+  camera.x = camera.x + (x - camera.x) /12
+  camera.y = camera.y + (y - camera.y) /24
 end
 
 

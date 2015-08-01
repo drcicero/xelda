@@ -1,17 +1,20 @@
+local state = require "state"
 local scripting = require "map.scripting"
 local byId = scripting.byId
-require "switchs"
+
+local function change_water (self)
+    local bool = scripting.getVar("lr")
+    state[state.mapname].water_y = bool and -6*20 or 0
+    scripting.setVar("lr", not bool)
+end
 
 return {
   funcs = {
-    change_water = function (self, bool)
-      persistence[persistence.mapname].water_y = bool and 0 or -6*20
-      setVar("lr", bool, self)
-    end,
+    change_water = change_water,
   },
 
-  load = function ()
-    persistence[persistence.mapname].water_y = -6*20
-    setVar("lr", false)
+  focus = function ()
+    change_water()
+    change_water()
   end,
 }

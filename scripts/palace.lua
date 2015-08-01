@@ -1,10 +1,10 @@
 local cron = require "cron"
 local audio = require "audio"
 
-local objs = require "map.objs"
 local scripting = require "map.scripting"
 
 local dialog = scripting.dialog
+local cutscene = scripting.cutscene
 local wander_by = scripting.wander_by
 
 return {
@@ -22,7 +22,7 @@ return {
   funcs = {
     scene = function ()
     cutscene("hello", function ()
-      fairy = objs.spawn("FAIRY", 18.5*20, 10*20)
+      fairy = scripting.spawn("FAIRY", 18.5*20, 10*20)
       fairy.properties.image = "Watson"
       fairy.gravity = 0
 
@@ -43,9 +43,8 @@ return {
       end
 
       audio.play "tadadi"
-      local continue = nth_call(4, resume)
       for i,o in pairs(scripting.byClass("carpet")) do
-        sceneclock.add {dur=4, f=cron.by(o, "y", -50), ended=continue}
+        sceneclock.add {dur=4, f=cron.by(o, "y", -50), ended=nth_call(4, scripting.resume)}
       end
 
       dialog(fairy, "Has anyone ever told you the saga of our land?")
@@ -55,7 +54,7 @@ return {
 --      dialog(" Follow me.")
 --          wander_by(fairy, -3*20, 40)
 
-      objs.del(fairy)
+      scripting.del(fairy)
 
     end) end,
   },

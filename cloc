@@ -1,0 +1,8 @@
+#! /usr/bin/env sh
+
+echo "Counts only lua files. Else moon code would be counted twice. Actual lines are a little bit lower."
+
+cloc --force-lang=lua,moon --progress-rate 10 --by-file \
+  main.lua \
+  src/*.lua lib/*.lua src/*/*.lua
+#  src/*.moon lib/*.moon src/*/*.moon
