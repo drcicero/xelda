@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="25" height="15" tilewidth="20" tileheight="20">
+ <properties>
+  <property name="landmusic" value="Village"/>
+ </properties>
+ <tileset firstgid="1" name="tileset" tilewidth="20" tileheight="20">
+  <image source="../../assets/tileset.png" width="160" height="380"/>
+ </tileset>
+ <layer name="background" width="25" height="15">
+  <data encoding="base64" compression="zlib">
+   eJzLZmBgyB7Fo3gUj+JRPKwwAIwAnL4=
+  </data>
+ </layer>
+ <layer name="background" width="25" height="15" opacity="0.71">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgF1AKVJPJH7Ri1gxjQSCJ/FIwCEAAARE8KBg==
+  </data>
+ </layer>
+ <layer name="mid" width="25" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFowABakikBwuIBOIoGtuRCMRJSPwqGttHKqBWGFRjwTCAHgajYPACAC7VCLY=
+  </data>
+ </layer>
+ <objectgroup name="objs">
+  <object x="365" y="188" width="29.5" height="33">
+   <properties>
+    <property name="TO" value="village"/>
+   </properties>
+  </object>
+  <object name="goleft" x="130.333" y="76" width="42" height="136"/>
+  <object type="carpet" gid="129" x="100" y="200"/>
+  <object type="carpet" gid="129" x="80" y="200"/>
+  <object type="carpet" gid="129" x="60" y="200"/>
+  <object type="carpet" gid="121" x="60" y="180"/>
+  <object type="carpet" gid="121" x="80" y="180"/>
+  <object type="carpet" gid="121" x="100" y="180"/>
+  <object type="carpet" gid="121" x="100" y="160"/>
+  <object type="carpet" gid="121" x="80" y="160"/>
+  <object type="carpet" gid="121" x="60" y="160"/>
+  <object type="carpet" gid="121" x="60" y="140"/>
+  <object type="carpet" gid="121" x="80" y="140"/>
+  <object type="carpet" gid="121" x="100" y="140"/>
+  <object type="carpet" gid="121" x="60" y="120"/>
+  <object type="carpet" gid="121" x="80" y="120"/>
+  <object type="carpet" gid="121" x="100" y="120"/>
+  <object type="carpet" gid="121" x="40" y="180"/>
+  <object type="carpet" gid="129" x="40" y="200"/>
+  <object type="carpet" gid="121" x="40" y="160"/>
+  <object type="carpet" gid="121" x="40" y="140"/>
+  <object type="carpet" gid="121" x="40" y="120"/>
+  <object name="sanctuum" x="64.25" y="147.5" width="30" height="32">
+   <properties>
+    <property name="TO" value="sanctuum"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="Ground" width="25" height="15">
+  <data encoding="base64" compression="zlib">
+   eJzrZGBgyKIi7sSBR+0YfHZQA4zaQT078GFSACXpih52DJX8MdTtAAA+34FT
+  </data>
+ </layer>
+ <layer name="foreground" width="25" height="15">
+  <properties>
+   <property name="parallax_x" value="0.2"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFowA7qCSRP5LtaCSRPwpGAa0BANqzBcU=
+  </data>
+ </layer>
+</map>

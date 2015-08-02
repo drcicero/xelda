@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="22" tilewidth="20" tileheight="20" nextobjectid="99">
+ <tileset firstgid="1" name="All2" tilewidth="20" tileheight="20">
+  <image source="../../assets/tileset.png" width="160" height="440"/>
+ </tileset>
+ <layer name="background" width="25" height="22">
+  <data encoding="base64" compression="zlib">
+   eJyLY2BgiAXiOBrSaUCcSmOalu4f9ceoP0b9MeqPUX+M+mPUH/TxBwB13NGF
+  </data>
+ </layer>
+ <layer name="mid" width="25" height="22">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo4C2IBKIo2hsRiIQJ1FoBzXMGAX0A9RIV4TAaJoYBaOA/gAAfI4EYw==
+  </data>
+ </layer>
+ <objectgroup name="objs">
+  <properties>
+   <property name="switch" value="!lr"/>
+  </properties>
+  <object id="3" gid="91" x="400" y="240" width="20" height="20">
+   <properties>
+    <property name="change" value="$change_water"/>
+   </properties>
+  </object>
+  <object id="6" gid="88" x="300" y="220" width="20" height="20">
+   <properties>
+    <property name="switch" value="!right"/>
+   </properties>
+  </object>
+  <object id="9" gid="87" x="60" y="160" width="20" height="20"/>
+  <object id="10" gid="87" x="60" y="380" width="20" height="20"/>
+  <object id="11" gid="87" x="80" y="400" width="20" height="20"/>
+  <object id="13" gid="87" x="120" y="400" width="20" height="20"/>
+  <object id="15" gid="87" x="40" y="140" width="20" height="20"/>
+  <object id="16" gid="87" x="180" y="380" width="20" height="20"/>
+  <object id="17" gid="87" x="200" y="380" width="20" height="20"/>
+  <object id="18" gid="87" x="220" y="380" width="20" height="20"/>
+  <object id="19" gid="87" x="240" y="360" width="20" height="20"/>
+  <object id="20" gid="87" x="260" y="360" width="20" height="20"/>
+  <object id="23" gid="87" x="320" y="340" width="20" height="20"/>
+  <object id="24" gid="87" x="80" y="160" width="20" height="20"/>
+  <object id="25" gid="72" x="260" y="200" width="20" height="20">
+   <properties>
+    <property name="CYAN" value="right"/>
+    <property name="YELLOW" value="right_"/>
+   </properties>
+  </object>
+  <object id="26" gid="72" x="180" y="240" width="20" height="20">
+   <properties>
+    <property name="CYAN" value="left"/>
+    <property name="YELLOW" value="left_"/>
+   </properties>
+  </object>
+  <object id="28" name="cyan" gid="38" x="349.333" y="152" width="20" height="20"/>
+  <object id="40" gid="88" x="380" y="160" width="20" height="20">
+   <properties>
+    <property name="switch" value="!lr"/>
+   </properties>
+  </object>
+  <object id="43" x="62.3333" y="245.667" width="35" height="36">
+   <properties>
+    <property name="TO" value="ice_puzzle_easy"/>
+   </properties>
+  </object>
+  <object id="44" x="406.333" y="123" width="30" height="35">
+   <properties>
+    <property name="TO" value="ice_puzzle"/>
+   </properties>
+  </object>
+  <object id="51" gid="88" x="380" y="140" width="20" height="20">
+   <properties>
+    <property name="switch" value="!lr"/>
+   </properties>
+  </object>
+  <object id="52" gid="88" x="380" y="120" width="20" height="20">
+   <properties>
+    <property name="switch" value="!lr"/>
+   </properties>
+  </object>
+  <object id="53" gid="88" x="380" y="100" width="20" height="20">
+   <properties>
+    <property name="switch" value="!lr"/>
+   </properties>
+  </object>
+  <object id="54" gid="88" x="380" y="80" width="20" height="20">
+   <properties>
+    <property name="switch" value="!lr"/>
+   </properties>
+  </object>
+  <object id="56" gid="31" x="280" y="300" width="20" height="20"/>
+  <object id="57" gid="17" x="360" y="260" width="20" height="20"/>
+  <object id="58" gid="87" x="100" y="400" width="20" height="20"/>
+  <object id="59" gid="87" x="140" y="400" width="20" height="20"/>
+  <object id="60" gid="87" x="300" y="340" width="20" height="20"/>
+  <object id="61" gid="87" x="280" y="340" width="20" height="20"/>
+  <object id="66" gid="88" x="140" y="260" width="20" height="20">
+   <properties>
+    <property name="switch" value="!left"/>
+   </properties>
+  </object>
+  <object id="69" gid="99" x="240" y="100" width="20" height="20">
+   <properties>
+    <property name="change" value="eye"/>
+   </properties>
+  </object>
+  <object id="78" gid="37" x="240" y="60" width="20" height="20"/>
+  <object id="79" gid="88" x="300" y="260" width="20" height="20">
+   <properties>
+    <property name="switch" value="!right_"/>
+   </properties>
+  </object>
+  <object id="81" gid="88" x="140" y="220" width="20" height="20">
+   <properties>
+    <property name="switch" value="!left_"/>
+   </properties>
+  </object>
+  <object id="84" gid="88" x="100" y="160" width="20" height="20">
+   <properties>
+    <property name="switch" value="!lr"/>
+   </properties>
+  </object>
+  <object id="85" gid="88" x="100" y="140" width="20" height="20">
+   <properties>
+    <property name="switch" value="!lr"/>
+   </properties>
+  </object>
+  <object id="86" gid="88" x="100" y="100" width="20" height="20">
+   <properties>
+    <property name="switch" value="!lr"/>
+   </properties>
+  </object>
+  <object id="88" gid="88" x="100" y="120" width="20" height="20">
+   <properties>
+    <property name="switch" value="!lr"/>
+   </properties>
+  </object>
+  <object id="89" gid="88" x="240" y="80" width="20" height="20">
+   <properties>
+    <property name="switch" value="eye"/>
+   </properties>
+  </object>
+  <object id="93" gid="120" x="220" y="220" width="20" height="20"/>
+  <object id="95" gid="104" x="230" y="249.333" width="20" height="20" rotation="-180"/>
+  <object id="97" x="62.5" y="126" width="35" height="36">
+   <properties>
+    <property name="TO" value="ice_time"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="Water" width="25" height="22" opacity="0.43">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUDDTIpSGGgXwa4lE7Ru0YtWPUDmrZAQBrI4F4
+  </data>
+ </layer>
+ <layer name="Ground" width="25" height="22">
+  <data encoding="base64" compression="zlib">
+   eJzdlVEKwDAIQz3yrtFbl/0V0TY2KRsN5Kvooxi0mVkD/ARG6ip+e446wfQMr4g5crN376o844RuYGTzUDNW+a/2Q7LMZijizhhIPcNge68Yqt6zeTBC9pYiV+ju3v2DYq9+wdi5HSiDuUnZPNT3Dt07f3QHsFiTFg==
+  </data>
+ </layer>
+ <objectgroup name="Zones">
+  <object id="47" x="28" y="7.66667" width="443.667" height="202.667"/>
+  <object id="48" x="44.6667" y="165" width="313.333" height="246.666"/>
+  <object id="98" x="349" y="39.6665" width="144.834" height="271.333"/>
+ </objectgroup>
+</map>

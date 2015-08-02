@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="26" tilewidth="20" tileheight="20" nextobjectid="65">
+ <properties>
+  <property name="chest" value="3"/>
+ </properties>
+ <tileset firstgid="1" name="All2" tilewidth="20" tileheight="20">
+  <image source="../../assets/tileset.png" width="160" height="400"/>
+ </tileset>
+ <layer name="background" width="50" height="26">
+  <properties>
+   <property name="paralax_y" value="0.5"/>
+   <property name="parallax_x" value="0.5"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJzt0bERACAMw8AsGjrYfwSyhQynwqfe31W1Zv149+x8UPpHPfRILv2jHnokl/5RDz2SS/+ohx7JpX/UQ4/k0j/qoUdyL61X7y4=
+  </data>
+ </layer>
+ <layer name="back" width="50" height="26">
+  <data encoding="base64" compression="zlib">
+   eJztzsEJACAMALGuqb+6/xB2BhFKIYH7XwQAwByr2t0TH2R1uicAAODBBWQwAXc=
+  </data>
+ </layer>
+ <objectgroup name="objs">
+  <object id="1" gid="88" x="320" y="301" width="20" height="20"/>
+  <object id="2" gid="87" x="680" y="460" width="20" height="20"/>
+  <object id="3" gid="87" x="100" y="440" width="20" height="20"/>
+  <object id="4" gid="87" x="840" y="460" width="20" height="20"/>
+  <object id="5" gid="87" x="40" y="440" width="20" height="20"/>
+  <object id="6" gid="87" x="20" y="400" width="20" height="20"/>
+  <object id="7" gid="87" x="260" y="480" width="20" height="20"/>
+  <object id="8" gid="87" x="80" y="440" width="20" height="20"/>
+  <object id="9" gid="87" x="540" y="480" width="20" height="20"/>
+  <object id="10" gid="87" x="400" y="440" width="20" height="20"/>
+  <object id="11" gid="80" x="940" y="480" width="20" height="20">
+   <properties>
+    <property name="item" value="KEY"/>
+   </properties>
+  </object>
+  <object id="12" gid="64" x="920" y="260" width="20" height="20">
+   <properties>
+    <property name="change" value="key"/>
+   </properties>
+  </object>
+  <object id="13" gid="88" x="960" y="240" width="20" height="20">
+   <properties>
+    <property name="switch" value="!key"/>
+   </properties>
+  </object>
+  <object id="14" gid="88" x="900" y="220" width="20" height="20">
+   <properties>
+    <property name="switch" value="!key"/>
+   </properties>
+  </object>
+  <object id="15" gid="88" x="840" y="200" width="20" height="20">
+   <properties>
+    <property name="switch" value="!key"/>
+   </properties>
+  </object>
+  <object id="16" gid="87" x="920" y="480" width="20" height="20"/>
+  <object id="17" gid="87" x="960" y="480" width="20" height="20"/>
+  <object id="18" gid="87" x="580" y="480" width="20" height="20"/>
+  <object id="19" gid="87" x="640" y="460" width="20" height="20"/>
+  <object id="20" gid="87" x="780" y="440" width="20" height="20"/>
+  <object id="21" gid="87" x="440" y="440" width="20" height="20"/>
+  <object id="22" gid="87" x="720" y="460" width="20" height="20"/>
+  <object id="23" x="187" y="228" width="26" height="31">
+   <properties>
+    <property name="TO" value="ice_entry"/>
+   </properties>
+  </object>
+  <object id="24" gid="99" x="388" y="200" width="20" height="20">
+   <properties>
+    <property name="change" value="eye1"/>
+    <property name="timer" value="40"/>
+   </properties>
+  </object>
+  <object id="25" gid="99" x="529" y="202" width="20" height="20">
+   <properties>
+    <property name="change" value="eye2"/>
+    <property name="timer" value="30"/>
+   </properties>
+  </object>
+  <object id="26" gid="99" x="669" y="201" width="20" height="20">
+   <properties>
+    <property name="change" value="eye3"/>
+    <property name="timer" value="20"/>
+   </properties>
+  </object>
+  <object id="27" gid="99" x="810" y="200" width="20" height="20">
+   <properties>
+    <property name="change" value="eye4"/>
+    <property name="timer" value="10"/>
+   </properties>
+  </object>
+  <object id="28" gid="88" x="380" y="301" width="20" height="20">
+   <properties>
+    <property name="switch" value="!eye1"/>
+   </properties>
+  </object>
+  <object id="29" gid="88" x="400" y="301" width="20" height="20">
+   <properties>
+    <property name="switch" value="!eye1"/>
+   </properties>
+  </object>
+  <object id="30" gid="88" x="460" y="301" width="20" height="20"/>
+  <object id="31" gid="88" x="520" y="301" width="20" height="20">
+   <properties>
+    <property name="switch" value="!eye2"/>
+   </properties>
+  </object>
+  <object id="32" gid="88" x="540" y="301" width="20" height="20">
+   <properties>
+    <property name="switch" value="!eye2"/>
+   </properties>
+  </object>
+  <object id="33" gid="88" x="600" y="301" width="20" height="20"/>
+  <object id="34" gid="88" x="660" y="301" width="20" height="20">
+   <properties>
+    <property name="switch" value="!eye3"/>
+   </properties>
+  </object>
+  <object id="35" gid="88" x="680" y="301" width="20" height="20">
+   <properties>
+    <property name="switch" value="!eye3"/>
+   </properties>
+  </object>
+  <object id="36" gid="88" x="740" y="301" width="20" height="20"/>
+  <object id="37" gid="88" x="800" y="301" width="20" height="20">
+   <properties>
+    <property name="switch" value="!eye4"/>
+   </properties>
+  </object>
+  <object id="38" gid="88" x="820" y="301" width="20" height="20">
+   <properties>
+    <property name="switch" value="!eye4"/>
+   </properties>
+  </object>
+  <object id="39" gid="88" x="780" y="180" width="20" height="20">
+   <properties>
+    <property name="switch" value="!key"/>
+   </properties>
+  </object>
+  <object id="40" gid="88" x="720" y="160" width="20" height="20">
+   <properties>
+    <property name="switch" value="!key"/>
+   </properties>
+  </object>
+  <object id="41" gid="80" x="110" y="99" width="20" height="20">
+   <properties>
+    <property name="item" value="CONTAINER"/>
+   </properties>
+  </object>
+  <object id="42" x="179" y="33" width="25" height="96">
+   <properties>
+    <property name="onfirsttouch" value="left"/>
+   </properties>
+  </object>
+  <object id="43" gid="88" x="140" y="120" width="20" height="20">
+   <properties>
+    <property name="switch" value="!left $chest"/>
+   </properties>
+  </object>
+  <object id="44" gid="88" x="140" y="100" width="20" height="20">
+   <properties>
+    <property name="switch" value="!left $chest"/>
+   </properties>
+  </object>
+  <object id="45" gid="88" x="140" y="80" width="20" height="20">
+   <properties>
+    <property name="switch" value="!left $chest"/>
+   </properties>
+  </object>
+  <object id="46" gid="88" x="140" y="60" width="20" height="20">
+   <properties>
+    <property name="switch" value="!left $chest"/>
+   </properties>
+  </object>
+  <object id="47" x="384" y="33" width="23" height="93">
+   <properties>
+    <property name="onfirsttouch" value="right"/>
+    <property name="switch" value="!left"/>
+   </properties>
+  </object>
+  <object id="48" gid="88" x="420" y="60" width="20" height="20">
+   <properties>
+    <property name="switch" value="!right $chest"/>
+   </properties>
+  </object>
+  <object id="49" gid="88" x="420" y="80" width="20" height="20">
+   <properties>
+    <property name="switch" value="!right $chest"/>
+   </properties>
+  </object>
+  <object id="50" gid="88" x="420" y="100" width="20" height="20">
+   <properties>
+    <property name="switch" value="!right $chest"/>
+   </properties>
+  </object>
+  <object id="51" gid="88" x="420" y="120" width="20" height="20">
+   <properties>
+    <property name="switch" value="!right $chest"/>
+   </properties>
+  </object>
+  <object id="52" gid="17" x="180" y="120" width="20" height="20">
+   <properties>
+    <property name="onkill" value="$chest"/>
+    <property name="switch" value="!right"/>
+   </properties>
+  </object>
+  <object id="55" gid="31" x="360" y="380" width="20" height="20"/>
+  <object id="56" gid="31" x="640" y="420" width="20" height="20"/>
+  <object id="57" gid="31" x="101" y="413" width="20" height="20"/>
+  <object id="59" gid="17" x="220" y="120" width="20" height="20">
+   <properties>
+    <property name="onkill" value="$chest"/>
+    <property name="switch" value="!right"/>
+   </properties>
+  </object>
+  <object id="63" gid="136" x="200" y="120" width="20" height="20">
+   <properties>
+    <property name="onkill" value="$chest"/>
+    <property name="switch" value="!right"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="Water" width="50" height="26" opacity="0.38">
+  <properties>
+   <property name="parallax_x" value="1"/>
+   <property name="parallax_y" value="1"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztw7EJAAAIA7A+LP6/eYOOkkASAAAANurJVtXDAR9Pwrs=
+  </data>
+ </layer>
+ <layer name="Ground" width="50" height="26">
+  <data encoding="base64" compression="zlib">
+   eJztmEEKwCAMBPfJ/Ya/7qkgpTZpstZVHMithgzEWFIAlMFxEIKVJxsZao+Z2R5atDwYPfsnK91zlWB4zM720GJ7aOHx6DFfMkRnnqrH0z+zdUbJA1jL4+7Sqqnn+8vA61F/r+rxtSY1hzsRF0WuHlOtz0vtke0d5j2K9L21hwHsXG9vU3QeWjshj0dkrxTJwdx3jd7BseIE6x3FuA==
+  </data>
+ </layer>
+</map>

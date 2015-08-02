@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="40" height="13" tilewidth="20" tileheight="20">
+ <tileset firstgid="1" name="All2" tilewidth="20" tileheight="20">
+  <image source="../../assets/tileset.png" width="160" height="380"/>
+ </tileset>
+ <layer name="background" width="40" height="13">
+  <data encoding="base64" compression="zlib">
+   eJxLZWBgSAPi1EFKxwJx3CCmBzp8RsNvNPwGQzgNtfCDgYEOn6EafqPpb2SEHwCQqsXy
+  </data>
+ </layer>
+ <layer name="mid" width="40" height="13">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjALyQCQQR9HJrgoy9CQCcRKJesjxUwYQ55Coh1xAjp9yGOjnvlEwfAAAAUkFEQ==
+  </data>
+ </layer>
+ <objectgroup name="objs">
+  <object gid="88" x="460" y="200">
+   <properties>
+    <property name="switch" value="right"/>
+   </properties>
+  </object>
+  <object gid="88" x="460" y="180">
+   <properties>
+    <property name="switch" value="right"/>
+   </properties>
+  </object>
+  <object gid="88" x="240" y="200">
+   <properties>
+    <property name="switch" value="left"/>
+   </properties>
+  </object>
+  <object gid="88" x="240" y="180">
+   <properties>
+    <property name="switch" value="left"/>
+   </properties>
+  </object>
+  <object gid="88" x="240" y="160">
+   <properties>
+    <property name="switch" value="left"/>
+   </properties>
+  </object>
+  <object gid="88" x="240" y="140">
+   <properties>
+    <property name="switch" value="left"/>
+   </properties>
+  </object>
+  <object gid="88" x="460" y="160">
+   <properties>
+    <property name="switch" value="right"/>
+   </properties>
+  </object>
+  <object gid="88" x="460" y="140">
+   <properties>
+    <property name="switch" value="right"/>
+   </properties>
+  </object>
+  <object gid="72" x="280" y="200">
+   <properties>
+    <property name="YELLOW" value="left"/>
+   </properties>
+  </object>
+  <object gid="72" x="420" y="200">
+   <properties>
+    <property name="YELLOW" value="right"/>
+   </properties>
+  </object>
+  <object gid="37" x="280" y="140"/>
+  <object gid="87" x="80" y="200"/>
+  <object gid="87" x="140" y="200"/>
+  <object gid="87" x="160" y="220"/>
+  <object gid="87" x="180" y="220"/>
+  <object gid="87" x="520" y="180"/>
+  <object gid="87" x="539" y="180"/>
+  <object gid="87" x="599" y="160"/>
+  <object gid="87" x="559" y="180"/>
+  <object gid="87" x="699" y="180"/>
+  <object gid="87" x="619" y="160"/>
+  <object x="105" y="168" width="31" height="34">
+   <properties>
+    <property name="TO" value="ice_entry"/>
+   </properties>
+  </object>
+  <object x="644" y="127" width="33" height="34">
+   <properties>
+    <property name="TO" value="ice_puzzle_normal"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="Water" width="40" height="13" opacity="0.33">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIKRCXIHOc4fxaN4ADEAW1lWaQ==
+  </data>
+ </layer>
+ <layer name="Ground" width="40" height="13">
+  <data encoding="base64" compression="zlib">
+   eJzrZGBg6ByhuIAAJqSWHu7DBbC5B10el9sJ+Z8a7iME0N2By1/49NHKfdjCiVS9xGJy3UeteKAFGHUfcW7AlRbo6T5yyz9c7iMm/5KKqV3OU6v8GwkYAELupKY=
+  </data>
+ </layer>
+ <layer name="front" width="40" height="13" opacity="0.79">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjALqgLKBdgABUDDQDiAAcLlvKIRrOR55fHKjYPACAOZNAys=
+  </data>
+ </layer>
+ <objectgroup name="Zones">
+  <object x="0" y="35" width="280" height="224"/>
+  <object x="238" y="81" width="242" height="161"/>
+  <object x="440" y="0" width="360" height="222"/>
+ </objectgroup>
+</map>

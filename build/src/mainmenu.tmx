@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="40" height="12" tilewidth="20" tileheight="20">
+ <properties>
+  <property name="landmusic" value="Xelda"/>
+ </properties>
+ <tileset firstgid="1" name="tileset" tilewidth="20" tileheight="20">
+  <image source="../../assets/tileset.png" width="160" height="380"/>
+ </tileset>
+ <layer name="background" width="40" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFgwm4E4EHChDjtoF0Iynuo7dbyXUbPdxHidto7T5K3TYU3EdLNw5291HqzqEOAHkCJJ0=
+  </data>
+ </layer>
+ <layer name="mid" width="40" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFhIAtENsBsf1AOwQPcKOBmdT0NzXdh+wuaplL7fBzQ6MHGxgO7osE4ig6uIVckAjESQPtCDqA0XggHwAAIywH1w==
+  </data>
+ </layer>
+ <objectgroup name="objs">
+  <object x="464" y="143" width="29" height="40">
+   <properties>
+    <property name="TO" value="ice_entry"/>
+   </properties>
+  </object>
+  <object gid="84" x="440" y="180">
+   <properties>
+    <property name="text" value="Level 1\nIce Grotto"/>
+   </properties>
+  </object>
+  <object x="25" y="211" width="29" height="29">
+   <properties>
+    <property name="TO" value="village"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="Water" width="40" height="12" opacity="0.42">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIKRCXKphGllZz6VMKmAWvaOYvwYAL+YOy4=
+  </data>
+ </layer>
+ <layer name="Ground" width="40" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjYBiZwBWI/XDggQSuROKBcCfMbmLUDJQbiQHobhwq7vQfWOdgAPQ0OdgAtd3ny4C7zIBhXHEE04svT1MDkFJ+wDCxeqgFiLWPFExtQC/3AQD51yKl
+  </data>
+ </layer>
+ <objectgroup name="Zones" visible="0">
+  <object x="326" y="9" width="309" height="229"/>
+  <object x="158" y="-9" width="295" height="216"/>
+  <object x="0" y="165" width="399" height="72"/>
+ </objectgroup>
+</map>

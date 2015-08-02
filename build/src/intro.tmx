@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="40" height="10" tilewidth="20" tileheight="20">
+ <tileset firstgid="1" name="All2" tilewidth="20" tileheight="20">
+  <image source="../../Programme/Springteufel/games/Xelda/pre/All2.png" width="160" height="300"/>
+ </tileset>
+ <layer name="Kachelebene 1" width="40" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjGTghYYHG6Cl+9DNHsWkYQANfRlx
+  </data>
+ </layer>
+ <objectgroup name="Objektebene 1" width="40" height="10">
+  <object x="10" y="10" width="121" height="178">
+   <properties>
+    <property name="text" value="links, rechts : bewegen\nhoch : springen"/>
+   </properties>
+  </object>
+  <object x="140" y="12" width="124" height="177">
+   <properties>
+    <property name="text" value="Es gibt eine Legende, die besagt"/>
+   </properties>
+  </object>
+  <object x="274" y="9" width="130" height="181">
+   <properties>
+    <property name="text" value="dass für eine Zeit großer Gefahr"/>
+   </properties>
+  </object>
+  <object x="410" y="11" width="139" height="180">
+   <properties>
+    <property name="text" value="die Götter ein Artefakt ebenso großer Macht hinterlassen haben."/>
+   </properties>
+  </object>
+  <object x="555" y="8" width="146" height="184">
+   <properties>
+    <property name="text" value="Der Legende nach soll ein GRÜNLING mit Hilfe des Artefaktes in der Lage sein die Welt zu retten."/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="50" height="10" tilewidth="20" tileheight="20">
+ <tileset firstgid="1" name="All2" tilewidth="20" tileheight="20">
+  <image source="../../assets/tileset.png"/>
+ </tileset>
+ <layer name="background" width="50" height="10">
+  <data encoding="base64" compression="zlib">
+   eJyLZWBgiAPi2CFOpwJx2jCgBzocR+NjND4GMz3Q4TgaH6PxMZhpAH6ivm8=
+  </data>
+ </layer>
+ <layer name="back" width="50" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjILhByKBOGqgHUEFkAjESQPtiFEwJAAAvS0Bdw==
+  </data>
+ </layer>
+ <objectgroup name="objs" width="50" height="10">
+  <object gid="88" x="780" y="180">
+   <properties>
+    <property name="switch" value="right"/>
+   </properties>
+  </object>
+  <object gid="99" x="70" y="69">
+   <properties>
+    <property name="change" value="eye"/>
+   </properties>
+  </object>
+  <object gid="80" x="69" y="128">
+   <properties>
+    <property name="item" value="RUBY50"/>
+    <property name="switch" value="!eye"/>
+   </properties>
+  </object>
+  <object gid="88" x="780" y="160">
+   <properties>
+    <property name="switch" value="right"/>
+   </properties>
+  </object>
+  <object gid="88" x="780" y="140">
+   <properties>
+    <property name="switch" value="right"/>
+   </properties>
+  </object>
+  <object gid="17" x="540" y="160"/>
+  <object gid="17" x="620" y="160"/>
+  <object gid="17" x="460" y="180"/>
+  <object gid="17" x="120" y="180"/>
+  <object gid="30" x="880" y="160"/>
+  <object gid="87" x="260" y="160"/>
+  <object gid="87" x="280" y="160"/>
+  <object gid="87" x="300" y="160"/>
+  <object gid="87" x="940" y="180"/>
+  <object x="227" y="127" width="28" height="36">
+   <properties>
+    <property name="TO" value="ice_entry"/>
+   </properties>
+  </object>
+  <object gid="91" x="740" y="180">
+   <properties>
+    <property name="change" value="right"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="Water" width="50" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMApGwVAHAAfQAAE=
+  </data>
+ </layer>
+ <layer name="Ground" width="50" height="10">
+  <data encoding="base64" compression="zlib">
+   eJzrZGBg6MSCCyjApJqHTZ5U9+BTRw7AZxch9ehi6O4i1s7BBJD9QYzaweZ+GBj1x+ACpKT3wewPUsBw9Qex5SOp5Ryhsp9U96LroXX9RkgvOfUtLj0A9GtOkw==
+  </data>
+ </layer>
+</map>

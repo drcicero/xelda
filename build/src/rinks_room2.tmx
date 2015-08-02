@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="6" tilewidth="20" tileheight="20" nextobjectid="4">
+ <properties>
+  <property name="landmusic" value="Village"/>
+ </properties>
+ <tileset firstgid="1" name="tileset" tilewidth="20" tileheight="20">
+  <image source="../../assets/tileset.png" width="160" height="380"/>
+ </tileset>
+ <layer name="background" width="10" height="6">
+  <data encoding="base64" compression="zlib">
+   eJzLZmBgyB5BGAD1HRkV
+  </data>
+ </layer>
+ <layer name="mid" width="10" height="6">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAtqEHjNyOxI4E4CoccMkgE4iQouxqImyhwDwCAswP2
+  </data>
+ </layer>
+ <objectgroup name="objs">
+  <object id="1" x="23.833" y="66" width="30.6667" height="34.6667">
+   <properties>
+    <property name="TO" value="rinks_house"/>
+   </properties>
+  </object>
+  <object id="2" gid="85" x="146.333" y="80">
+   <properties>
+    <property name="text" value="ZzZzZ\n*SNOR*\nzZzZz"/>
+   </properties>
+  </object>
+  <object id="3" gid="80" x="120" y="100">
+   <properties>
+    <property name="item" value="RUBY50"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="Ground" width="10" height="6">
+  <data encoding="base64" compression="zlib">
+   eJzLYmBgyCITowNc4rRSVwjFpLgZAO6ODiM=
+  </data>
+ </layer>
+ <layer name="foreground" width="10" height="6">
+  <data encoding="base64" compression="zlib">
+   eJxjYBh8oAWIW2lkNgBeGAEK
+  </data>
+ </layer>
+</map>

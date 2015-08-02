@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="15" height="14" tilewidth="20" tileheight="20" nextobjectid="6">
+ <properties>
+  <property name="landmusic" value="Village"/>
+ </properties>
+ <tileset firstgid="1" name="tileset" tilewidth="20" tileheight="20">
+  <image source="../../assets/tileset.png" width="160" height="380"/>
+ </tileset>
+ <layer name="background" width="15" height="14">
+  <data encoding="base64" compression="zlib">
+   eJzLZmBgyB7Fo3gUU4QBvBxXxw==
+  </data>
+ </layer>
+ <layer name="mid" width="15" height="14">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFMFBDhJpIII7CIt5MhJpEIE5CE6sG4iYojUsNrQAx/sUFmnGI4/I7DKD7FxnQ0+/UBgDcRwlR
+  </data>
+ </layer>
+ <objectgroup name="objs">
+  <object id="1" x="25" y="108" width="30" height="32.5">
+   <properties>
+    <property name="TO" value="rinks_room"/>
+   </properties>
+  </object>
+  <object id="2" x="265" y="188" width="29.5" height="33">
+   <properties>
+    <property name="TO" value="village"/>
+   </properties>
+  </object>
+  <object id="4" x="205" y="105.75" width="30" height="32.5">
+   <properties>
+    <property name="TO" value="rinks_room2"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="Ground" width="15" height="14">
+  <data encoding="base64" compression="zlib">
+   eJwrYmBgKBpBOAsJkwLI0UNNvehmkOpXcv1LLf2U2k0sHqh0BQB1kTw9
+  </data>
+ </layer>
+</map>

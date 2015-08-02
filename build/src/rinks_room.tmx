@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="6" tilewidth="20" tileheight="20" nextobjectid="3">
+ <properties>
+  <property name="landmusic" value="Village"/>
+ </properties>
+ <tileset firstgid="1" name="tileset" tilewidth="20" tileheight="20">
+  <image source="../../assets/tileset.png" width="160" height="380"/>
+ </tileset>
+ <layer name="background" width="10" height="6">
+  <data encoding="base64" compression="zlib">
+   eJzLZmBgyB5BGAD1HRkV
+  </data>
+ </layer>
+ <layer name="mid" width="10" height="6">
+  <data encoding="base64" compression="zlib">
+   eJxjYKA+aMYiVkOC3kggjsKjphqIm4A4EYiTSHMaAwBiFwP2
+  </data>
+ </layer>
+ <objectgroup name="objs">
+  <object id="1" x="144.333" y="67" width="30.6667" height="34.6667">
+   <properties>
+    <property name="TO" value="rinks_house"/>
+   </properties>
+  </object>
+  <object id="2" gid="85" x="80" y="100">
+   <properties>
+    <property name="text" value="Dont forget to move, boy:\n[left], [right], [up], [down]!\n\n ~ Mom"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="Ground" width="10" height="6">
+  <data encoding="base64" compression="zlib">
+   eJzLYmBgyCISowNi1eHSR6y6QigmpI4YDADpPg4j
+  </data>
+ </layer>
+ <layer name="foreground" width="10" height="6">
+  <data encoding="base64" compression="zlib">
+   eJxjYBg40ALErXS2EwB28AEK
+  </data>
+ </layer>
+</map>

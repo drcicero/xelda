@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="29" height="30" tilewidth="20" tileheight="20" nextobjectid="35">
+ <tileset firstgid="1" name="All2" tilewidth="20" tileheight="20">
+  <image source="../../assets/tileset.png" width="160" height="440"/>
+ </tileset>
+ <layer name="background" width="29" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt0NEKQBEQBFA/yhv//wkoatOuFdaDZuo2D26Zw7l/Ex/fF8rnW79I9SXS1qE+2lxu7Bl9tKVdK+EcPZxvdEq7dh3aubRHen/tf61ne6z6ZC+ccMIJJ5xwwgnnD84MtBgHCA==
+  </data>
+ </layer>
+ <layer name="mid" width="29" height="30">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMNhAIJXUkAKCiFATTGU7ifEDte0kxjxiwoJSO9H9To/4RBejdtgSA4ZjGsLmBmqnIXTzqG0+uYDa6ZYYQMt0G4hGwwAtwzsIjUZ3Cz0BLfNnJBBHMdA+bJHNSwTiJBrYQSsAALnmDPw=
+  </data>
+ </layer>
+ <objectgroup name="objs">
+  <object id="1" x="285" y="544" width="30" height="36.5">
+   <properties>
+    <property name="TO" value="ice_entry"/>
+   </properties>
+  </object>
+  <object id="2" name="eye1" gid="99" x="73" y="450" width="20" height="20"/>
+  <object id="3" name="eye2" gid="99" x="513" y="371" width="20" height="20"/>
+  <object id="4" name="eye3" gid="99" x="70" y="289" width="20" height="20"/>
+  <object id="5" gid="29" x="287" y="124" width="20" height="20">
+   <properties>
+    <property name="switch" value="!victory"/>
+   </properties>
+  </object>
+  <object id="6" name="bossstart" x="222" y="140" width="145" height="39"/>
+  <object id="7" gid="88" x="240" y="560" width="20" height="20">
+   <properties>
+    <property name="switch" value="!noescape"/>
+   </properties>
+  </object>
+  <object id="8" gid="88" x="240" y="580" width="20" height="20">
+   <properties>
+    <property name="switch" value="!noescape"/>
+   </properties>
+  </object>
+  <object id="9" gid="88" x="340" y="560" width="20" height="20">
+   <properties>
+    <property name="switch" value="!noescape"/>
+   </properties>
+  </object>
+  <object id="10" gid="88" x="340" y="580" width="20" height="20">
+   <properties>
+    <property name="switch" value="!noescape"/>
+   </properties>
+  </object>
+  <object id="11" gid="87" x="240" y="440" width="20" height="20"/>
+  <object id="12" gid="87" x="260" y="520" width="20" height="20"/>
+  <object id="13" gid="87" x="320" y="440" width="20" height="20"/>
+  <object id="14" gid="87" x="380" y="580" width="20" height="20"/>
+  <object id="15" gid="87" x="100" y="580" width="20" height="20"/>
+  <object id="16" gid="87" x="60" y="580" width="20" height="20"/>
+  <object id="17" gid="87" x="20" y="580" width="20" height="20"/>
+  <object id="18" gid="87" x="40" y="580" width="20" height="20"/>
+  <object id="19" gid="87" x="520" y="580" width="20" height="20"/>
+  <object id="20" gid="87" x="540" y="580" width="20" height="20"/>
+  <object id="21" gid="87" x="460" y="580" width="20" height="20"/>
+  <object id="22" gid="87" x="200" y="180" width="20" height="20"/>
+  <object id="23" gid="87" x="220" y="180" width="20" height="20"/>
+  <object id="24" gid="87" x="400" y="180" width="20" height="20"/>
+  <object id="25" gid="87" x="140" y="200" width="20" height="20"/>
+  <object id="26" gid="87" x="440" y="200" width="20" height="20"/>
+  <object id="27" gid="87" x="280" y="360" width="20" height="20"/>
+  <object id="28" gid="87" x="300" y="360" width="20" height="20"/>
+  <object id="29" gid="87" x="240" y="360" width="20" height="20"/>
+ </objectgroup>
+ <layer name="Water" width="29" height="30" opacity="0.42">
+  <data encoding="base64" compression="zlib">
+   eJztwzENAAAIA7AZJvj/kDGONmkC0DWFq6r66AHQPftD
+  </data>
+ </layer>
+ <layer name="Ground" width="29" height="30">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2DogYIBsG/UTlQ1pGJy7STXPnzmEhu21PIjKXYSYz+p+kftHBx2UgpISbf0thNdPSXhOxqflJlJTTtH45P6do7E/EkpGMi8Qm8MAGhHTzE=
+  </data>
+ </layer>
+ <layer name="fore" width="29" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztlFEKACAIQ7tidf+7RH8hSUazQvY+Q6ZtWUqEEEJ+IYNqdqigmgg9C7in1Jtlh85zNYN2doL3HWag34eFVZ4ePkhNOQM6y84Lby090f6O3mnanl5o2UXczxt/n2U3PPYFSQNahAuG
+  </data>
+ </layer>
+ <objectgroup name="Zones">
+  <object id="30" x="0" y="399" width="357" height="199"/>
+  <object id="31" x="-1" y="480" width="581" height="118"/>
+  <object id="32" x="241" y="218" width="339" height="263"/>
+  <object id="33" x="0" y="179" width="282" height="241"/>
+  <object id="34" x="134" y="64" width="331" height="148"/>
+ </objectgroup>
+</map>
