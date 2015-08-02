@@ -21,7 +21,7 @@ export avatar, transient
 
 --------------------------------------------------------------------------------
 
-ensure_music = (ch)->
+ensure_music = (ch, newmusic)->
   unless audio.channels[ch] and audio.channels[ch].name == newmusic
     audio.music newmusic, ch
 
@@ -33,6 +33,7 @@ contains = (list, thing)->
 --------------------------------------------------------------------------------
 
 compress_objs = ->
+  print "compress_objs"
   local pool, o
   pool = persistence[persistence.mapname].pool
   for i = #pool, 1, -1
@@ -44,6 +45,7 @@ compress_objs = ->
 
 
 decompress_objs = ->
+  print "decompress_objs"
   local pool2
   pool2 = persistence[persistence.mapname].pool
   transient.byid = {}
@@ -57,7 +59,8 @@ decompress_objs = ->
   return
 
 
-insert_objs = ->
+show_objs = ->
+  print "insert_objs"
   local layer
   for _,layer in ipairs(transient.layers)
     if layer.name == "objs"
@@ -68,6 +71,7 @@ insert_objs = ->
 
 
 partial_level_reset = ->
+  print "partial_level_reset"
   local pool2, state, default_state
   _, default_state = parse_map persistence.mapname
 
@@ -82,6 +86,7 @@ partial_level_reset = ->
 --------------------------------------------------------------------------------
 
 exclude_avatar = ->
+  print "exclude_avatar"
   local pool, o
   persistence.avatar, avatar = avatar, nil
 
@@ -92,6 +97,7 @@ exclude_avatar = ->
 
 
 include_avatar = ->
+  print "include_avatar"
   if persistence.avatar == nil
     error "ERR: no avatar to load"
 
@@ -109,6 +115,7 @@ include_avatar = ->
 
 
 come_from = (prev)->
+  print "come_from"
   for meta,_ in pairs transient.types.META
     if meta.properties.TO == prev
       avatar.x = meta.x + meta.width/2
@@ -121,12 +128,14 @@ come_from = (prev)->
 --------------------------------------------------------------------------------
 
 close_curtain = ->
+  print "close_curtain"
   exclude_avatar!
   compress_objs!
   return
 
 
 open_curtain = ->
+  print "open_curtain"
   decompress_objs!
   include_avatar!
   ensure_music "default", transient.properties.landmusic or "Ruins"
@@ -142,11 +151,12 @@ open_curtain = ->
 --------------------------------------------------------------------------------
 
 init_level = ->
+  print "init_level"
   local state, default_state
   transient, default_state = parse_map persistence.mapname
   state = persistence[persistence.mapname] or default_state -- first time or load?
   persistence[persistence.mapname] = state
-  insert_objs!
+  show_objs!
 
   transient.levelclock = cron_new_clock!
   open_curtain!
@@ -154,6 +164,7 @@ init_level = ->
 
 
 use_door_to = (to)->
+  print "use_door_to"
   local prev
 
   close_curtain!

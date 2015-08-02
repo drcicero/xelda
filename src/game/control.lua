@@ -14,10 +14,11 @@ local pool = require "pool"
 local camera = require "map.camera"
 local scripting = require "map.scripting"
 
-local function up()    return pressed.up    or pressed.j or pressed.w end
-local function down()  return pressed.down  or pressed.k or pressed.s end
-local function left()  return pressed.left  or pressed.h or pressed.a end
-local function right() return pressed.right or pressed.l or pressed.d end
+local function action() return pressed[" "]  or pressed.y or pressed.z end
+local function up()     return pressed.up    or pressed.j or pressed.w end
+local function down()   return pressed.down  or pressed.k or pressed.s end
+local function left()   return pressed.left  or pressed.h or pressed.a end
+local function right()  return pressed.right or pressed.l or pressed.d end
 
 local function b2n(bool) return bool and 1 or 0 end
 
@@ -29,7 +30,7 @@ function unsword ()
     persistence.vars.occupied = false
     pool.del(sword)
     sword = false
-    pressed[" "] = false
+    pressed[" "] = false pressed.y = false pressed.z = false
     doing = nil
     avatar.noface = false
   end
@@ -75,7 +76,7 @@ end
 
 ---
 local function control_grab(o)
-  if persistence.vars.grab and not pressed[" "] then
+  if persistence.vars.grab and not action() then
     persistence.vars.occupied = false
     persistence.vars.grab = nil
   end
@@ -108,11 +109,11 @@ local function control_sword(o)
       sword.r = o.facing == 1 and a or - a
 
       sword.timer = math.max(sword.timer, 2)
-      if not pressed[" "] then
+      if not action() then
         unsword()
       end
 
-    elseif not persistence.vars.occupied and pressed[" "] then
+    elseif not persistence.vars.occupied and action() then
       if space_register ~= nil then
         space_register()
 
