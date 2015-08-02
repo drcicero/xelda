@@ -1,13 +1,11 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "2015-05-07",
   orientation = "orthogonal",
   width = 29,
   height = 30,
   tilewidth = 20,
   tileheight = 20,
-  nextobjectid = 35,
   properties = {},
   tilesets = {
     {
@@ -25,7 +23,6 @@ return {
         y = 0
       },
       properties = {},
-      terrains = {},
       tiles = {}
     }
   },
@@ -126,7 +123,6 @@ return {
       properties = {},
       objects = {
         {
-          id = 1,
           name = "",
           type = "",
           shape = "rectangle",
@@ -141,7 +137,6 @@ return {
           }
         },
         {
-          id = 2,
           name = "eye1",
           type = "",
           shape = "rectangle",
@@ -155,7 +150,6 @@ return {
           properties = {}
         },
         {
-          id = 3,
           name = "eye2",
           type = "",
           shape = "rectangle",
@@ -169,7 +163,6 @@ return {
           properties = {}
         },
         {
-          id = 4,
           name = "eye3",
           type = "",
           shape = "rectangle",
@@ -183,7 +176,6 @@ return {
           properties = {}
         },
         {
-          id = 5,
           name = "",
           type = "",
           shape = "rectangle",
@@ -199,7 +191,6 @@ return {
           }
         },
         {
-          id = 6,
           name = "bossstart",
           type = "",
           shape = "rectangle",
@@ -212,71 +203,6 @@ return {
           properties = {}
         },
         {
-          id = 7,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 240,
-          y = 560,
-          width = 20,
-          height = 20,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!noescape"
-          }
-        },
-        {
-          id = 8,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 240,
-          y = 580,
-          width = 20,
-          height = 20,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!noescape"
-          }
-        },
-        {
-          id = 9,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 340,
-          y = 560,
-          width = 20,
-          height = 20,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!noescape"
-          }
-        },
-        {
-          id = 10,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 340,
-          y = 580,
-          width = 20,
-          height = 20,
-          rotation = 0,
-          gid = 88,
-          visible = true,
-          properties = {
-            ["switch"] = "!noescape"
-          }
-        },
-        {
-          id = 11,
           name = "",
           type = "",
           shape = "rectangle",
@@ -290,7 +216,6 @@ return {
           properties = {}
         },
         {
-          id = 12,
           name = "",
           type = "",
           shape = "rectangle",
@@ -304,7 +229,6 @@ return {
           properties = {}
         },
         {
-          id = 13,
           name = "",
           type = "",
           shape = "rectangle",
@@ -318,7 +242,6 @@ return {
           properties = {}
         },
         {
-          id = 14,
           name = "",
           type = "",
           shape = "rectangle",
@@ -332,7 +255,6 @@ return {
           properties = {}
         },
         {
-          id = 15,
           name = "",
           type = "",
           shape = "rectangle",
@@ -346,7 +268,6 @@ return {
           properties = {}
         },
         {
-          id = 16,
           name = "",
           type = "",
           shape = "rectangle",
@@ -360,7 +281,6 @@ return {
           properties = {}
         },
         {
-          id = 17,
           name = "",
           type = "",
           shape = "rectangle",
@@ -374,7 +294,6 @@ return {
           properties = {}
         },
         {
-          id = 18,
           name = "",
           type = "",
           shape = "rectangle",
@@ -388,7 +307,6 @@ return {
           properties = {}
         },
         {
-          id = 19,
           name = "",
           type = "",
           shape = "rectangle",
@@ -402,7 +320,6 @@ return {
           properties = {}
         },
         {
-          id = 20,
           name = "",
           type = "",
           shape = "rectangle",
@@ -416,7 +333,6 @@ return {
           properties = {}
         },
         {
-          id = 21,
           name = "",
           type = "",
           shape = "rectangle",
@@ -430,7 +346,6 @@ return {
           properties = {}
         },
         {
-          id = 22,
           name = "",
           type = "",
           shape = "rectangle",
@@ -444,7 +359,6 @@ return {
           properties = {}
         },
         {
-          id = 23,
           name = "",
           type = "",
           shape = "rectangle",
@@ -458,7 +372,6 @@ return {
           properties = {}
         },
         {
-          id = 24,
           name = "",
           type = "",
           shape = "rectangle",
@@ -472,7 +385,6 @@ return {
           properties = {}
         },
         {
-          id = 25,
           name = "",
           type = "",
           shape = "rectangle",
@@ -486,7 +398,6 @@ return {
           properties = {}
         },
         {
-          id = 26,
           name = "",
           type = "",
           shape = "rectangle",
@@ -500,7 +411,6 @@ return {
           properties = {}
         },
         {
-          id = 27,
           name = "",
           type = "",
           shape = "rectangle",
@@ -514,7 +424,6 @@ return {
           properties = {}
         },
         {
-          id = 28,
           name = "",
           type = "",
           shape = "rectangle",
@@ -528,7 +437,6 @@ return {
           properties = {}
         },
         {
-          id = 29,
           name = "",
           type = "",
           shape = "rectangle",
@@ -538,6 +446,30 @@ return {
           height = 20,
           rotation = 0,
           gid = 87,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "rightwall",
+          type = "",
+          shape = "rectangle",
+          x = 456.167,
+          y = 34.4581,
+          width = 21.6667,
+          height = 192.167,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "leftwall",
+          type = "",
+          shape = "rectangle",
+          x = 120.167,
+          y = 56.3751,
+          width = 23.6667,
+          height = 166.167,
+          rotation = 0,
           visible = true,
           properties = {}
         }
@@ -683,7 +615,6 @@ return {
       properties = {},
       objects = {
         {
-          id = 30,
           name = "",
           type = "",
           shape = "rectangle",
@@ -696,7 +627,6 @@ return {
           properties = {}
         },
         {
-          id = 31,
           name = "",
           type = "",
           shape = "rectangle",
@@ -709,7 +639,6 @@ return {
           properties = {}
         },
         {
-          id = 32,
           name = "",
           type = "",
           shape = "rectangle",
@@ -722,7 +651,6 @@ return {
           properties = {}
         },
         {
-          id = 33,
           name = "",
           type = "",
           shape = "rectangle",
@@ -735,7 +663,6 @@ return {
           properties = {}
         },
         {
-          id = 34,
           name = "",
           type = "",
           shape = "rectangle",

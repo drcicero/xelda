@@ -1,13 +1,11 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "2015-05-07",
   orientation = "orthogonal",
   width = 46,
   height = 15,
   tilewidth = 20,
   tileheight = 20,
-  nextobjectid = 42,
   properties = {},
   tilesets = {
     {
@@ -25,7 +23,6 @@ return {
         y = 0
       },
       properties = {},
-      terrains = {},
       tiles = {}
     }
   },
@@ -133,39 +130,6 @@ return {
       properties = {},
       objects = {
         {
-          id = 2,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 260.667,
-          y = 260.667,
-          width = 20,
-          height = 20,
-          rotation = 0,
-          gid = 84,
-          visible = true,
-          properties = {
-            ["text"] = "PART 5\\n\\nAlthough the GREEN ONE was able to weaken Nonag, it was not in his power to end the tragedy."
-          }
-        },
-        {
-          id = 3,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 761.167,
-          y = 260.167,
-          width = 20,
-          height = 20,
-          rotation = 0,
-          gid = 84,
-          visible = true,
-          properties = {
-            ["text"] = "XELDAS SAGA\\n\\nOnce upon the time princess Xelda was born. Happily she lived her life until..."
-          }
-        },
-        {
-          id = 4,
           name = "",
           type = "",
           shape = "rectangle",
@@ -181,7 +145,6 @@ return {
           }
         },
         {
-          id = 5,
           name = "",
           type = "",
           shape = "rectangle",
@@ -197,7 +160,6 @@ return {
           }
         },
         {
-          id = 6,
           name = "",
           type = "",
           shape = "rectangle",
@@ -213,7 +175,6 @@ return {
           }
         },
         {
-          id = 7,
           name = "",
           type = "",
           shape = "rectangle",
@@ -229,7 +190,6 @@ return {
           }
         },
         {
-          id = 8,
           name = "",
           type = "",
           shape = "rectangle",
@@ -245,7 +205,6 @@ return {
           }
         },
         {
-          id = 9,
           name = "",
           type = "",
           shape = "rectangle",
@@ -261,7 +220,6 @@ return {
           }
         },
         {
-          id = 10,
           name = "",
           type = "",
           shape = "rectangle",
@@ -277,7 +235,6 @@ return {
           }
         },
         {
-          id = 11,
           name = "",
           type = "",
           shape = "rectangle",
@@ -292,12 +249,11 @@ return {
           }
         },
         {
-          id = 12,
           name = "",
           type = "",
           shape = "rectangle",
           x = 440,
-          y = 220,
+          y = 230,
           width = 20,
           height = 20,
           rotation = 0,
@@ -306,12 +262,11 @@ return {
           properties = {}
         },
         {
-          id = 13,
           name = "sword",
           type = "",
           shape = "rectangle",
           x = 440,
-          y = 200,
+          y = 210,
           width = 20,
           height = 20,
           rotation = -270.274,
@@ -320,7 +275,6 @@ return {
           properties = {}
         },
         {
-          id = 14,
           name = "king",
           type = "",
           shape = "rectangle",
@@ -334,7 +288,6 @@ return {
           properties = {}
         },
         {
-          id = 15,
           name = "mid",
           type = "",
           shape = "rectangle",
@@ -347,12 +300,11 @@ return {
           properties = {}
         },
         {
-          id = 16,
           name = "drawing",
           type = "",
           shape = "rectangle",
           x = 439.917,
-          y = 136.833,
+          y = 144.833,
           width = 19.1667,
           height = 87.5833,
           rotation = 0,
@@ -360,103 +312,6 @@ return {
           properties = {}
         },
         {
-          id = 17,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 710.667,
-          y = 260.667,
-          width = 20,
-          height = 20,
-          rotation = 0,
-          gid = 84,
-          visible = true,
-          properties = {
-            ["text"] = "PART 2\\n\\nOne day she met the magician Nonag. To defeat death, he had turned himself into an foul creature. Now he was looking for a kingdom to rule in his evil ways."
-          }
-        },
-        {
-          id = 18,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 690.667,
-          y = 260.667,
-          width = 20,
-          height = 20,
-          rotation = 0,
-          gid = 84,
-          visible = true,
-          properties = {
-            ["text"] = "PART 3\\n\\nNonag turned the sky pitch black, kidnapped Xelda and watched the confused people and the king until it was time for him to take over the kingdom."
-          }
-        },
-        {
-          id = 19,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 641.334,
-          y = 260.667,
-          width = 20,
-          height = 20,
-          rotation = 0,
-          gid = 84,
-          visible = true,
-          properties = {
-            ["text"] = "PART 4\\n\\nSuddenly a boy wearing green from head to toe appeared and defeated him.\\nAnd they may or may not have lived happily ever after (depending on circumstances)."
-          }
-        },
-        {
-          id = 20,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 210.667,
-          y = 260.667,
-          width = 20,
-          height = 20,
-          rotation = 0,
-          gid = 84,
-          visible = true,
-          properties = {
-            ["text"] = "PART 6\\n\\nPrincess Xelda gathered the wisest men around her, and together they banished Nonag to the moon."
-          }
-        },
-        {
-          id = 21,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 190.667,
-          y = 260.667,
-          width = 20,
-          height = 20,
-          rotation = 0,
-          gid = 84,
-          visible = true,
-          properties = {
-            ["text"] = "PART 7\\n\\nEvery twenty Years the spell will have to be renewed by the ancestors of the Princess."
-          }
-        },
-        {
-          id = 22,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 140,
-          y = 260,
-          width = 20,
-          height = 20,
-          rotation = 0,
-          gid = 84,
-          visible = true,
-          properties = {
-            ["text"] = "PART 8\\n\\nHowever, when the spell breaks, a new Hero is born..."
-          }
-        },
-        {
-          id = 23,
           name = "offlimits",
           type = "",
           shape = "rectangle",
@@ -469,7 +324,6 @@ return {
           properties = {}
         },
         {
-          id = 24,
           name = "lasttablet",
           type = "",
           shape = "rectangle",
@@ -482,7 +336,6 @@ return {
           properties = {}
         },
         {
-          id = 25,
           name = "",
           type = "",
           shape = "rectangle",
@@ -497,7 +350,6 @@ return {
           }
         },
         {
-          id = 29,
           name = "moon",
           type = "",
           shape = "rectangle",
@@ -513,12 +365,11 @@ return {
           }
         },
         {
-          id = 30,
           name = "",
           type = "",
           shape = "rectangle",
           x = 420,
-          y = 240,
+          y = 250,
           width = 20,
           height = 20,
           rotation = 0,
@@ -529,12 +380,11 @@ return {
           }
         },
         {
-          id = 31,
           name = "",
           type = "",
           shape = "rectangle",
           x = 440,
-          y = 240,
+          y = 250,
           width = 20,
           height = 20,
           rotation = 0,
@@ -545,12 +395,11 @@ return {
           }
         },
         {
-          id = 32,
           name = "",
           type = "",
           shape = "rectangle",
           x = 460,
-          y = 240,
+          y = 250,
           width = 20,
           height = 20,
           rotation = 0,
@@ -561,12 +410,11 @@ return {
           }
         },
         {
-          id = 33,
           name = "",
           type = "",
           shape = "rectangle",
           x = 460,
-          y = 260,
+          y = 270,
           width = 20,
           height = 20,
           rotation = 0,
@@ -577,12 +425,11 @@ return {
           }
         },
         {
-          id = 34,
           name = "",
           type = "",
           shape = "rectangle",
           x = 440,
-          y = 280,
+          y = 290,
           width = 20,
           height = 20,
           rotation = 0,
@@ -593,12 +440,11 @@ return {
           }
         },
         {
-          id = 35,
           name = "",
           type = "",
           shape = "rectangle",
           x = 420,
-          y = 260,
+          y = 270,
           width = 20,
           height = 20,
           rotation = 0,
@@ -609,12 +455,11 @@ return {
           }
         },
         {
-          id = 36,
           name = "",
           type = "",
           shape = "rectangle",
           x = 440,
-          y = 260,
+          y = 270,
           width = 20,
           height = 20,
           rotation = 0,
@@ -625,12 +470,11 @@ return {
           }
         },
         {
-          id = 37,
           name = "",
           type = "",
           shape = "rectangle",
           x = 420,
-          y = 280,
+          y = 290,
           width = 20,
           height = 20,
           rotation = 0,
@@ -641,12 +485,11 @@ return {
           }
         },
         {
-          id = 38,
           name = "",
           type = "",
           shape = "rectangle",
           x = 460,
-          y = 280,
+          y = 290,
           width = 20,
           height = 20,
           rotation = 0,
@@ -657,12 +500,11 @@ return {
           }
         },
         {
-          id = 39,
           name = "",
           type = "",
           shape = "rectangle",
           x = 460,
-          y = 300,
+          y = 310,
           width = 20,
           height = 20,
           rotation = 0,
@@ -673,12 +515,11 @@ return {
           }
         },
         {
-          id = 40,
           name = "",
           type = "",
           shape = "rectangle",
           x = 440,
-          y = 300,
+          y = 310,
           width = 20,
           height = 20,
           rotation = 0,
@@ -689,12 +530,11 @@ return {
           }
         },
         {
-          id = 41,
           name = "",
           type = "",
           shape = "rectangle",
           x = 420,
-          y = 300,
+          y = 310,
           width = 20,
           height = 20,
           rotation = 0,
@@ -743,7 +583,6 @@ return {
       properties = {},
       objects = {
         {
-          id = 26,
           name = "",
           type = "",
           shape = "rectangle",
@@ -756,7 +595,6 @@ return {
           properties = {}
         },
         {
-          id = 27,
           name = "",
           type = "",
           shape = "rectangle",
@@ -769,7 +607,6 @@ return {
           properties = {}
         },
         {
-          id = 28,
           name = "",
           type = "",
           shape = "rectangle",

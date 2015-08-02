@@ -262,9 +262,13 @@ function M.trash_slots ()
 
   list.update = function (self)
     local slot = trash_slots[self.selector - 3]
-    if slot ~= nil and persistence.meta.slotname ~= slot.slotname
-    or slot == nil and persistence.meta.playtime ~= 0 then
+
+    if slot ~= nil
+    and persistence.meta.slotname ~= slot.slotname then
       saveload.load_slot(slot)
+    elseif slot == nil
+    and persistence.meta.playtime ~= 0 then
+      saveload.load_slot(saveload.make_slot())
     end
 
     return menu.column.update(self)

@@ -217,11 +217,11 @@ do
       while true do
         self.selector = (self.selector + 1 - 1) % #self + 1
         ctr = ctr + 1
-        if ctr == #self then
-          error("ERR: no action in column")
-        end
         if self[self.selector].action then
           break
+        end
+        if ctr == #self then
+          error("ERR: no action in column")
         end
       end
     end,
@@ -230,11 +230,11 @@ do
       while true do
         self.selector = (self.selector - 1 - 1) % #self + 1
         ctr = ctr + 1
-        if ctr == #self then
-          error("ERR: no action in column")
-        end
         if self[self.selector].action then
           break
+        end
+        if ctr == #self then
+          error("ERR: no action in column")
         end
       end
     end,

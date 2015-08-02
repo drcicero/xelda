@@ -196,16 +196,16 @@ class column
         while true
             @selector = (@selector + 1 - 1) % #self + 1
             ctr = ctr + 1
-            error("ERR: no action in column") if ctr == #self
             break if @[@selector].action
+            error("ERR: no action in column") if ctr == #self
 
     _findPrevSelector: =>
         ctr = 0
         while true
             @selector = (@selector - 1 - 1) % #self + 1
             ctr = ctr + 1
-            error("ERR: no action in column") if ctr == #self
             break if @[@selector].action
+            error("ERR: no action in column") if ctr == #self
 
 
     ---

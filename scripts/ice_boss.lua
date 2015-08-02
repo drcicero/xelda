@@ -184,8 +184,15 @@ local phase = {
 
 return {
   funcs = {
+    throwback = function (self)
+      avatar.vy = -5
+      avatar.vx = (self.name == "leftwall" and 1 or -1) * 10
+    end,
+
     bossstart_onfirsttouch = function ()
-      sfx_bosstrigger()
+     byId("leftwall").properties.ontouch  = "$throwback"
+     byId("rightwall").properties.ontouch = "$throwback"
+     sfx_bosstrigger()
 
       audio.music "Raw"
       boss = { phase="up", lasts = {}, notyet = 1, timer = 0, }
@@ -255,17 +262,17 @@ return {
 
         draw.draw_obj(o)
 
-        if not o.properties.closed then
-          local a, b = 100+math.random()*155, math.random()*100
-          g.setColor(a, b, b, 255)
-          g.setLineWidth(1 + math.random()*4)
+--        if not o.properties.closed then
+--          local a, b = 100+math.random()*155, math.random()*100
+--          g.setColor(a, b, b, 255)
+--          g.setLineWidth(1 + math.random()*4)
 
-          local x = math.cos(o.properties.da_angle - boss.timer/60)
-          local y = math.sin(o.properties.da_angle - boss.timer/60)
+--          local x = math.cos(o.properties.da_angle - boss.timer/60)
+--          local y = math.sin(o.properties.da_angle - boss.timer/60)
 
-          g.line(o.x, o.y-10, o.x + x*200, o.y-10 + y*200)
-          g.setLineWidth(1)
-        end
+--          g.line(o.x, o.y-10, o.x + x*200, o.y-10 + y*200)
+--          g.setLineWidth(1)
+--        end
       end
     end
   end,
