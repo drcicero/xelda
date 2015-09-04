@@ -1,13 +1,11 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "2015-05-07",
   orientation = "orthogonal",
   width = 50,
   height = 20,
   tilewidth = 20,
   tileheight = 20,
-  nextobjectid = 94,
   properties = {},
   tilesets = {
     {
@@ -25,75 +23,7 @@ return {
         y = 0
       },
       properties = {},
-      terrains = {
-        {
-          name = "Solid",
-          tile = 136,
-          properties = {}
-        }
-      },
-      tiles = {
-        {
-          id = 122,
-          terrain = { -1, 0, 0, 0 }
-        },
-        {
-          id = 123,
-          terrain = { 0, -1, 0, 0 }
-        },
-        {
-          id = 124,
-          terrain = { -1, -1, -1, 0 }
-        },
-        {
-          id = 125,
-          terrain = { -1, -1, 0, -1 }
-        },
-        {
-          id = 126,
-          terrain = { -1, -1, 0, 0 }
-        },
-        {
-          id = 127,
-          terrain = { 0, -1, 0, -1 }
-        },
-        {
-          id = 128,
-          terrain = { -1, 0, 0, -1 }
-        },
-        {
-          id = 129,
-          terrain = { 0, -1, -1, 0 }
-        },
-        {
-          id = 130,
-          terrain = { 0, 0, -1, 0 }
-        },
-        {
-          id = 131,
-          terrain = { 0, 0, 0, -1 }
-        },
-        {
-          id = 132,
-          terrain = { -1, 0, -1, -1 }
-        },
-        {
-          id = 133,
-          terrain = { 0, -1, -1, -1 }
-        },
-        {
-          id = 134,
-          terrain = { -1, 0, -1, 0 }
-        },
-        {
-          id = 135,
-          terrain = { 0, 0, -1, -1 }
-        },
-        {
-          id = 136,
-          terrain = { 0, 0, 0, 0 }
-        }
-      }
+      tiles = {}
     }
   },
   layers = {
@@ -173,7 +103,6 @@ return {
       properties = {},
       objects = {
         {
-          id = 1,
           name = "",
           type = "",
           shape = "rectangle",
@@ -189,7 +118,6 @@ return {
           }
         },
         {
-          id = 2,
           name = "",
           type = "",
           shape = "rectangle",
@@ -205,7 +133,6 @@ return {
           }
         },
         {
-          id = 3,
           name = "",
           type = "lock",
           shape = "rectangle",
@@ -221,7 +148,6 @@ return {
           }
         },
         {
-          id = 4,
           name = "",
           type = "lock",
           shape = "rectangle",
@@ -237,7 +163,6 @@ return {
           }
         },
         {
-          id = 5,
           name = "",
           type = "",
           shape = "rectangle",
@@ -253,7 +178,6 @@ return {
           }
         },
         {
-          id = 6,
           name = "",
           type = "",
           shape = "rectangle",
@@ -269,7 +193,6 @@ return {
           }
         },
         {
-          id = 7,
           name = "",
           type = "",
           shape = "rectangle",
@@ -285,7 +208,6 @@ return {
           }
         },
         {
-          id = 8,
           name = "",
           type = "",
           shape = "rectangle",
@@ -301,7 +223,6 @@ return {
           }
         },
         {
-          id = 9,
           name = "",
           type = "",
           shape = "rectangle",
@@ -317,7 +238,6 @@ return {
           }
         },
         {
-          id = 10,
           name = "",
           type = "",
           shape = "rectangle",
@@ -333,7 +253,6 @@ return {
           }
         },
         {
-          id = 11,
           name = "",
           type = "",
           shape = "rectangle",
@@ -349,7 +268,6 @@ return {
           }
         },
         {
-          id = 12,
           name = "",
           type = "",
           shape = "rectangle",
@@ -365,7 +283,6 @@ return {
           }
         },
         {
-          id = 13,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -379,7 +296,6 @@ return {
           properties = {}
         },
         {
-          id = 14,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -393,7 +309,6 @@ return {
           properties = {}
         },
         {
-          id = 15,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -407,7 +322,6 @@ return {
           properties = {}
         },
         {
-          id = 16,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -421,7 +335,6 @@ return {
           properties = {}
         },
         {
-          id = 17,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -435,7 +348,6 @@ return {
           properties = {}
         },
         {
-          id = 18,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -449,7 +361,6 @@ return {
           properties = {}
         },
         {
-          id = 19,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -463,7 +374,6 @@ return {
           properties = {}
         },
         {
-          id = 20,
           name = "",
           type = "",
           shape = "rectangle",
@@ -477,7 +387,6 @@ return {
           properties = {}
         },
         {
-          id = 21,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -491,7 +400,6 @@ return {
           properties = {}
         },
         {
-          id = 22,
           name = "",
           type = "",
           shape = "rectangle",
@@ -506,22 +414,6 @@ return {
           }
         },
         {
-          id = 23,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 466,
-          y = 130,
-          width = 28,
-          height = 48,
-          rotation = 0,
-          visible = true,
-          properties = {
-            ["TO"] = "sanctuum"
-          }
-        },
-        {
-          id = 24,
           name = "",
           type = "",
           shape = "rectangle",
@@ -536,7 +428,6 @@ return {
           }
         },
         {
-          id = 25,
           name = "",
           type = "",
           shape = "rectangle",
@@ -551,7 +442,6 @@ return {
           }
         },
         {
-          id = 26,
           name = "",
           type = "",
           shape = "rectangle",
@@ -566,7 +456,6 @@ return {
           }
         },
         {
-          id = 27,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -580,7 +469,6 @@ return {
           properties = {}
         },
         {
-          id = 28,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -594,7 +482,6 @@ return {
           properties = {}
         },
         {
-          id = 29,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -608,7 +495,6 @@ return {
           properties = {}
         },
         {
-          id = 30,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -622,7 +508,6 @@ return {
           properties = {}
         },
         {
-          id = 31,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -636,7 +521,6 @@ return {
           properties = {}
         },
         {
-          id = 32,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -650,7 +534,6 @@ return {
           properties = {}
         },
         {
-          id = 33,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -664,7 +547,6 @@ return {
           properties = {}
         },
         {
-          id = 34,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -678,7 +560,6 @@ return {
           properties = {}
         },
         {
-          id = 35,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -692,7 +573,6 @@ return {
           properties = {}
         },
         {
-          id = 36,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -706,7 +586,6 @@ return {
           properties = {}
         },
         {
-          id = 37,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -720,7 +599,6 @@ return {
           properties = {}
         },
         {
-          id = 38,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -734,7 +612,6 @@ return {
           properties = {}
         },
         {
-          id = 39,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -748,7 +625,6 @@ return {
           properties = {}
         },
         {
-          id = 40,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -762,7 +638,6 @@ return {
           properties = {}
         },
         {
-          id = 41,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -776,7 +651,6 @@ return {
           properties = {}
         },
         {
-          id = 42,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -790,7 +664,6 @@ return {
           properties = {}
         },
         {
-          id = 43,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -804,7 +677,6 @@ return {
           properties = {}
         },
         {
-          id = 44,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -818,7 +690,6 @@ return {
           properties = {}
         },
         {
-          id = 45,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -832,7 +703,6 @@ return {
           properties = {}
         },
         {
-          id = 46,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -846,7 +716,6 @@ return {
           properties = {}
         },
         {
-          id = 47,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -860,7 +729,6 @@ return {
           properties = {}
         },
         {
-          id = 48,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -874,7 +742,6 @@ return {
           properties = {}
         },
         {
-          id = 49,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -888,7 +755,6 @@ return {
           properties = {}
         },
         {
-          id = 50,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -902,7 +768,6 @@ return {
           properties = {}
         },
         {
-          id = 51,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -916,7 +781,6 @@ return {
           properties = {}
         },
         {
-          id = 52,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -930,7 +794,6 @@ return {
           properties = {}
         },
         {
-          id = 53,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -944,7 +807,6 @@ return {
           properties = {}
         },
         {
-          id = 54,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -958,7 +820,6 @@ return {
           properties = {}
         },
         {
-          id = 55,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -972,7 +833,6 @@ return {
           properties = {}
         },
         {
-          id = 56,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -986,7 +846,6 @@ return {
           properties = {}
         },
         {
-          id = 57,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -1000,7 +859,6 @@ return {
           properties = {}
         },
         {
-          id = 58,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -1014,7 +872,6 @@ return {
           properties = {}
         },
         {
-          id = 59,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -1028,7 +885,6 @@ return {
           properties = {}
         },
         {
-          id = 60,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -1042,7 +898,6 @@ return {
           properties = {}
         },
         {
-          id = 61,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -1056,7 +911,6 @@ return {
           properties = {}
         },
         {
-          id = 62,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -1070,7 +924,6 @@ return {
           properties = {}
         },
         {
-          id = 63,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -1084,7 +937,6 @@ return {
           properties = {}
         },
         {
-          id = 64,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -1098,7 +950,6 @@ return {
           properties = {}
         },
         {
-          id = 65,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -1112,7 +963,6 @@ return {
           properties = {}
         },
         {
-          id = 66,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -1126,7 +976,6 @@ return {
           properties = {}
         },
         {
-          id = 67,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -1140,7 +989,6 @@ return {
           properties = {}
         },
         {
-          id = 68,
           name = "",
           type = "grass",
           shape = "rectangle",
@@ -1154,7 +1002,6 @@ return {
           properties = {}
         },
         {
-          id = 69,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1169,7 +1016,6 @@ return {
           }
         },
         {
-          id = 70,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1184,7 +1030,6 @@ return {
           }
         },
         {
-          id = 71,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1200,7 +1045,6 @@ return {
           }
         },
         {
-          id = 72,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1216,7 +1060,6 @@ return {
           }
         },
         {
-          id = 73,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1232,7 +1075,6 @@ return {
           }
         },
         {
-          id = 74,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1248,7 +1090,6 @@ return {
           }
         },
         {
-          id = 75,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1264,7 +1105,6 @@ return {
           }
         },
         {
-          id = 76,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1280,7 +1120,6 @@ return {
           }
         },
         {
-          id = 77,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1294,7 +1133,6 @@ return {
           properties = {}
         },
         {
-          id = 78,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1308,7 +1146,6 @@ return {
           properties = {}
         },
         {
-          id = 79,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1322,7 +1159,6 @@ return {
           properties = {}
         },
         {
-          id = 80,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1336,7 +1172,6 @@ return {
           properties = {}
         },
         {
-          id = 81,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1350,7 +1185,6 @@ return {
           properties = {}
         },
         {
-          id = 82,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1366,7 +1200,6 @@ return {
           }
         },
         {
-          id = 83,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1382,7 +1215,6 @@ return {
           }
         },
         {
-          id = 84,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1398,7 +1230,6 @@ return {
           }
         },
         {
-          id = 85,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1414,7 +1245,6 @@ return {
           }
         },
         {
-          id = 86,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1428,21 +1258,6 @@ return {
           properties = {
             ["bigkey"] = "ice",
             ["change"] = "boss"
-          }
-        },
-        {
-          id = 93,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 564.5,
-          y = 131,
-          width = 28,
-          height = 48,
-          rotation = 0,
-          visible = true,
-          properties = {
-            ["TO"] = "fire_entry"
           }
         }
       }
@@ -1523,7 +1338,6 @@ return {
       properties = {},
       objects = {
         {
-          id = 87,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1536,7 +1350,6 @@ return {
           properties = {}
         },
         {
-          id = 88,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1549,7 +1362,6 @@ return {
           properties = {}
         },
         {
-          id = 89,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1562,7 +1374,6 @@ return {
           properties = {}
         },
         {
-          id = 90,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1575,7 +1386,6 @@ return {
           properties = {}
         },
         {
-          id = 91,
           name = "",
           type = "",
           shape = "rectangle",
@@ -1588,7 +1398,6 @@ return {
           properties = {}
         },
         {
-          id = 92,
           name = "",
           type = "",
           shape = "rectangle",

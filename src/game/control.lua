@@ -146,6 +146,18 @@ end
 ---
 local function control_swim(o)
   local o = avatar
+
+  if arrow then
+    audio.play "schwupp"
+    persistence.vars.occupied = false
+    o.noface = false
+
+    pool.setType(arrow, "ARROW")
+    arrow.properties.ghost = false
+    arrow = false
+    arrow_timer = 30
+  end
+
   if up() then       o.vy = o.vy - 0.2
   elseif down() then o.vy = o.vy + 0.2 end
 
@@ -162,8 +174,6 @@ local function control_swim(o)
     local as = {"_WALK", "", "_HOLD"}
     o.type = persistence.vars.avatar_name .. as[math.floor(math.sin(now/.1)*1.5+2.5)]
   end
-
-  arrow = false
 end
 
 ---

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="30" tilewidth="20" tileheight="20" nextobjectid="81">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="30" tilewidth="20" tileheight="20">
  <tileset firstgid="1" name="All2" tilewidth="20" tileheight="20">
-  <image source="../../assets/tileset.png" width="160" height="380"/>
+  <image source="../../assets/tileset.png" width="160" height="440"/>
  </tileset>
  <layer name="background" width="32" height="30">
   <data encoding="base64" compression="zlib">
@@ -14,102 +14,102 @@
   </data>
  </layer>
  <objectgroup name="objs">
-  <object id="1" x="485" y="327" width="28" height="34">
+  <object x="485" y="327" width="28" height="34">
    <properties>
     <property name="TO" value="ice_entry"/>
    </properties>
   </object>
-  <object id="3" gid="88" x="300" y="340">
+  <object gid="88" x="300" y="340">
    <properties>
     <property name="switch" value="!time"/>
    </properties>
   </object>
-  <object id="4" gid="88" x="240" y="340">
+  <object gid="88" x="240" y="340">
    <properties>
     <property name="switch" value="!time"/>
    </properties>
   </object>
-  <object id="5" gid="88" x="180" y="340">
+  <object gid="88" x="180" y="340">
    <properties>
     <property name="switch" value="!time"/>
    </properties>
   </object>
-  <object id="6" gid="88" x="120" y="340">
+  <object gid="88" x="120" y="340">
    <properties>
     <property name="switch" value="!time"/>
    </properties>
   </object>
-  <object id="9" gid="80" x="49" y="309">
+  <object gid="80" x="49" y="309">
    <properties>
     <property name="item" value="BIGKEY"/>
    </properties>
   </object>
-  <object id="10" gid="87" x="60" y="480"/>
-  <object id="11" gid="87" x="40" y="480"/>
-  <object id="12" gid="87" x="80" y="500"/>
-  <object id="13" gid="87" x="100" y="520"/>
-  <object id="14" gid="87" x="120" y="540"/>
-  <object id="15" gid="87" x="140" y="560"/>
-  <object id="16" gid="87" x="160" y="560"/>
-  <object id="17" gid="87" x="180" y="560"/>
-  <object id="18" gid="87" x="200" y="560"/>
-  <object id="19" gid="87" x="220" y="560"/>
-  <object id="20" gid="87" x="240" y="560"/>
-  <object id="21" gid="87" x="260" y="560"/>
-  <object id="22" gid="87" x="280" y="560"/>
-  <object id="23" gid="87" x="320" y="560"/>
-  <object id="24" gid="87" x="300" y="560"/>
-  <object id="25" gid="87" x="340" y="560"/>
-  <object id="26" gid="87" x="360" y="560"/>
-  <object id="27" gid="87" x="380" y="560"/>
-  <object id="28" gid="87" x="420" y="560"/>
-  <object id="29" gid="87" x="400" y="560"/>
-  <object id="30" gid="87" x="440" y="560"/>
-  <object id="31" gid="87" x="460" y="560"/>
-  <object id="32" gid="87" x="380" y="180"/>
-  <object id="35" gid="87" x="480" y="540"/>
-  <object id="38" gid="87" x="460" y="340"/>
-  <object id="39" gid="87" x="520" y="340"/>
-  <object id="41" gid="31" x="103" y="417"/>
-  <object id="42" gid="31" x="316" y="453"/>
-  <object id="43" gid="31" x="368" y="527"/>
-  <object id="46" gid="99" x="430" y="133">
+  <object gid="87" x="60" y="480"/>
+  <object gid="87" x="40" y="480"/>
+  <object gid="87" x="80" y="500"/>
+  <object gid="87" x="100" y="520"/>
+  <object gid="87" x="120" y="540"/>
+  <object gid="87" x="140" y="560"/>
+  <object gid="87" x="160" y="560"/>
+  <object gid="87" x="180" y="560"/>
+  <object gid="87" x="200" y="560"/>
+  <object gid="87" x="220" y="560"/>
+  <object gid="87" x="240" y="560"/>
+  <object gid="87" x="260" y="560"/>
+  <object gid="87" x="280" y="560"/>
+  <object gid="87" x="320" y="560"/>
+  <object gid="87" x="300" y="560"/>
+  <object gid="87" x="340" y="560"/>
+  <object gid="87" x="360" y="560"/>
+  <object gid="87" x="380" y="560"/>
+  <object gid="87" x="420" y="560"/>
+  <object gid="87" x="400" y="560"/>
+  <object gid="87" x="440" y="560"/>
+  <object gid="87" x="460" y="560"/>
+  <object gid="87" x="380" y="180"/>
+  <object gid="87" x="480" y="540"/>
+  <object gid="87" x="460" y="340"/>
+  <object gid="87" x="520" y="340"/>
+  <object gid="31" x="103" y="417"/>
+  <object gid="31" x="316" y="453"/>
+  <object gid="31" x="368" y="527"/>
+  <object gid="99" x="498" y="99">
    <properties>
     <property name="change" value="eye"/>
    </properties>
   </object>
-  <object id="52" gid="91" x="440" y="340">
+  <object gid="91" x="440" y="340">
    <properties>
     <property name="change" value="$start"/>
     <property name="switch" value="!eye"/>
    </properties>
   </object>
-  <object id="53" gid="88" x="580" y="260">
+  <object gid="88" x="580" y="260">
    <properties>
     <property name="switch" value="time"/>
    </properties>
   </object>
-  <object id="55" gid="72" x="580" y="400">
+  <object gid="72" x="580" y="400">
    <properties>
     <property name="YELLOW" value="$stop"/>
    </properties>
   </object>
-  <object id="62" name="yel" gid="37" x="580" y="240"/>
-  <object id="65" x="67" y="127" width="28" height="34">
+  <object name="yel" gid="37" x="580" y="240"/>
+  <object x="67" y="127" width="28" height="34">
    <properties>
     <property name="TO" value="ice_puzzle_normal"/>
    </properties>
   </object>
-  <object id="70" gid="87" x="420" y="220"/>
-  <object id="71" gid="87" x="320" y="160"/>
-  <object id="72" gid="87" x="340" y="160"/>
-  <object id="73" gid="87" x="260" y="120"/>
-  <object id="74" gid="87" x="240" y="120"/>
-  <object id="75" gid="87" x="220" y="120"/>
-  <object id="76" gid="87" x="180" y="120"/>
-  <object id="77" gid="87" x="100" y="160"/>
-  <object id="78" gid="87" x="120" y="160"/>
-  <object id="79" gid="87" x="40" y="180"/>
+  <object gid="87" x="420" y="220"/>
+  <object gid="87" x="320" y="160"/>
+  <object gid="87" x="340" y="160"/>
+  <object gid="87" x="260" y="120"/>
+  <object gid="87" x="240" y="120"/>
+  <object gid="87" x="220" y="120"/>
+  <object gid="87" x="180" y="120"/>
+  <object gid="87" x="100" y="160"/>
+  <object gid="87" x="120" y="160"/>
+  <object gid="87" x="40" y="180"/>
  </objectgroup>
  <layer name="Water" width="32" height="30" opacity="0.24">
   <properties>
@@ -122,13 +122,13 @@
  </layer>
  <layer name="Ground" width="32" height="30">
   <data encoding="base64" compression="zlib">
-   eJztljESwCAIBH1yvuGvU6VhOAQ8wSLM0KRwV1DMHGPM5nxAVvK1QF6rZPEzkfFg8qVHF/9zYPBRnyv4Vh093hF+5ixb9YjwGfddOmTXzN55xPfOicjZkqGxUH9lbXa4mgPqicVnBNp3FV/jdPA9Xif6v8tnrI1mtPx2qv6eWXGS7/Go4K8cfv5d/FP338NnzoGIg/X2d/HZDhHu7j9QdJ835AvZlvqR
+   eJztlksOwCAIRD2y1/DWrpo0xEEGEW1SEhatrW8oH9tKKe2wV+CZ/JEhXTPX4mL4HnuzRmtZfLT2RT7KM6PHm/+VurH2URXPMz3oqTe0R3QfP9dR82jW8yM+M9/Y2pIcuQfKr/aOx6w1qvFXTYs7g484J/gWXZH5j+JH7I1mtLy36/tbZsVOvkVHBn+m4effxd/V/xZ+5BxgNGhn/yl+tAaGu/oPxMZ5g3cBKfVb
   </data>
  </layer>
- <objectgroup name="Zones" visible="0">
-  <object id="44" x="20" y="201" width="598" height="202"/>
-  <object id="45" x="20" y="344.667" width="471.333" height="229.333"/>
-  <object id="66" x="18" y="26" width="397" height="169"/>
-  <object id="67" x="333" y="27" width="231.333" height="316.333"/>
+ <objectgroup name="Zones">
+  <object x="20" y="201" width="605" height="226"/>
+  <object x="18" y="26" width="397" height="169"/>
+  <object x="333" y="27" width="282.333" height="378.333"/>
+  <object x="17.5" y="357" width="605" height="226"/>
  </objectgroup>
 </map>

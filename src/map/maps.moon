@@ -34,14 +34,38 @@ contains = (list, thing)->
 
 compress_objs = ->
   print "compress_objs"
-  local pool, o
+  local pool
   pool = persistence[persistence.mapname].pool
   for i = #pool, 1, -1
-    o = pool[i]
-    if o.type=="REMOVED" or is_transient_type[o.type]
+    entities.compress pool[i]
+  return
+
+
+delete_objs = ->
+  local pool
+  pool = persistence[persistence.mapname].pool
+  for i = #pool, 1, -1
+    if pool[i].type=="REMOVED" or is_transient_type[pool[i].type]
       table.remove pool, i
-    else
-      entities.compress o
+  return
+
+
+insert_objs = ->
+  local pool2, state, default_state
+  _, default_state = parse_map persistence.mapname
+
+  pool2 = persistence[persistence.mapname].pool
+  for _,o in ipairs(default_state.pool)
+    if is_transient_type[o.type]
+      pool.init o
+      table.insert pool2, o
+  return
+
+
+partial_level_reset = ->
+  print "partial_level_reset"
+  delete_objs!
+  insert_objs!
 
 
 decompress_objs = ->
@@ -60,7 +84,7 @@ decompress_objs = ->
 
 
 show_objs = ->
-  print "insert_objs"
+  print "show_objs"
   local layer
   for _,layer in ipairs(transient.layers)
     if layer.name == "objs"
@@ -68,20 +92,6 @@ show_objs = ->
       return
 
   error "there must be a layer called 'objs'"
-
-
-partial_level_reset = ->
-  print "partial_level_reset"
-  local pool2, state, default_state
-  _, default_state = parse_map persistence.mapname
-
-  pool2 = persistence[persistence.mapname].pool
-  for _,o in ipairs(default_state.pool)
-    if is_transient_type[o.type]
-      pool.init o
-      table.insert pool2, o
-
-  return
 
 --------------------------------------------------------------------------------
 
@@ -130,6 +140,7 @@ come_from = (prev)->
 close_curtain = ->
   print "close_curtain"
   exclude_avatar!
+  delete_objs!
   compress_objs!
   return
 
@@ -150,7 +161,7 @@ open_curtain = ->
 
 --------------------------------------------------------------------------------
 
-init_level = ->
+init_level = (bool)->
   print "init_level"
   local state, default_state
   transient, default_state = parse_map persistence.mapname
@@ -160,6 +171,7 @@ init_level = ->
 
   transient.levelclock = cron_new_clock!
   open_curtain!
+  partial_level_reset!  if bool and state ~= default_state
   return
 
 
@@ -169,8 +181,7 @@ use_door_to = (to)->
 
   close_curtain!
   prev, persistence.mapname = persistence.mapname, to
-  init_level!
-  partial_level_reset!
+  init_level true
   come_from prev
 
   scripting.hook "focus"  if topisgame

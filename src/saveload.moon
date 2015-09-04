@@ -50,13 +50,13 @@ save = (slot, path) ->
     slot.meta.version = GAME_VERSION
     sessionstart = now
 
-    scripting.hook "before_save"
+--    scripting.hook "before_save"
     maps.exclude_avatar!
     assert love.filesystem.write path,
       "return " .. (serialize slot, nil, INDENT)
 --    print "SAVED"
     maps.include_avatar!
-    scripting.hook "after_save"
+--    scripting.hook "after_save"
 
 
 load = (slot) ->

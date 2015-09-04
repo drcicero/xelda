@@ -33,7 +33,7 @@ function print_globals ()
 end
 
 return function ()
-  g.setColor(255, 255, 255, 50)
+  g.setColor(255, 255, 255, 100)
   g.setFont(font)
   if widgets.timestep then
     s = s .. "fps: " .. love.timer.getFPS()
@@ -52,8 +52,8 @@ return function ()
     end
 
     s = s .. "\n\navatar.lua:"
-    s = s .. "\n  vx: " .. math.floor(avatar.vx*100)/100
-    s = s .. "\n  vy: " .. math.floor(avatar.vy*100)/100
+    s = s .. "\n  x: " .. math.floor(avatar.x*100)/100
+    s = s .. "\n  y: " .. math.floor(avatar.y*100)/100
 
     s = s .. "\n\nwidgets.lua:"
     for i, state in pairs(widgets.stack) do

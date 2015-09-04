@@ -49,11 +49,9 @@ save = function(slot, path)
   slot.meta.lastsaved = now
   slot.meta.version = GAME_VERSION
   sessionstart = now
-  scripting.hook("before_save")
   maps.exclude_avatar()
   assert(love.filesystem.write(path, "return " .. (serialize(slot, nil, INDENT))))
-  maps.include_avatar()
-  return scripting.hook("after_save")
+  return maps.include_avatar()
 end
 local load
 load = function(slot)

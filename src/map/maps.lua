@@ -27,16 +27,40 @@ end
 local compress_objs
 compress_objs = function()
   print("compress_objs")
-  local pool, o
+  local pool
   pool = persistence[persistence.mapname].pool
   for i = #pool, 1, -1 do
-    o = pool[i]
-    if o.type == "REMOVED" or is_transient_type[o.type] then
+    entities.compress(pool[i])
+  end
+end
+local delete_objs
+delete_objs = function()
+  local pool
+  pool = persistence[persistence.mapname].pool
+  for i = #pool, 1, -1 do
+    if pool[i].type == "REMOVED" or is_transient_type[pool[i].type] then
       table.remove(pool, i)
-    else
-      entities.compress(o)
     end
   end
+end
+local insert_objs
+insert_objs = function()
+  local pool2, state, default_state
+  local _
+  _, default_state = parse_map(persistence.mapname)
+  pool2 = persistence[persistence.mapname].pool
+  for _, o in ipairs(default_state.pool) do
+    if is_transient_type[o.type] then
+      pool.init(o)
+      table.insert(pool2, o)
+    end
+  end
+end
+local partial_level_reset
+partial_level_reset = function()
+  print("partial_level_reset")
+  delete_objs()
+  return insert_objs()
 end
 local decompress_objs
 decompress_objs = function()
@@ -55,7 +79,7 @@ decompress_objs = function()
 end
 local show_objs
 show_objs = function()
-  print("insert_objs")
+  print("show_objs")
   local layer
   for _, layer in ipairs(transient.layers) do
     if layer.name == "objs" then
@@ -64,20 +88,6 @@ show_objs = function()
     end
   end
   return error("there must be a layer called 'objs'")
-end
-local partial_level_reset
-partial_level_reset = function()
-  print("partial_level_reset")
-  local pool2, state, default_state
-  local _
-  _, default_state = parse_map(persistence.mapname)
-  pool2 = persistence[persistence.mapname].pool
-  for _, o in ipairs(default_state.pool) do
-    if is_transient_type[o.type] then
-      pool.init(o)
-      table.insert(pool2, o)
-    end
-  end
 end
 local exclude_avatar
 exclude_avatar = function()
@@ -124,6 +134,7 @@ local close_curtain
 close_curtain = function()
   print("close_curtain")
   exclude_avatar()
+  delete_objs()
   compress_objs()
 end
 local open_curtain
@@ -140,7 +151,7 @@ open_curtain = function()
   end
 end
 local init_level
-init_level = function()
+init_level = function(bool)
   print("init_level")
   local state, default_state
   transient, default_state = parse_map(persistence.mapname)
@@ -149,6 +160,9 @@ init_level = function()
   show_objs()
   transient.levelclock = cron_new_clock()
   open_curtain()
+  if bool and state ~= default_state then
+    partial_level_reset()
+  end
 end
 local use_door_to
 use_door_to = function(to)
@@ -156,8 +170,7 @@ use_door_to = function(to)
   local prev
   close_curtain()
   prev, persistence.mapname = persistence.mapname, to
-  init_level()
-  partial_level_reset()
+  init_level(true)
   come_from(prev)
   if topisgame then
     return scripting.hook("focus")

@@ -83,9 +83,10 @@ local function move_obj (o)
         right + tileOf(front + right * vx), -- x_to
         tileOf(y - o.oy - 1), -- y_from
         tileOf(y - o.oy - 1 + o.height) + 1 -- y_to
-      ) and not grid(o, vx, 0) then
+      ) and not grid(o, vx, -1) then
         o.x = o.x + vx
       else
+
         o.wall = true
         o.vx = 0
         if math.abs(vx) > 2.5 then
